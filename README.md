@@ -75,4 +75,4 @@ Then add the xaml:
 * [rebeccaXam](https://github.com/rebeccaXam)
 
 #### License
-https://github.com/rebeccaXam/XamForms.Controls.Calendar/LICENSE.md
+https://github.com/rebeccaXam/XamForms.Controls.Calendar/LICENSE
