@@ -3,7 +3,7 @@
 A simple Calendar control for your Xamarin.Forms projects
 
 #### Setup
-* Available on NuGet: https://www.nuget.org/packages/Xam.Plugins.Forms.Calendar [![NuGet](https://img.shields.io/nuget/v/Xam.Plugins.Forms.Calendar.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugins.Forms.Calendar/)
+* Available on NuGet: https://www.nuget.org/packages/XamForms.Controls.Calendar/ [![NuGet](https://img.shields.io/nuget/v/XamForms.Controls.Calendar.Calendar.svg?label=NuGet)](https://www.nuget.org/packages/XamForms.Controls.Calendar/)
 * Install into your PCL project and Client projects.
 
 #### Usage
@@ -23,7 +23,7 @@ new Calendar
 
 First add the xmlns namespace:
 ```xml
-xmlns:controls="clr-namespace:XamForms.Controls.Calendar;assembly=XamForms.Controls.Calendar"
+xmlns:controls="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calendar"
 ```
 
 Then add the xaml:
