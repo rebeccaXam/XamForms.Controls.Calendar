@@ -753,10 +753,9 @@ namespace XamForms.Controls
 
         protected void SetButtonSelected(CalendarButton button, bool isInsideMonth)
         {
-            if (button.IsEnabled && button.IsSelected && !button.IsOutOfMonth) return;
+            if (button.IsEnabled && button.IsSelected) return;
             button.IsEnabled = true;
             button.IsSelected = true;
-            button.IsOutOfMonth = false;
             button.FontSize = SelectedFontSize;
             button.BorderWidth = SelectedBorderWidth;
             button.BorderColor = SelectedBorderColor;
@@ -787,7 +786,7 @@ namespace XamForms.Controls
             if (!date.HasValue) return;
             var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
             if (button == null) return;
-            buttons.FindAll(b => b.IsSelected).ForEach(b => {
+			buttons.FindAll(b => b.IsSelected).ForEach(b => {
                 SetButtonNormal(b, !b.IsOutOfMonth);
             });
             SetButtonSelected(button, !button.IsOutOfMonth);
@@ -826,16 +825,15 @@ namespace XamForms.Controls
         public DateTime DateTime { get; set; }
     }
 
-    public static class LinqExtention
-    {
-        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
-        {
-            foreach (T item in enumeration)
-            {
-                action(item);
-                yield return item;
-            }
-        }
-    }
+    public static class EnumerableExtensions
+	{
+		public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+		{
+			foreach (T item in enumeration)
+			{
+				action(item);
+			}
+		}
+	}
 }
 

@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 using XamForms.Controls;
 
 namespace CalendarDemo
@@ -14,7 +15,7 @@ namespace CalendarDemo
                 {
                     Padding = 5,
                     Children = {
-                        new Calendar { }
+						new Calendar { MaxDate=DateTime.Now.AddDays(30), MinDate=DateTime.Now.AddDays(-1) }
                     }
                 }
             };
