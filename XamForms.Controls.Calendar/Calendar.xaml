@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:controls="clr-namespace:XamForms.Controls"
+		x:Class="XamForms.Controls.Calendar">
+  <ContentView.Content>
+    <StackLayout Orientation="Vertical" Padding="0" x:Name="MainView">
+      <StackLayout Orientation="Horizontal" VerticalOptions="Start" Padding="0" HeightRequest="32" x:Name="MonthNavigation" >
+        <controls:CalendarButton FontSize="24"
+					x:Name="LeftArrow"
+					FontAttributes="Bold"
+					BackgroundColor="Transparent"
+					Text="❰"
+					TextColor="#c82727" />
+        <Label FontSize="24"
+					VerticalTextAlignment="Center"
+					HorizontalTextAlignment="Center"
+					FontAttributes="Bold"
+					HorizontalOptions="FillAndExpand"
+					x:Name="CenterLabel"
+					Text="OCTOBER 2013" />
+        <controls:CalendarButton FontSize="24"
+					x:Name="RightArrow"
+					BackgroundColor="Transparent"
+					Text="❱"
+					FontAttributes="Bold"
+					TextColor="#c82727" />
+      </StackLayout>
+    </StackLayout>
+  </ContentView.Content>
+</ContentView>
