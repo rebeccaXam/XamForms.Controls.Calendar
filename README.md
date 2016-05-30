@@ -6,6 +6,11 @@ A simple Calendar control for your Xamarin.Forms projects
 * Available on NuGet: https://www.nuget.org/packages/XamForms.Controls.Calendar/ [![NuGet](https://img.shields.io/nuget/v/XamForms.Controls.Calendar.Calendar.svg?label=NuGet)](https://www.nuget.org/packages/XamForms.Controls.Calendar/)
 * Install into your PCL project and Client projects.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/iOS.png" width="350"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/Android.png" width="350"/>
+</p>
+
 #### Usage
 Here is a sample:
 ```
