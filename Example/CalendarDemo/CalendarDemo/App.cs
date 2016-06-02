@@ -11,9 +11,10 @@ namespace CalendarDemo
             // The root page of your application
             MainPage = new ContentPage
             {
+				BackgroundColor= Color.White,
                 Content = new StackLayout
                 {
-                    Padding = 5,
+					Padding = new Thickness(5,Device.OS == TargetPlatform.iOS ? 25 : 5,5,5),
                     Children = {
 						new Calendar { MaxDate=DateTime.Now.AddDays(30), MinDate=DateTime.Now.AddDays(-1) }
                     }

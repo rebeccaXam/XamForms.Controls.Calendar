@@ -16,6 +16,7 @@
 					VerticalTextAlignment="Center"
 					HorizontalTextAlignment="Center"
 					FontAttributes="Bold"
+					TextColor="Black"
 					HorizontalOptions="FillAndExpand"
 					x:Name="CenterLabel"
 					Text="OCTOBER 2013" />
