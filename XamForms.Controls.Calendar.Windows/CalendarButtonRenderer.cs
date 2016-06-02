@@ -3,6 +3,7 @@ using Windows.UI.Xaml.Media;
 using XamForms.Controls;
 using XamForms.Controls.Windows;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using System;
 #if WINDOWS_UWP
 using Xamarin.Forms.Platform.UWP;
@@ -15,6 +16,25 @@ namespace XamForms.Controls.Windows
 {
 	public class CalendarButtonRenderer : ButtonRenderer
     {
+        private static bool _runOnce = false;
+        protected void RunOne()
+        {
+            if (_runOnce) return;
+            var resourceDictionary = new ResourceDictionary();
+            var url = string.Format("ms-appx:///{0}/Resources.xaml", typeof(CalendarButtonRenderer).AssemblyQualifiedName.Split(',')[1].Trim());
+            resourceDictionary.Source = new Uri(url, UriKind.RelativeOrAbsolute);
+            Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            _runOnce = true;
+        }
+
+        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
+        {
+            base.OnElementChanged(e);
+            if (Control == null) return;
+            RunOne();
+            Control.Style = Application.Current.Resources["CalendarButtonStyle"] as Style;
+        }
+
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
@@ -22,27 +42,6 @@ namespace XamForms.Controls.Windows
             if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
             {
                 Control.Content = element.TextWithoutMeasure;
-                Control.Padding = new Thickness(0);
-                Control.Width = Math.Min(Control.ActualWidth, Control.ActualHeight);
-                Control.Height = Math.Min(Control.ActualWidth, Control.ActualHeight);
-            }
-
-            if (e.PropertyName == nameof(element.TextColor) || e.PropertyName == "Renderer")
-            {
-                Control.Foreground = new SolidColorBrush(
-                    Color.FromArgb((byte)(element.TextColor.A * 255),
-                    (byte)(element.TextColor.R * 255),
-                    (byte)(element.TextColor.G * 255),
-                    (byte)(element.TextColor.B * 255)));
-            }
-            
-            if (e.PropertyName == nameof(element.BackgroundColor) || e.PropertyName == "Renderer")
-            {
-                Control.Background = new SolidColorBrush(
-                    Color.FromArgb((byte)(element.BackgroundColor.A * 255),
-                    (byte)(element.BackgroundColor.R * 255),
-                    (byte)(element.BackgroundColor.G * 255),
-                    (byte)(element.BackgroundColor.B * 255)));
             }
         }
     }

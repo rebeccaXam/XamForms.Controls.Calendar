@@ -16,7 +16,7 @@ namespace XamForms.Controls
         public Calendar()
         {
 			InitializeComponent();
-			MonthNavigation.HeightRequest = Device.OS == TargetPlatform.Windows ||  Device.OS == TargetPlatform.WinPhone ? 50 : 32;
+			MonthNavigation.HeightRequest = Device.Idiom == TargetIdiom.Phone ? 32 : 50;
             TitleLabel = CenterLabel;
             TitleLeftArrow = LeftArrow;
             TitleRightArrow = RightArrow;

@@ -7,7 +7,7 @@
     <ProjectGuid>{AC53D10D-AE04-42FC-A2EE-2DA6894D9272}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XamForms.Controls.Calendar.UWP</RootNamespace>
+    <RootNamespace>XamForms.Controls.UWP</RootNamespace>
     <AssemblyName>XamForms.Controls.Calendar.UWP</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -118,6 +118,13 @@
       <Project>{DA721ED1-72ED-43EF-B909-FF4F037D6549}</Project>
       <Name>XamForms.Controls.Calendar</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
