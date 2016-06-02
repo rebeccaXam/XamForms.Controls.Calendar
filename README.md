@@ -11,6 +11,15 @@ A simple Calendar control for your Xamarin.Forms projects
   <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/Android.png" width="350"/>
 </p>
 
+In your iOS, Android, and Windows projects call:
+
+```
+Xamarin.Forms.Init();//platform specific init
+XamForms.Controls.<PLATFORM>.Calendar.Init();
+```
+
+You must do this AFTER you call Xamarin.Forms.Init();
+
 #### Usage
 Here is a sample:
 ```
