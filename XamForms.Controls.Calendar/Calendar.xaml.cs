@@ -16,6 +16,7 @@ namespace XamForms.Controls
         public Calendar()
         {
 			InitializeComponent();
+			MonthNavigation.HeightRequest = Device.OS == TargetPlatform.Windows ||  Device.OS == TargetPlatform.WinPhone ? 50 : 32;
             TitleLabel = CenterLabel;
             TitleLeftArrow = LeftArrow;
             TitleRightArrow = RightArrow;
@@ -36,41 +37,54 @@ namespace XamForms.Controls
 
         protected async override void OnParentSet()
         {
-            await FillCalendar();
+            if (Device.OS == TargetPlatform.Windows || Device.OS == TargetPlatform.WinPhone)
+            {
+                FillCalendarWindows();
+            }
+            else { 
+                // iOS and Android can create controls on another thread when they are not attached to the main ui yet, 
+                // windows can not
+                await FillCalendar();
+            }
             MainView.Children.Add(DayLabels);
             MainView.Children.Add(MainCalendar);
             base.OnParentSet();
+        }
+
+        protected void FillCalendarWindows()
+        {
+            for (int r = 0; r < 6; r++)
+            {
+                for (int c = 0; c < 7; c++)
+                {
+                    if (r == 0)
+                    {
+                        labels.Add(new Label { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center });
+                        DayLabels.Children.Add(labels.Last(), c, r);
+                    }
+                    buttons.Add(new CalendarButton
+                    {
+                        BorderRadius = 0,
+                        BorderWidth = BorderWidth,
+                        BorderColor = BorderColor,
+                        FontSize = DatesFontSize,
+                        BackgroundColor = DatesBackgroundColor,
+                        HorizontalOptions = LayoutOptions.FillAndExpand,
+                        VerticalOptions = LayoutOptions.FillAndExpand
+                    });
+                    buttons.Last().Clicked += DateClickedEvent;
+                    MainCalendar.Children.Add(buttons.Last(), c, r);
+                }
+            }
+
+            ChangeCalendar(CalandarChanges.All);
         }
 
         protected Task FillCalendar()
         {
             return Task.Factory.StartNew(() =>
             {
-                for (int r = 0; r < 6; r++)
-                {
-                    for (int c = 0; c < 7; c++)
-                    {
-                        if (r == 0)
-                        {
-                            labels.Add(new Label { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center });
-                            DayLabels.Children.Add(labels.Last(), c, r);
-                        }
-                        buttons.Add(new CalendarButton
-                        {
-                            BorderRadius = 0,
-                            BorderWidth = BorderWidth,
-                            BorderColor = BorderColor,
-                            FontSize = DatesFontSize,
-                            BackgroundColor = DatesBackgroundColor,
-                            HorizontalOptions = LayoutOptions.FillAndExpand,
-                            VerticalOptions = LayoutOptions.FillAndExpand
-                        });
-                        buttons.Last().Clicked += DateClickedEvent;
-                        MainCalendar.Children.Add(buttons.Last(), c, r);
-                    }
-                }
-
-                ChangeCalendar(CalandarChanges.All);
+                FillCalendarWindows();
             });
         }
 
@@ -765,48 +779,60 @@ namespace XamForms.Controls
 
         protected void SetButtonNormal(CalendarButton button, bool isInsideMonth)
         {
-            button.IsEnabled = true;
-            button.IsSelected = false;
-            button.IsOutOfMonth = !isInsideMonth;
-            button.FontSize = DatesFontSize;
-            button.BorderWidth = BorderWidth;
-            button.BorderColor = BorderColor;
-            button.BackgroundColor = isInsideMonth ? DatesBackgroundColor : DatesBackgroundColorOutsideMonth;
-            button.TextColor = isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                button.IsEnabled = true;
+                button.IsSelected = false;
+                button.IsOutOfMonth = !isInsideMonth;
+                button.FontSize = DatesFontSize;
+                button.BorderWidth = BorderWidth;
+                button.BorderColor = BorderColor;
+                button.BackgroundColor = isInsideMonth ? DatesBackgroundColor : DatesBackgroundColorOutsideMonth;
+                button.TextColor = isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth;
+            });
         }
 
         protected void SetButtonSelected(CalendarButton button, bool isInsideMonth)
         {
-            button.IsEnabled = true;
-            button.IsSelected = true;
-            button.FontSize = SelectedFontSize;
-            button.BorderWidth = SelectedBorderWidth;
-            button.BorderColor = SelectedBorderColor;
-            button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : DatesBackgroundColor;
-            button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : (isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                button.IsEnabled = true;
+                button.IsSelected = true;
+                button.FontSize = SelectedFontSize;
+                button.BorderWidth = SelectedBorderWidth;
+                button.BorderColor = SelectedBorderColor;
+                button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : DatesBackgroundColor;
+                button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : (isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth);
+            });
         }
 
         protected void SetButtonDisabled(CalendarButton button)
         {
-            button.FontSize = DisabledFontSize;
-            button.BorderWidth = DisabledBorderWidth;
-            button.BorderColor = DisabledBorderColor;
-            button.BackgroundColor = DisabledBackgroundColor;
-            button.TextColor = DisabledTextColor;
-            button.IsEnabled = false;
-            button.IsSelected = false;
-            button.IsOutOfMonth = false;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                button.FontSize = DisabledFontSize;
+                button.BorderWidth = DisabledBorderWidth;
+                button.BorderColor = DisabledBorderColor;
+                button.BackgroundColor = DisabledBackgroundColor;
+                button.TextColor = DisabledTextColor;
+                button.IsEnabled = false;
+                button.IsSelected = false;
+                button.IsOutOfMonth = false;
+            });
         }
 
 		protected void SetButtonSpecial(CalendarButton button, SpecialDate special)
 		{
-			if (special.FontSize.HasValue) button.FontSize = special.FontSize.Value;
-			if (special.BorderWidth.HasValue) button.BorderWidth = special.BorderWidth.Value;
-			if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;
-			if (special.BackgroundColor.HasValue) button.BackgroundColor = special.BackgroundColor.Value;
-			if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
-			button.IsEnabled = special.Selectable;
-		}
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (special.FontSize.HasValue) button.FontSize = special.FontSize.Value;
+			    if (special.BorderWidth.HasValue) button.BorderWidth = special.BorderWidth.Value;
+			    if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;
+			    if (special.BackgroundColor.HasValue) button.BackgroundColor = special.BackgroundColor.Value;
+			    if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
+			    button.IsEnabled = special.Selectable;
+            });
+        }
 
         protected void DateClickedEvent(object s, EventArgs a)
         {

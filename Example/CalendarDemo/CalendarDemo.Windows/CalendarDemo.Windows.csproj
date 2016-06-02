@@ -136,6 +136,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\XamForms.Controls.Calendar.Windows\XamForms.Controls.Calendar.Windows.csproj">
+      <Project>{a3d6d889-986a-4639-b6ad-c42e8ea3f674}</Project>
+      <Name>XamForms.Controls.Calendar.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj">
+      <Project>{da721ed1-72ed-43ef-b909-ff4f037d6549}</Project>
+      <Name>XamForms.Controls.Calendar</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CalendarDemo\CalendarDemo.csproj">
       <Name>CalendarDemo</Name>
     </ProjectReference>

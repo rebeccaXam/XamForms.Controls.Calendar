@@ -81,7 +81,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CalendarButtonRenderer.cs" />
+    <Compile Include="..\XamForms.Controls.Calendar.Windows\CalendarButtonRenderer.cs">
+      <Link>CalendarButtonRenderer.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

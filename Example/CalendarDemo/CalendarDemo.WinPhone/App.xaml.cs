@@ -65,6 +65,7 @@ namespace CalendarDemo.WinPhone
                 rootFrame.CacheSize = 1;
 
                 Xamarin.Forms.Forms.Init(e);
+                XamForms.Controls.Windows.Calendar.Init();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

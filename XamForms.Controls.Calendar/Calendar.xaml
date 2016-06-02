@@ -5,7 +5,7 @@
 		x:Class="XamForms.Controls.Calendar">
   <ContentView.Content>
     <StackLayout Orientation="Vertical" Padding="0" x:Name="MainView">
-      <StackLayout Orientation="Horizontal" VerticalOptions="Start" Padding="0" HeightRequest="32" x:Name="MonthNavigation" >
+      <StackLayout Orientation="Horizontal" VerticalOptions="Start" Padding="0" x:Name="MonthNavigation" >
         <controls:CalendarButton FontSize="24"
 					x:Name="LeftArrow"
 					FontAttributes="Bold"
