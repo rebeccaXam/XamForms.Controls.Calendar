@@ -1,10 +1,5 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 
 namespace CalendarDemo.Droid
@@ -17,7 +12,8 @@ namespace CalendarDemo.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            LoadApplication(new App());
+			XamForms.Controls.Droid.Calendar.Init();
+			LoadApplication(new App());
         }
     }
 }

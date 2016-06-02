@@ -15,7 +15,7 @@ namespace XamForms.Controls
 
         public Calendar()
         {
-            InitializeComponent();
+			InitializeComponent();
             TitleLabel = CenterLabel;
             TitleLeftArrow = LeftArrow;
             TitleRightArrow = RightArrow;
@@ -665,7 +665,22 @@ namespace XamForms.Controls
             set { SetValue(LeftArrowCommandProperty, value); }
         }
 
-        public DateTime CalendarStartDate
+		public static readonly BindableProperty SpecialDatesProperty = 
+			BindableProperty.Create(nameof(SpecialDates), typeof(List<SpecialDate>), typeof(Calendar), null,
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
+
+		public List<SpecialDate> SpecialDates
+		{
+			get { return (List<SpecialDate>)GetValue(SpecialDatesProperty); }
+			set { SetValue(SpecialDatesProperty, value); }
+		}
+
+		public void RaiseSpecialDatesChanged()
+		{
+			OnPropertyChanged(nameof(SpecialDates));
+		}
+
+		public DateTime CalendarStartDate
         {
             get
             {
@@ -693,7 +708,7 @@ namespace XamForms.Controls
 
         protected void ChangeCalendar(CalandarChanges changes)
         {
-            if (changes.HasFlag(CalandarChanges.All) || changes.HasFlag(CalandarChanges.StartDate))
+            if (changes.HasFlag(CalandarChanges.StartDate))
             {
                 Device.BeginInvokeOnMainThread(() => CenterLabel.Text = StartDate.ToString(TitleLabelFormat));
             }
@@ -706,7 +721,7 @@ namespace XamForms.Controls
                 endOfMonth |= beginOfMonth && start.Day == 1;
                 beginOfMonth |= start.Day == 1;
 
-                if (i < 7 && WeekdaysShow && (changes.HasFlag(CalandarChanges.StartDay) || changes.HasFlag(CalandarChanges.All)))
+				if (i < 7 && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
                 {
                     labels[i].Text = start.ToString(WeekdaysFormat);
                 }
@@ -722,7 +737,13 @@ namespace XamForms.Controls
                 buttons[i].Date = start;
 
                 var isInsideMonth = beginOfMonth && !endOfMonth;
-                if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate))
+				SpecialDate sd = null;
+				if (SpecialDates != null)
+				{
+					sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
+				}
+
+				if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate))
                 {
                     SetButtonDisabled(buttons[i]);
                 }
@@ -730,17 +751,20 @@ namespace XamForms.Controls
                 {
                     SetButtonSelected(buttons[i], isInsideMonth);
                 }
-                else
+				else if (sd != null)
+				{
+					SetButtonSpecial(buttons[i], sd);
+				}
+				else
                 {
-                    SetButtonNormal(buttons[i], isInsideMonth, changes.HasFlag(CalandarChanges.All));
+                    SetButtonNormal(buttons[i], isInsideMonth);
                 }
                 start = start.AddDays(1);
             }
         }
 
-        protected void SetButtonNormal(CalendarButton button, bool isInsideMonth, bool force = false)
+        protected void SetButtonNormal(CalendarButton button, bool isInsideMonth)
         {
-            if (!force && button.IsEnabled && !button.IsSelected && button.IsOutOfMonth == !isInsideMonth) return;
             button.IsEnabled = true;
             button.IsSelected = false;
             button.IsOutOfMonth = !isInsideMonth;
@@ -753,7 +777,6 @@ namespace XamForms.Controls
 
         protected void SetButtonSelected(CalendarButton button, bool isInsideMonth)
         {
-            if (button.IsEnabled && button.IsSelected) return;
             button.IsEnabled = true;
             button.IsSelected = true;
             button.FontSize = SelectedFontSize;
@@ -765,7 +788,6 @@ namespace XamForms.Controls
 
         protected void SetButtonDisabled(CalendarButton button)
         {
-            if (!button.IsEnabled && !button.IsSelected && !button.IsOutOfMonth) return;
             button.FontSize = DisabledFontSize;
             button.BorderWidth = DisabledBorderWidth;
             button.BorderColor = DisabledBorderColor;
@@ -775,6 +797,16 @@ namespace XamForms.Controls
             button.IsSelected = false;
             button.IsOutOfMonth = false;
         }
+
+		protected void SetButtonSpecial(CalendarButton button, SpecialDate special)
+		{
+			if (special.FontSize.HasValue) button.FontSize = special.FontSize.Value;
+			if (special.BorderWidth.HasValue) button.BorderWidth = special.BorderWidth.Value;
+			if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;
+			if (special.BackgroundColor.HasValue) button.BackgroundColor = special.BackgroundColor.Value;
+			if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
+			button.IsEnabled = special.Selectable;
+		}
 
         protected void DateClickedEvent(object s, EventArgs a)
         {
@@ -787,7 +819,12 @@ namespace XamForms.Controls
             var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
             if (button == null) return;
 			buttons.FindAll(b => b.IsSelected).ForEach(b => {
-                SetButtonNormal(b, !b.IsOutOfMonth);
+				var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == b.Date.Value.Date);
+				SetButtonNormal(b, !b.IsOutOfMonth);
+				if (spD != null)
+				{
+					SetButtonSpecial(b, spD);
+				}
             });
             SetButtonSelected(button, !button.IsOutOfMonth);
             DateClicked?.Invoke(this, new DateTimeEventArgs { DateTime = SelectedDate.Value });
@@ -809,20 +846,6 @@ namespace XamForms.Controls
         }
 
         public event EventHandler<DateTimeEventArgs> RightArrowClicked, LeftArrowClicked, DateClicked;
-    }
-
-    [Flags]
-    public enum CalandarChanges
-    {
-        All = 1,
-        MaxMin = 2,
-        StartDate = 4,
-        StartDay = 8
-    }
-
-    public class DateTimeEventArgs : EventArgs
-    {
-        public DateTime DateTime { get; set; }
     }
 
     public static class EnumerableExtensions

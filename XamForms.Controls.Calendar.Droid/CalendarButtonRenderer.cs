@@ -2,10 +2,13 @@ using Android.Graphics.Drawables;
 using XamForms.Controls.Droid;
 using Xamarin.Forms.Platform.Android;
 using XamForms.Controls;
+using Android.Runtime;
+using System;
 
 [assembly: Xamarin.Forms.ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.Droid
 {
+	[Preserve(AllMembers = true)]
     public class CalendarButtonRenderer : ButtonRenderer
     {
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
@@ -29,7 +32,12 @@ namespace XamForms.Controls.Droid
                 Control.Text = element.TextWithoutMeasure;
             }
 
-            if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
+			if (e.PropertyName == nameof(Element.TextColor) || e.PropertyName == "Renderer")
+			{
+				Control.SetTextColor(Element.TextColor.ToAndroid());
+			}
+			 
+			if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
             {
                 var drawable = new GradientDrawable();
                 drawable.SetShape(ShapeType.Rectangle);
@@ -40,5 +48,13 @@ namespace XamForms.Controls.Droid
             }
         }
     }
+
+	public static class Calendar
+	{
+		public static void Init()
+		{
+			var d = "";
+		}
+	}
 }
 

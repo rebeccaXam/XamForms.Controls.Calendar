@@ -8,7 +8,7 @@
     <ProjectGuid>{DA721ED1-72ED-43EF-B909-FF4F037D6549}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XamForms.Controls.Calendar</RootNamespace>
+    <RootNamespace>XamForms.Controls</RootNamespace>
     <AssemblyName>XamForms.Controls.Calendar</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
@@ -40,6 +40,9 @@
     </Compile>
     <Compile Include="CalendarButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CalandarChanges.cs" />
+    <Compile Include="DateTimeEventArgs.cs" />
+    <Compile Include="SpecialDate.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Calendar.xaml">

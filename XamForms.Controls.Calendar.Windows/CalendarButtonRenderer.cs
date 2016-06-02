@@ -4,6 +4,7 @@ using XamForms.Controls.Windows;
 [assembly: ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.Windows
 {
+	[Preserve(AllMembers = true)]
     public class CalendarButtonRenderer : ButtonRenderer
     {
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -16,4 +17,12 @@ namespace XamForms.Controls.Windows
             }
         }
     }
+
+	public static class Calendar
+	{
+		public static void Init()
+		{
+			var d = "";
+		}
+	}
 }
