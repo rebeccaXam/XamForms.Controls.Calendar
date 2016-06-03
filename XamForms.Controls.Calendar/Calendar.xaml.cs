@@ -16,7 +16,7 @@ namespace XamForms.Controls
         public Calendar()
         {
 			InitializeComponent();
-			MonthNavigation.HeightRequest = Device.Idiom == TargetIdiom.Phone ? 32 : 50;
+			MonthNavigation.HeightRequest = Device.OS == TargetPlatform.Windows ? 50 : 32;
             TitleLabel = CenterLabel;
             TitleLeftArrow = LeftArrow;
             TitleRightArrow = RightArrow;
@@ -59,7 +59,12 @@ namespace XamForms.Controls
                 {
                     if (r == 0)
                     {
-                        labels.Add(new Label { HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Center });
+                        labels.Add(new Label {
+                            HorizontalOptions = LayoutOptions.Center,
+                            VerticalOptions = LayoutOptions.Center,
+                            TextColor = Color.Black,
+                            FontSize = 18,
+                            FontAttributes = FontAttributes.Bold });
                         DayLabels.Children.Add(labels.Last(), c, r);
                     }
                     buttons.Add(new CalendarButton
@@ -158,7 +163,7 @@ namespace XamForms.Controls
         }
 
         public static readonly BindableProperty BorderWidthProperty =
-            BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.Android ? 3 : 1,
+            BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderWidth((int)newValue, (int)oldValue));
 
         protected void ChangeBorderWidth(int newValue, int oldValue)
@@ -178,7 +183,7 @@ namespace XamForms.Controls
         }
 
         public static readonly BindableProperty OuterBorderWidthProperty =
-            BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.Android ? 3 : 1,
+            BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendar.Padding = (int)newValue);
 
         /// <summary>
@@ -449,7 +454,7 @@ namespace XamForms.Controls
         public StackLayout MonthNavigationLayout { get; protected set; }
 		
         public static readonly BindableProperty SelectedBorderWidthProperty =
-            BindableProperty.Create(nameof(SelectedBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.Android ? 5 : 3,
+            BindableProperty.Create(nameof(SelectedBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 3 : 5,
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeSelectedBorderWidth((int)newValue, (int)oldValue));
 
         protected void ChangeSelectedBorderWidth(int newValue, int oldValue)
@@ -549,7 +554,7 @@ namespace XamForms.Controls
         }
 
         public static readonly BindableProperty DisabledBorderWidthProperty =
-            BindableProperty.Create(nameof(DisabledBorderWidth), typeof(int), typeof(Calendar), 1,
+            BindableProperty.Create(nameof(DisabledBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDisabledBorderWidth((int)newValue, (int)oldValue));
 
         protected void ChangeDisabledBorderWidth(int newValue, int oldValue)

@@ -5,6 +5,7 @@ using XamForms.Controls.Windows;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using Windows.Foundation;
 #if WINDOWS_UWP
 using Xamarin.Forms.Platform.UWP;
 #else
@@ -32,6 +33,8 @@ namespace XamForms.Controls.Windows
             base.OnElementChanged(e);
             if (Control == null) return;
             RunOne();
+            Control.MinWidth = 48;
+            Control.MinHeight = 48;
             Control.Style = Application.Current.Resources["CalendarButtonStyle"] as Style;
         }
 
