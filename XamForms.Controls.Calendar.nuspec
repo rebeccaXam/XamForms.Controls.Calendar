@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.2</version>
+       <version>1.0.3</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -21,6 +21,10 @@
          <dependency id="Xamarin.Forms" version="2.0.1.6521" />
        </dependencies>
        <releaseNotes>
+           [1.0.3]
+           - Windows is working now
+		   - Extra Special Dates where you can change the style of specific dates
+		   - Some fixes
            [1.0.2]
            - Initital Calandar Control (No Windows yet)
 		   - Some fixes
@@ -30,6 +34,18 @@
       <!--Core-->
      <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/portable-net45+wp8+win8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10/XamForms.Controls.Calendar.dll" />
      
+     <!--Win Phone RT-->
+     <file src="XamForms.Controls.Calendar.WinPhone/bin/Release/XamForms.Controls.Calendar.WinPhone.dll" target="lib/wpa81/XamForms.Controls.Calendar.WinPhone.dll" />
+     <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/wpa81/XamForms.Controls.Calendar.dll" />
+    
+     <!--Win Store-->
+     <file src="XamForms.Controls.Calendar.Windows/bin/Release/XamForms.Controls.Calendar.Windows.dll" target="lib/win81/XamForms.Controls.Calendar.Windows.dll" />
+     <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/win81/XamForms.Controls.Calendar.dll" />
+	 
+     <!--UWP-->
+     <file src="XamForms.Controls.Calendar.UWP/bin/Release/XamForms.Controls.Calendar.UWP.dll" target="lib/UAP10/XamForms.Controls.Calendar.UWP.dll" />
+     <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/UAP10/XamForms.Controls.Calendar.dll" />
+	 
      <!--Xamarin.Android-->
      <file src="XamForms.Controls.Calendar.Droid/bin/Release/XamForms.Controls.Calendar.Droid.dll" target="lib/MonoAndroid10/XamForms.Controls.Calendar.Droid.dll" />
      <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/MonoAndroid10/XamForms.Controls.Calendar.dll" />

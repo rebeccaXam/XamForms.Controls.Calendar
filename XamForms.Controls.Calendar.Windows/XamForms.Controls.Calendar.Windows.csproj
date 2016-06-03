@@ -9,7 +9,7 @@
     <ProjectGuid>{A3D6D889-986A-4639-B6AD-C42E8EA3F674}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XamForms.Controls.Calendar.Windows</RootNamespace>
+    <RootNamespace>XamForms.Controls.Windows</RootNamespace>
     <AssemblyName>XamForms.Controls.Calendar.Windows</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

@@ -9,7 +9,7 @@
     <ProjectGuid>{64EE9FEF-69A9-43D9-94A9-C3DF5E926A4E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XamForms.Controls.Calendar.WinPhone</RootNamespace>
+    <RootNamespace>XamForms.Controls.WinPhone</RootNamespace>
     <AssemblyName>XamForms.Controls.Calendar.WinPhone</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>

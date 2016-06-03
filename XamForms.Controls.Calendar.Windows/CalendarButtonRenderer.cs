@@ -1,11 +1,7 @@
-﻿using Windows.UI;
-using Windows.UI.Xaml.Media;
-using XamForms.Controls;
+﻿using XamForms.Controls;
 using XamForms.Controls.Windows;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using System;
-using Windows.Foundation;
 #if WINDOWS_UWP
 using Xamarin.Forms.Platform.UWP;
 #else
@@ -17,22 +13,10 @@ namespace XamForms.Controls.Windows
 {
 	public class CalendarButtonRenderer : ButtonRenderer
     {
-        private static bool _runOnce = false;
-        protected void RunOne()
-        {
-            if (_runOnce) return;
-            var resourceDictionary = new ResourceDictionary();
-            var url = string.Format("ms-appx:///{0}/Resources.xaml", typeof(CalendarButtonRenderer).AssemblyQualifiedName.Split(',')[1].Trim());
-            resourceDictionary.Source = new Uri(url, UriKind.RelativeOrAbsolute);
-            Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
-            _runOnce = true;
-        }
-
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
         {
             base.OnElementChanged(e);
             if (Control == null) return;
-            RunOne();
             Control.MinWidth = 48;
             Control.MinHeight = 48;
             Control.Style = Application.Current.Resources["CalendarButtonStyle"] as Style;
@@ -53,7 +37,16 @@ namespace XamForms.Controls.Windows
 	{
 		public static void Init()
 		{
-			var d = "";
-		}
+            var resourceDictionary = new ResourceDictionary();
+#if WINDOWS_UWP
+            var url = "ms-appx:///XamForms.Controls.Calendar.UWP/Resources.xaml";
+#elif WINDOWS_PHONE_APP
+            var url = "ms-appx:///XamForms.Controls.Calendar.WinPhone/Resources.xaml";
+#else
+            var url = "ms-appx:///XamForms.Controls.Calendar.Windows/Resources.xaml";
+#endif 
+            resourceDictionary.Source = new Uri(url, UriKind.Absolute);
+            Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+        }
 	}
 }
