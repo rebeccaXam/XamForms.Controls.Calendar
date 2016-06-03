@@ -7,8 +7,11 @@ A simple Calendar control for your Xamarin.Forms projects
 * Install into your PCL project and Client projects.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/iOS.png" width="350"/>
-  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/Android.png" width="350"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/iOS.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/Android.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/WinPhone.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/Win8.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/UWP.png" height="200"/>
 </p>
 
 In your iOS, Android, and Windows projects call:
