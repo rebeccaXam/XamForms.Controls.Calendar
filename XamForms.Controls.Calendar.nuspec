@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.3</version>
+       <version>1.0.4</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -21,6 +21,8 @@
          <dependency id="Xamarin.Forms" version="2.0.1.6521" />
        </dependencies>
        <releaseNotes>
+	       [1.0.4]
+		   - Fixed Missing references: Cannot locate resource from ‘ms-appx:///XamForms.Controls.Calendar.UWP/Resources.xaml’.
            [1.0.3]
            - Windows is working now
 		   - Extra Special Dates where you can change the style of specific dates
