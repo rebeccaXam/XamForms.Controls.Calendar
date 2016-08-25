@@ -806,8 +806,8 @@ namespace XamForms.Controls
                 button.FontSize = SelectedFontSize;
                 button.BorderWidth = SelectedBorderWidth;
                 button.BorderColor = SelectedBorderColor;
-                button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : DatesBackgroundColor;
-                button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : (isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth);
+                button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : button.BackgroundColor;
+                button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : button.TextColor;
             });
         }
 
