@@ -95,7 +95,13 @@ namespace XamForms.Controls
 
         public static readonly BindableProperty SelectedDateProperty =
             BindableProperty.Create(nameof(SelectedDate), typeof(DateTime?), typeof(Calendar), null,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeSelectedDate((DateTime?)newValue));
+				propertyChanged: (bindable, oldValue, newValue) =>
+				{
+					if ((bindable as Calendar).ChangeSelectedDate((DateTime?)newValue))
+					{
+						(bindable as Calendar).SelectedDate = null;
+					}
+				});
         /// <summary>
         /// Gets or sets a date the selected date
         /// </summary>
@@ -103,8 +109,32 @@ namespace XamForms.Controls
         public DateTime? SelectedDate
         {
             get { return (DateTime?)GetValue(SelectedDateProperty); }
-            set { SetValue(SelectedDateProperty, value); }
+			set { SetValue(SelectedDateProperty, value.HasValue ? value.Value.Date : value); }
         }
+
+		public static readonly BindableProperty MultiSelectDatesProperty = BindableProperty.Create(nameof(MultiSelectDates), typeof(bool), typeof(Calendar), false);
+
+		/// <summary>
+		/// Gets or sets multiple Dates can be selected.
+		/// </summary>
+		/// <value>The weekdays show.</value>
+		public bool MultiSelectDates
+		{
+			get { return (bool)GetValue(MultiSelectDatesProperty); }
+			set { SetValue(MultiSelectDatesProperty, value); }
+		}
+
+
+		public static readonly BindableProperty SelectedDatesProperty = BindableProperty.Create(nameof(SelectedDates), typeof(List<DateTime>), typeof(Calendar), new List<DateTime>());
+		/// <summary>
+		/// Gets the selected dates when MultiSelectDates is true
+		/// </summary>
+		/// <value>The selected date.</value>
+		public List<DateTime> SelectedDates
+		{
+			get { return (List<DateTime>)GetValue(SelectedDatesProperty); }
+			protected set { SetValue(SelectedDatesProperty, value); }
+		}
 
         public static readonly BindableProperty MinDateProperty =
             BindableProperty.Create(nameof(MinDate), typeof(DateTime?), typeof(Calendar), null,
@@ -732,7 +762,7 @@ namespace XamForms.Controls
                 Device.BeginInvokeOnMainThread(() => CenterLabel.Text = StartDate.ToString(TitleLabelFormat));
             }
 
-            var start = CalendarStartDate;
+			var start = CalendarStartDate.Date;
             var beginOfMonth = false;
             var endOfMonth = false;
             for (int i = 0; i < buttons.Count; i++)
@@ -755,7 +785,8 @@ namespace XamForms.Controls
                 }
                 buttons[i].Date = start;
 
-                var isInsideMonth = beginOfMonth && !endOfMonth;
+				buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
+
 				SpecialDate sd = null;
 				if (SpecialDates != null)
 				{
@@ -766,9 +797,9 @@ namespace XamForms.Controls
                 {
                     SetButtonDisabled(buttons[i]);
                 }
-                else if (SelectedDate.HasValue && start.Date == SelectedDate.Value.Date)
+				else if (SelectedDates.Contains(start.Date))
                 {
-                    SetButtonSelected(buttons[i], isInsideMonth);
+                    SetButtonSelected(buttons[i], sd);
                 }
 				else if (sd != null)
 				{
@@ -776,38 +807,39 @@ namespace XamForms.Controls
 				}
 				else
                 {
-                    SetButtonNormal(buttons[i], isInsideMonth);
+                    SetButtonNormal(buttons[i]);
                 }
                 start = start.AddDays(1);
             }
         }
 
-        protected void SetButtonNormal(CalendarButton button, bool isInsideMonth)
+        protected void SetButtonNormal(CalendarButton button)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
                 button.IsEnabled = true;
                 button.IsSelected = false;
-                button.IsOutOfMonth = !isInsideMonth;
                 button.FontSize = DatesFontSize;
                 button.BorderWidth = BorderWidth;
                 button.BorderColor = BorderColor;
-                button.BackgroundColor = isInsideMonth ? DatesBackgroundColor : DatesBackgroundColorOutsideMonth;
-                button.TextColor = isInsideMonth ? DatesTextColor : DatesTextColorOutsideMonth;
+                button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
+                button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
             });
         }
 
-        protected void SetButtonSelected(CalendarButton button, bool isInsideMonth)
+		protected void SetButtonSelected(CalendarButton button, SpecialDate special)
         {
             Device.BeginInvokeOnMainThread(() =>
             {
-                button.IsEnabled = true;
+				var defaultBackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
+				var defaultTextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
+				button.IsEnabled = true;
                 button.IsSelected = true;
                 button.FontSize = SelectedFontSize;
                 button.BorderWidth = SelectedBorderWidth;
                 button.BorderColor = SelectedBorderColor;
-                button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : button.BackgroundColor;
-                button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : button.TextColor;
+				button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : (special != null && special.BackgroundColor.HasValue ? special.BackgroundColor.Value : defaultBackgroundColor);
+				button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : (special != null && special.TextColor.HasValue ? special.TextColor.Value : defaultTextColor);
             });
         }
 
@@ -821,8 +853,7 @@ namespace XamForms.Controls
                 button.BackgroundColor = DisabledBackgroundColor;
                 button.TextColor = DisabledTextColor;
                 button.IsEnabled = false;
-                button.IsSelected = false;
-                button.IsOutOfMonth = false;
+				button.IsSelected = false;
             });
         }
 
@@ -841,26 +872,46 @@ namespace XamForms.Controls
 
         protected void DateClickedEvent(object s, EventArgs a)
         {
+			SelectedDate = null;
             SelectedDate = (s as CalendarButton).Date;
         }
 
-        protected void ChangeSelectedDate(DateTime? date)
+		protected bool ChangeSelectedDate(DateTime? date)
         {
-            if (!date.HasValue) return;
+            if (!date.HasValue) return false;
             var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
-            if (button == null) return;
-			buttons.FindAll(b => b.IsSelected).ForEach(b => {
-				var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == b.Date.Value.Date);
-				SetButtonNormal(b, !b.IsOutOfMonth);
-				if (spD != null)
-				{
-					SetButtonSpecial(b, spD);
-				}
-            });
-            SetButtonSelected(button, !button.IsOutOfMonth);
-            DateClicked?.Invoke(this, new DateTimeEventArgs { DateTime = SelectedDate.Value });
-            DateCommand?.Execute(SelectedDate.Value);
+            if (button == null) return false;
+			if (!MultiSelectDates)
+			{
+				buttons.FindAll(b => b.IsSelected).ForEach(b => ResetButton(b));
+			}
+
+			var deselect = button.IsSelected;
+			if (button.IsSelected)
+			{
+				ResetButton(button);
+			}
+			else
+			{
+				SelectedDates.Add(SelectedDate.Value);
+				var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == button.Date.Value.Date);
+				SetButtonSelected(button, spD);
+			}
+			DateClicked?.Invoke(this, new DateTimeEventArgs { DateTime = SelectedDate.Value });
+			DateCommand?.Execute(SelectedDate.Value);
+			return deselect;
         }
+
+		protected void ResetButton(CalendarButton b)
+		{
+			if (b.Date.HasValue) SelectedDates.Remove(b.Date.Value.Date);
+			var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == b.Date.Value.Date);
+			SetButtonNormal(b);
+			if (spD != null)
+			{
+				SetButtonSpecial(b, spD);
+			}
+		}
 
         protected void LeftArrowClickedEvent(object s, EventArgs a)
         {

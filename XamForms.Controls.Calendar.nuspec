@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.4</version>
+       <version>1.0.5</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -11,7 +11,7 @@
       <iconUrl>https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/icon.png</iconUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
        <description>
-           Custom calendar control for Xamarin.Forms. (No Windows yet)
+           Custom calendar control for Xamarin.Forms.
            Customizable border thickness, color, background colors and formats.
            Built against: 2.1.0.6521
        </description>
@@ -21,6 +21,9 @@
          <dependency id="Xamarin.Forms" version="2.0.1.6521" />
        </dependencies>
        <releaseNotes>
+	       [1.0.5]
+		   - Add support to select multiple dates
+		   - Fix background color for Special Dates that where selected/deselected
 	       [1.0.4]
 		   - Fixed Missing references: Cannot locate resource from ‘ms-appx:///XamForms.Controls.Calendar.UWP/Resources.xaml’.
            [1.0.3]

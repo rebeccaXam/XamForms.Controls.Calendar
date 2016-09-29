@@ -56,6 +56,9 @@ Then add the xaml:
 
 
 **Bindable Properties**
+* bool ```MultiSelectDates``` Gets or sets if multiple dates can be selected (default is false)
+* List<DateTime> ```SelectedDates``` Gets the list of selected dates
+* List<SpecialDate> ```SpecialDates``` Gets or sets a list of special dates (dates that differ in color, font and selectability)
 * DateTime? ```SelectedDate``` Gets or sets a date the selected date
 * DateTime? ```MinDate``` Gets or sets the maximum date.
 * DateTime? ```MaxDate``` Gets or sets the minimum date.
@@ -69,7 +72,7 @@ Then add the xaml:
 * Color ```DatesTextColorOutsideMonth``` Gets or sets the text color of the dates not in the focused month.
 * Color ```DatesBackgroundColorOutsideMonth``` Gets or sets the background color of the dates not in the focused month.
 * double ```DatesFontSize``` Gets or sets the font size of the normal dates.
-* Color ``````WeekdaysTextColor``` Gets or sets the text color of the weekdays labels.
+* Color ```WeekdaysTextColor``` Gets or sets the text color of the weekdays labels.
 * Color ```WeekdaysBackgroundColor``` Gets or sets the background color of the weekdays labels.
 * double ```WeekdaysFontSize``` Gets or sets the font size of the weekday labels.
 * string ```WeekdaysFormat``` Gets or sets the date format of the weekday labels.
