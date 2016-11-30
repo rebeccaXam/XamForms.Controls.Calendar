@@ -884,6 +884,7 @@ namespace XamForms.Controls
 			if (!MultiSelectDates)
 			{
 				buttons.FindAll(b => b.IsSelected).ForEach(b => ResetButton(b));
+				SelectedDates.Clear();
 			}
 
 			var deselect = button.IsSelected;
