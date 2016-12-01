@@ -7,20 +7,23 @@ namespace CalendarDemo
 {
     public class App : Application
     {
+		Calendar calendar;
         public App()
         {
-			var calendar = new Calendar
+			calendar = new Calendar
 			{
 				//MaxDate=DateTime.Now.AddDays(30), 
 				MinDate = DateTime.Now.AddDays(-1),
-				MultiSelectDates = true,
+				MultiSelectDates = false,
+				ShowNumberOfWeek = true,
+				StartDay = DayOfWeek.Monday,
 				SelectedTextColor = Color.Fuchsia,
 				SpecialDates = new List<SpecialDate>{
-								new SpecialDate(DateTime.Now.AddDays(2)) { BackgroundColor = Color.Red, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth=8 },
-								new SpecialDate(DateTime.Now.AddDays(3)) { BackgroundColor = Color.Green, TextColor = Color.Blue, Selectable = true }
-							}
+					new SpecialDate(DateTime.Now.AddDays(2)) { BackgroundColor = Color.Red, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth=8 },
+					new SpecialDate(DateTime.Now.AddDays(3)) { BackgroundColor = Color.Green, TextColor = Color.Blue, Selectable = true }
+				}
 			};
-
+							
 			calendar.DateClicked += (sender, e) => {
 				System.Diagnostics.Debug.WriteLine( calendar.SelectedDates);
 			};
@@ -36,11 +39,14 @@ namespace CalendarDemo
                     }
                 }
             };
-        }
+		}
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+			// Handle when your app starts
+			calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(5)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
+			calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(6)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
+			calendar.RaiseSpecialDatesChanged();
         }
 
         protected override void OnSleep()

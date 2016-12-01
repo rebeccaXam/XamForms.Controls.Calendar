@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,9 +10,9 @@ namespace XamForms.Controls
 {
     public partial class Calendar : ContentView
     {
-        List<Label> labels;
+		List<Label> dayLabels, weekNumberLabels;
         List<CalendarButton> buttons;
-        public Grid DayLabels, MainCalendar;
+        public Grid DayLabels, MainCalendar, WeekNumbers;
 
         public Calendar()
         {
@@ -23,7 +24,8 @@ namespace XamForms.Controls
 			MonthNavigationLayout = MonthNavigation;
             LeftArrow.Clicked += LeftArrowClickedEvent;
             RightArrow.Clicked += RightArrowClickedEvent;
-            labels = new List<Label>();
+            dayLabels = new List<Label>();
+			weekNumberLabels = new List<Label>();
             buttons = new List<CalendarButton>();
 
             var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
@@ -33,7 +35,16 @@ namespace XamForms.Controls
             MainCalendar = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
             MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
             MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-        }
+			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0,24,0,0) };
+			WeekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
+			WeekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
+			var panGesture = new PanGestureRecognizer();
+			/*panGesture.PanUpdated += (s, e) =>
+			{
+				var t = e;
+			};
+			MainCalendar.GestureRecognizers.Add(panGesture);*/
+		}
 
         protected async override void OnParentSet()
         {
@@ -46,8 +57,8 @@ namespace XamForms.Controls
                 // windows can not
                 await FillCalendar();
             }
-            MainView.Children.Add(DayLabels);
-            MainView.Children.Add(MainCalendar);
+			var cal = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
+			MainView.Children.Add(new StackLayout { Padding = 0, Spacing = 0, Orientation= StackOrientation.Horizontal, Children = { WeekNumbers, cal } });
             base.OnParentSet();
         }
 
@@ -59,13 +70,13 @@ namespace XamForms.Controls
                 {
                     if (r == 0)
                     {
-                        labels.Add(new Label {
+                        dayLabels.Add(new Label {
                             HorizontalOptions = LayoutOptions.Center,
                             VerticalOptions = LayoutOptions.Center,
                             TextColor = Color.Black,
                             FontSize = 18,
                             FontAttributes = FontAttributes.Bold });
-                        DayLabels.Children.Add(labels.Last(), c, r);
+                        DayLabels.Children.Add(dayLabels.Last(), c, r);
                     }
                     buttons.Add(new CalendarButton
                     {
@@ -80,6 +91,18 @@ namespace XamForms.Controls
                     buttons.Last().Clicked += DateClickedEvent;
                     MainCalendar.Children.Add(buttons.Last(), c, r);
                 }
+				weekNumberLabels.Add(new Label
+				{
+					HorizontalOptions = LayoutOptions.FillAndExpand,
+					VerticalOptions = LayoutOptions.FillAndExpand,
+					TextColor = Color.Black,
+					VerticalTextAlignment = TextAlignment.Center,
+					HorizontalTextAlignment = TextAlignment.Center,
+					FontSize = 14,
+					WidthRequest=32,
+					FontAttributes = FontAttributes.None
+				});
+				WeekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
             }
 
             ChangeCalendar(CalandarChanges.All);
@@ -354,7 +377,7 @@ namespace XamForms.Controls
         protected void ChangeWeekdaysTextColor(Color newValue, Color oldValue)
         {
             if (newValue == oldValue) return;
-            labels.ForEach(l => l.TextColor = newValue);
+            dayLabels.ForEach(l => l.TextColor = newValue);
         }
 
         /// <summary>
@@ -374,7 +397,7 @@ namespace XamForms.Controls
         protected void ChangeWeekdaysBackgroundColor(Color newValue, Color oldValue)
         {
             if (newValue == oldValue) return;
-            labels.ForEach(l => l.BackgroundColor = newValue);
+            dayLabels.ForEach(l => l.BackgroundColor = newValue);
         }
 
         /// <summary>
@@ -388,13 +411,14 @@ namespace XamForms.Controls
         }
 
         public static readonly BindableProperty WeekdaysFontSizeProperty =
-            BindableProperty.Create(nameof(WeekdaysFontSize), typeof(double), typeof(Calendar), 16.0,
+            BindableProperty.Create(nameof(WeekdaysFontSize), typeof(double), typeof(Calendar), 18.0,
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontSize((double)newValue, (double)oldValue));
 
         protected void ChangeWeekdaysFontSize(double newValue, double oldValue)
         {
             if (Math.Abs(newValue - oldValue) < 0.01) return;
-            labels.ForEach(l => l.FontSize = newValue);
+            dayLabels.ForEach(l => l.FontSize = newValue);
+			WeekNumbers.Padding = new Thickness(0, newValue + 6, 0, 0);
         }
 
         /// <summary>
@@ -410,6 +434,25 @@ namespace XamForms.Controls
         public static readonly BindableProperty WeekdaysFormatProperty =
             BindableProperty.Create(nameof(WeekdaysFormat), typeof(string), typeof(Calendar), "ddd",
                                     propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
+
+		public static readonly BindableProperty WeekdaysFontAttributesProperty =
+			BindableProperty.Create(nameof(WeekdaysFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
+
+		protected void ChangeWeekdaysFontAttributes(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			weekNumberLabels.ForEach(l => l.FontAttributes = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font attributes of the weekday labels.
+		/// </summary>
+		public FontAttributes WeekdaysFontAttributes
+		{
+			get { return (FontAttributes)GetValue(WeekdaysFontAttributesProperty); }
+			set { SetValue(WeekdaysFontAttributesProperty, value); }
+		}
 
         /// <summary>
         /// Gets or sets the date format of the weekday labels.
@@ -434,6 +477,100 @@ namespace XamForms.Controls
             get { return (bool)GetValue(WeekdaysShowProperty); }
             set { SetValue(WeekdaysShowProperty, value); }
         }
+
+		public static readonly BindableProperty NumberOfWeekTextColorProperty =
+		  BindableProperty.Create(nameof(NumberOfWeekTextColor), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
+								  propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeNumberOfWeekTextColor((Color)newValue, (Color)oldValue));
+
+		protected void ChangeNumberOfWeekTextColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			weekNumberLabels.ForEach(l => l.TextColor = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the text color of the number of the week labels.
+		/// </summary>
+		/// <value>The color of the weekdays text.</value>
+		public Color NumberOfWeekTextColor
+		{
+			get { return (Color)GetValue(NumberOfWeekTextColorProperty); }
+			set { SetValue(NumberOfWeekTextColorProperty, value); }
+		}
+
+		public static readonly BindableProperty NumberOfWeekBackgroundColorProperty =
+			BindableProperty.Create(nameof(NumberOfWeekBackgroundColor), typeof(Color), typeof(Calendar), Color.Transparent,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeNumberOfWeekBackgroundColor((Color)newValue, (Color)oldValue));
+
+		protected void ChangeNumberOfWeekBackgroundColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			weekNumberLabels.ForEach(l => l.BackgroundColor = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the background color of the number of the week labels.
+		/// </summary>
+		/// <value>The color of the number of the weeks background.</value>
+		public Color NumberOfWeekBackgroundColor
+		{
+			get { return (Color)GetValue(NumberOfWeekBackgroundColorProperty); }
+			set { SetValue(NumberOfWeekBackgroundColorProperty, value); }
+		}
+
+		public static readonly BindableProperty NumberOfWeekFontSizeProperty =
+			BindableProperty.Create(nameof(NumberOfWeekFontSize), typeof(double), typeof(Calendar), 14.0,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeNumberOfWeekFontSize((double)newValue, (double)oldValue));
+
+		protected void ChangeNumberOfWeekFontSize(double newValue, double oldValue)
+		{
+			if (Math.Abs(newValue - oldValue) < 0.01) return;
+			WeekNumbers.WidthRequest = newValue + (newValue/2) + 4;
+			weekNumberLabels.ForEach(l => l.FontSize = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font size of the number of the week labels.
+		/// </summary>
+		/// <value>The size of the weekdays font.</value>
+		public double NumberOfWeekFontSize
+		{
+			get { return (double)GetValue(NumberOfWeekFontSizeProperty); }
+			set { SetValue(NumberOfWeekFontSizeProperty, value); }
+		}
+
+		public static readonly BindableProperty NumberOfWeekFontAttributesProperty =
+			BindableProperty.Create(nameof(NumberOfWeekFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeNumberOfWeekFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
+
+		protected void ChangeNumberOfWeekFontAttributes(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			weekNumberLabels.ForEach(l => l.FontAttributes = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font attributes of the number of the week labels.
+		/// </summary>
+		public FontAttributes NumberOfWeekFontAttributes
+		{
+			get { return (FontAttributes)GetValue(NumberOfWeekFontAttributesProperty); }
+			set { SetValue(NumberOfWeekFontAttributesProperty, value); }
+		}
+
+		public static readonly BindableProperty ShowNumberOfWeekProperty =
+			BindableProperty.Create(nameof(ShowNumberOfWeek), typeof(bool), typeof(Calendar), false,
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).WeekNumbers.IsVisible = (bool)newValue);
+
+		/// <summary>
+		/// Gets or sets wether to show the number of the week labels.
+		/// </summary>
+		/// <value>The weekdays show.</value>
+		public bool ShowNumberOfWeek
+		{
+			get { return (bool)GetValue(ShowNumberOfWeekProperty); }
+			set { SetValue(ShowNumberOfWeekProperty, value); }
+		}
 
         public static readonly BindableProperty MonthNavigationShowProperty =
             BindableProperty.Create(nameof(MonthNavigationShow), typeof(bool), typeof(Calendar), true,
@@ -726,7 +863,7 @@ namespace XamForms.Controls
 
 		public void RaiseSpecialDatesChanged()
 		{
-			OnPropertyChanged(nameof(SpecialDates));
+			ChangeCalendar(CalandarChanges.MaxMin);
 		}
 
 		public DateTime CalendarStartDate
@@ -748,18 +885,34 @@ namespace XamForms.Controls
         {
             if (!WeekdaysShow) return;
             var start = CalendarStartDate;
-            for (int i = 0; i < labels.Count; i++)
+            for (int i = 0; i < dayLabels.Count; i++)
             {
-                labels[i].Text = start.ToString(WeekdaysFormat);
+                dayLabels[i].Text = start.ToString(WeekdaysFormat);
                 start = start.AddDays(1);
             }
         }
+
+		protected void ChangeWeekNumbers()
+		{
+			if (!ShowNumberOfWeek) return;
+			CultureInfo ciCurr = CultureInfo.CurrentCulture;
+			var start = StartDate;
+			for (int i = 0; i < weekNumberLabels.Count; i++)
+			{
+				var weekNum = ciCurr.Calendar.GetWeekOfYear(start, CalendarWeekRule.FirstFourDayWeek, StartDay);
+				weekNumberLabels[i].Text = string.Format("{0}", weekNum);
+				start = start.AddDays(7);
+			}
+		}
 
         protected void ChangeCalendar(CalandarChanges changes)
         {
             if (changes.HasFlag(CalandarChanges.StartDate))
             {
-                Device.BeginInvokeOnMainThread(() => CenterLabel.Text = StartDate.ToString(TitleLabelFormat));
+				Device.BeginInvokeOnMainThread(() => {
+					CenterLabel.Text = StartDate.ToString(TitleLabelFormat);
+					ChangeWeekNumbers();
+				});
             }
 
 			var start = CalendarStartDate.Date;
@@ -772,7 +925,7 @@ namespace XamForms.Controls
 
 				if (i < 7 && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
                 {
-                    labels[i].Text = start.ToString(WeekdaysFormat);
+                    dayLabels[i].Text = start.ToString(WeekdaysFormat);
                 }
 
                 if (changes.HasFlag(CalandarChanges.All))
