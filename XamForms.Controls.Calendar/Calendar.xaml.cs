@@ -13,6 +13,7 @@ namespace XamForms.Controls
 		List<Label> dayLabels, weekNumberLabels;
         List<CalendarButton> buttons;
         public Grid DayLabels, MainCalendar, WeekNumbers;
+		StackLayout calendar;
 
         public Calendar()
         {
@@ -35,7 +36,7 @@ namespace XamForms.Controls
             MainCalendar = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
             MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
             MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0,24,0,0) };
+			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 			WeekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 			WeekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 			var panGesture = new PanGestureRecognizer();
@@ -44,6 +45,11 @@ namespace XamForms.Controls
 				var t = e;
 			};
 			MainCalendar.GestureRecognizers.Add(panGesture);*/
+			SelectedDates = new List<DateTime>();
+			DayLabels.PropertyChanged += (sender, e) =>
+			{
+				if(DayLabels.Height > 0) WeekNumbers.Padding = new Thickness(0, DayLabels.Height, 0, 0);
+			};
 		}
 
         protected async override void OnParentSet()
@@ -57,10 +63,25 @@ namespace XamForms.Controls
                 // windows can not
                 await FillCalendar();
             }
-			var cal = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
-			MainView.Children.Add(new StackLayout { Padding = 0, Spacing = 0, Orientation= StackOrientation.Horizontal, Children = { WeekNumbers, cal } });
+			calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
+			ShowHideWeekNumbers();
             base.OnParentSet();
         }
+
+		protected void ShowHideWeekNumbers()
+		{
+			if (calendar == null) return;
+			MainView.Children.Remove(calendar);
+			if (ShowNumberOfWeek)
+			{
+				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Horizontal, Children = { WeekNumbers, calendar } };
+			}
+			else 
+			{
+				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
+			}
+			MainView.Children.Add(calendar);
+		}
 
         protected void FillCalendarWindows()
         {
@@ -95,16 +116,16 @@ namespace XamForms.Controls
 				{
 					HorizontalOptions = LayoutOptions.FillAndExpand,
 					VerticalOptions = LayoutOptions.FillAndExpand,
-					TextColor = Color.Black,
+					TextColor = NumberOfWeekTextColor,
+					BackgroundColor = NumberOfWeekBackgroundColor,
 					VerticalTextAlignment = TextAlignment.Center,
 					HorizontalTextAlignment = TextAlignment.Center,
-					FontSize = 14,
-					WidthRequest=32,
-					FontAttributes = FontAttributes.None
+					FontSize = NumberOfWeekFontSize,
+					FontAttributes = WeekdaysFontAttributes
 				});
 				WeekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
             }
-
+			WeekNumbers.WidthRequest = NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6;
             ChangeCalendar(CalandarChanges.All);
         }
 
@@ -116,15 +137,30 @@ namespace XamForms.Controls
             });
         }
 
-        public static readonly BindableProperty SelectedDateProperty =
-            BindableProperty.Create(nameof(SelectedDate), typeof(DateTime?), typeof(Calendar), null,
+		public static readonly BindableProperty DisableAllDatesProperty = BindableProperty.Create(nameof(DisableAllDates), typeof(bool), typeof(Calendar), false, 
+		        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar)?.RaiseSpecialDatesChanged());
+
+		/// <summary>
+		/// Gets or sets wether all dates should be disabled by default or not
+		/// </summary>
+		/// <value></value>
+		public bool DisableAllDates
+		{
+			get { return (bool)GetValue(DisableAllDatesProperty); }
+			set { SetValue(DisableAllDatesProperty, value); }
+		}
+
+
+		public static readonly BindableProperty SelectedDateProperty =
+			BindableProperty.Create(nameof(SelectedDate), typeof(DateTime?), typeof(Calendar), null, BindingMode.TwoWay,
 				propertyChanged: (bindable, oldValue, newValue) =>
 				{
-					if ((bindable as Calendar).ChangeSelectedDate((DateTime?)newValue))
+					if ((bindable as Calendar).ChangeSelectedDate(newValue as DateTime?))
 					{
 						(bindable as Calendar).SelectedDate = null;
 					}
 				});
+
         /// <summary>
         /// Gets or sets a date the selected date
         /// </summary>
@@ -148,7 +184,7 @@ namespace XamForms.Controls
 		}
 
 
-		public static readonly BindableProperty SelectedDatesProperty = BindableProperty.Create(nameof(SelectedDates), typeof(List<DateTime>), typeof(Calendar), new List<DateTime>());
+		public static readonly BindableProperty SelectedDatesProperty = BindableProperty.Create(nameof(SelectedDates), typeof(List<DateTime>), typeof(Calendar), null);
 		/// <summary>
 		/// Gets the selected dates when MultiSelectDates is true
 		/// </summary>
@@ -417,8 +453,7 @@ namespace XamForms.Controls
         protected void ChangeWeekdaysFontSize(double newValue, double oldValue)
         {
             if (Math.Abs(newValue - oldValue) < 0.01) return;
-            dayLabels.ForEach(l => l.FontSize = newValue);
-			WeekNumbers.Padding = new Thickness(0, newValue + 6, 0, 0);
+			dayLabels.ForEach(l => l.FontSize = newValue);
         }
 
         /// <summary>
@@ -525,7 +560,7 @@ namespace XamForms.Controls
 		protected void ChangeNumberOfWeekFontSize(double newValue, double oldValue)
 		{
 			if (Math.Abs(newValue - oldValue) < 0.01) return;
-			WeekNumbers.WidthRequest = newValue + (newValue/2) + 4;
+			WeekNumbers.WidthRequest = newValue + (newValue/2) + 6;
 			weekNumberLabels.ForEach(l => l.FontSize = newValue);
 		}
 
@@ -560,7 +595,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty ShowNumberOfWeekProperty =
 			BindableProperty.Create(nameof(ShowNumberOfWeek), typeof(bool), typeof(Calendar), false,
-			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).WeekNumbers.IsVisible = (bool)newValue);
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ShowHideWeekNumbers());
 
 		/// <summary>
 		/// Gets or sets wether to show the number of the week labels.
@@ -907,63 +942,64 @@ namespace XamForms.Controls
 
         protected void ChangeCalendar(CalandarChanges changes)
         {
-            if (changes.HasFlag(CalandarChanges.StartDate))
-            {
-				Device.BeginInvokeOnMainThread(() => {
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				if (changes.HasFlag(CalandarChanges.StartDate))
+				{
 					CenterLabel.Text = StartDate.ToString(TitleLabelFormat);
 					ChangeWeekNumbers();
-				});
-            }
-
-			var start = CalendarStartDate.Date;
-            var beginOfMonth = false;
-            var endOfMonth = false;
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                endOfMonth |= beginOfMonth && start.Day == 1;
-                beginOfMonth |= start.Day == 1;
-
-				if (i < 7 && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
-                {
-                    dayLabels[i].Text = start.ToString(WeekdaysFormat);
-                }
-
-                if (changes.HasFlag(CalandarChanges.All))
-                {
-                    buttons[i].Text = string.Format("{0}", start.Day);
-                }
-                else
-                {
-                    buttons[i].TextWithoutMeasure = string.Format("{0}", start.Day);
-                }
-                buttons[i].Date = start;
-
-				buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
-
-				SpecialDate sd = null;
-				if (SpecialDates != null)
-				{
-					sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
 				}
 
-				if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate))
-                {
-                    SetButtonDisabled(buttons[i]);
-                }
-				else if (SelectedDates.Contains(start.Date))
-                {
-                    SetButtonSelected(buttons[i], sd);
-                }
-				else if (sd != null)
+				var start = CalendarStartDate.Date;
+				var beginOfMonth = false;
+				var endOfMonth = false;
+				for (int i = 0; i < buttons.Count; i++)
 				{
-					SetButtonSpecial(buttons[i], sd);
+					endOfMonth |= beginOfMonth && start.Day == 1;
+					beginOfMonth |= start.Day == 1;
+
+					if (i < 7 && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
+					{
+						dayLabels[i].Text = start.ToString(WeekdaysFormat);
+					}
+
+					if (changes.HasFlag(CalandarChanges.All))
+					{
+						buttons[i].Text = string.Format("{0}", start.Day);
+					}
+					else
+					{
+						buttons[i].TextWithoutMeasure = string.Format("{0}", start.Day);
+					}
+					buttons[i].Date = start;
+
+					buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
+
+					SpecialDate sd = null;
+					if (SpecialDates != null)
+					{
+						sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
+					}
+
+					if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate) || (DisableAllDates && sd == null))
+					{
+						SetButtonDisabled(buttons[i]);
+					}
+					else if (SelectedDates.Contains(start.Date))
+					{
+						SetButtonSelected(buttons[i], sd);
+					}
+					else if (sd != null)
+					{
+						SetButtonSpecial(buttons[i], sd);
+					}
+					else
+					{
+						SetButtonNormal(buttons[i]);
+					}
+					start = start.AddDays(1);
 				}
-				else
-                {
-                    SetButtonNormal(buttons[i]);
-                }
-                start = start.AddDays(1);
-            }
+			});
         }
 
         protected void SetButtonNormal(CalendarButton button)
@@ -1025,21 +1061,30 @@ namespace XamForms.Controls
 
         protected void DateClickedEvent(object s, EventArgs a)
         {
-			SelectedDate = null;
-            SelectedDate = (s as CalendarButton).Date;
+			var selectedDate = (s as CalendarButton).Date;
+			if (SelectedDate.HasValue && selectedDate.HasValue && SelectedDate.Value == selectedDate.Value)
+			{
+				ChangeSelectedDate(selectedDate);
+				SelectedDate = null;
+			}
+			else 
+			{
+				SelectedDate = selectedDate;
+			}
         }
 
 		protected bool ChangeSelectedDate(DateTime? date)
         {
             if (!date.HasValue) return false;
-            var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
-            if (button == null) return false;
+            
 			if (!MultiSelectDates)
 			{
 				buttons.FindAll(b => b.IsSelected).ForEach(b => ResetButton(b));
 				SelectedDates.Clear();
 			}
 
+			var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
+			if (button == null) return false;
 			var deselect = button.IsSelected;
 			if (button.IsSelected)
 			{
@@ -1047,7 +1092,7 @@ namespace XamForms.Controls
 			}
 			else
 			{
-				SelectedDates.Add(SelectedDate.Value);
+				SelectedDates.Add(SelectedDate.Value.Date);
 				var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == button.Date.Value.Date);
 				SetButtonSelected(button, spD);
 			}
