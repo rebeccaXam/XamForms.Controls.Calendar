@@ -43,6 +43,7 @@
     <Compile Include="CalandarChanges.cs" />
     <Compile Include="DateTimeEventArgs.cs" />
     <Compile Include="SpecialDate.cs" />
+    <Compile Include="DateTypeEnum.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Calendar.xaml">

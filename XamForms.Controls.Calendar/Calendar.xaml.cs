@@ -8,39 +8,40 @@ using Xamarin.Forms;
 
 namespace XamForms.Controls
 {
-    public partial class Calendar : ContentView
-    {
+	public partial class Calendar : ContentView
+	{
 		List<Label> dayLabels, weekNumberLabels;
-        List<CalendarButton> buttons;
-        public Grid DayLabels, MainCalendar, WeekNumbers;
+		List<CalendarButton> buttons;
+		public Grid DayLabels, MainCalendar, WeekNumbers;
 		StackLayout calendar;
+		protected Grid details;
 
-        public Calendar()
-        {
+		public Calendar()
+		{
 			InitializeComponent();
 			MonthNavigation.HeightRequest = Device.OS == TargetPlatform.Windows ? 50 : 32;
-            TitleLabel = CenterLabel;
-            TitleLeftArrow = LeftArrow;
-            TitleRightArrow = RightArrow;
+			TitleLabel = CenterLabel;
+			TitleLeftArrow = LeftArrow;
+			TitleRightArrow = RightArrow;
 			MonthNavigationLayout = MonthNavigation;
-            LeftArrow.Clicked += LeftArrowClickedEvent;
-            RightArrow.Clicked += RightArrowClickedEvent;
-            dayLabels = new List<Label>();
+			LeftArrow.Clicked += LeftArrowClickedEvent;
+			RightArrow.Clicked += RightArrowClickedEvent;
+			dayLabels = new List<Label>();
 			weekNumberLabels = new List<Label>();
-            buttons = new List<CalendarButton>();
+			buttons = new List<CalendarButton>();
 
-            var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-            var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-            DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
-            DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-            MainCalendar = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
-            MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-            MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
+			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+			DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
+			DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+			MainCalendar = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+			MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 			WeekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 			WeekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-			var panGesture = new PanGestureRecognizer();
-			/*panGesture.PanUpdated += (s, e) =>
+			CalendarViewType = DateTypeEnum.Normal;
+			/*var panGesture = new PanGestureRecognizer();panGesture.PanUpdated += (s, e) =>
 			{
 				var t = e;
 			};
@@ -48,25 +49,27 @@ namespace XamForms.Controls
 			SelectedDates = new List<DateTime>();
 			DayLabels.PropertyChanged += (sender, e) =>
 			{
-				if(DayLabels.Height > 0) WeekNumbers.Padding = new Thickness(0, DayLabels.Height, 0, 0);
+				if (DayLabels.Height > 0) WeekNumbers.Padding = new Thickness(0, DayLabels.Height, 0, 0);
 			};
+			YearsRow = 4;
+			YearsColumn = 4;
 		}
 
-        protected async override void OnParentSet()
-        {
-            if (Device.OS == TargetPlatform.Windows || Device.OS == TargetPlatform.WinPhone)
-            {
-                FillCalendarWindows();
-            }
-            else { 
-                // iOS and Android can create controls on another thread when they are not attached to the main ui yet, 
-                // windows can not
-                await FillCalendar();
-            }
+		protected async override void OnParentSet()
+		{
+			if (Device.OS == TargetPlatform.Windows || Device.OS == TargetPlatform.WinPhone)
+			{
+				FillCalendarWindows();
+			}
+			else {
+				// iOS and Android can create controls on another thread when they are not attached to the main ui yet, 
+				// windows can not
+				await FillCalendar();
+			}
 			calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
 			ShowHideWeekNumbers();
-            base.OnParentSet();
-        }
+			base.OnParentSet();
+		}
 
 		protected void ShowHideWeekNumbers()
 		{
@@ -76,42 +79,44 @@ namespace XamForms.Controls
 			{
 				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Horizontal, Children = { WeekNumbers, calendar } };
 			}
-			else 
+			else
 			{
 				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
 			}
 			MainView.Children.Add(calendar);
 		}
 
-        protected void FillCalendarWindows()
-        {
-            for (int r = 0; r < 6; r++)
-            {
-                for (int c = 0; c < 7; c++)
-                {
-                    if (r == 0)
-                    {
-                        dayLabels.Add(new Label {
-                            HorizontalOptions = LayoutOptions.Center,
-                            VerticalOptions = LayoutOptions.Center,
-                            TextColor = Color.Black,
-                            FontSize = 18,
-                            FontAttributes = FontAttributes.Bold });
-                        DayLabels.Children.Add(dayLabels.Last(), c, r);
-                    }
-                    buttons.Add(new CalendarButton
-                    {
-                        BorderRadius = 0,
-                        BorderWidth = BorderWidth,
-                        BorderColor = BorderColor,
-                        FontSize = DatesFontSize,
-                        BackgroundColor = DatesBackgroundColor,
-                        HorizontalOptions = LayoutOptions.FillAndExpand,
-                        VerticalOptions = LayoutOptions.FillAndExpand
-                    });
-                    buttons.Last().Clicked += DateClickedEvent;
-                    MainCalendar.Children.Add(buttons.Last(), c, r);
-                }
+		protected void FillCalendarWindows()
+		{
+			for (int r = 0; r < 6; r++)
+			{
+				for (int c = 0; c < 7; c++)
+				{
+					if (r == 0)
+					{
+						dayLabels.Add(new Label
+						{
+							HorizontalOptions = LayoutOptions.Center,
+							VerticalOptions = LayoutOptions.Center,
+							TextColor = WeekdaysTextColor,
+							FontSize = WeekdaysFontSize,
+							FontAttributes = WeekdaysFontAttributes
+						});
+						DayLabels.Children.Add(dayLabels.Last(), c, r);
+					}
+					buttons.Add(new CalendarButton
+					{
+						BorderRadius = 0,
+						BorderWidth = BorderWidth,
+						BorderColor = BorderColor,
+						FontSize = DatesFontSize,
+						BackgroundColor = DatesBackgroundColor,
+						HorizontalOptions = LayoutOptions.FillAndExpand,
+						VerticalOptions = LayoutOptions.FillAndExpand
+					});
+					buttons.Last().Clicked += DateClickedEvent;
+					MainCalendar.Children.Add(buttons.Last(), c, r);
+				}
 				weekNumberLabels.Add(new Label
 				{
 					HorizontalOptions = LayoutOptions.FillAndExpand,
@@ -124,21 +129,21 @@ namespace XamForms.Controls
 					FontAttributes = WeekdaysFontAttributes
 				});
 				WeekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
-            }
+			}
 			WeekNumbers.WidthRequest = NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6;
-            ChangeCalendar(CalandarChanges.All);
-        }
+			ChangeCalendar(CalandarChanges.All);
+		}
 
-        protected Task FillCalendar()
-        {
-            return Task.Factory.StartNew(() =>
-            {
-                FillCalendarWindows();
-            });
-        }
+		protected Task FillCalendar()
+		{
+			return Task.Factory.StartNew(() =>
+			{
+				FillCalendarWindows();
+			});
+		}
 
-		public static readonly BindableProperty DisableAllDatesProperty = BindableProperty.Create(nameof(DisableAllDates), typeof(bool), typeof(Calendar), false, 
-		        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar)?.RaiseSpecialDatesChanged());
+		public static readonly BindableProperty DisableAllDatesProperty = BindableProperty.Create(nameof(DisableAllDates), typeof(bool), typeof(Calendar), false,
+				propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar)?.RaiseSpecialDatesChanged());
 
 		/// <summary>
 		/// Gets or sets wether all dates should be disabled by default or not
@@ -161,22 +166,21 @@ namespace XamForms.Controls
 					}
 				});
 
-        /// <summary>
-        /// Gets or sets a date the selected date
-        /// </summary>
-        /// <value>The selected date.</value>
-        public DateTime? SelectedDate
-        {
-            get { return (DateTime?)GetValue(SelectedDateProperty); }
+		/// <summary>
+		/// Gets or sets a date the selected date
+		/// </summary>
+		/// <value>The selected date.</value>
+		public DateTime? SelectedDate
+		{
+			get { return (DateTime?)GetValue(SelectedDateProperty); }
 			set { SetValue(SelectedDateProperty, value.HasValue ? value.Value.Date : value); }
-        }
+		}
 
 		public static readonly BindableProperty MultiSelectDatesProperty = BindableProperty.Create(nameof(MultiSelectDates), typeof(bool), typeof(Calendar), false);
 
 		/// <summary>
 		/// Gets or sets multiple Dates can be selected.
 		/// </summary>
-		/// <value>The weekdays show.</value>
 		public bool MultiSelectDates
 		{
 			get { return (bool)GetValue(MultiSelectDatesProperty); }
@@ -195,280 +199,320 @@ namespace XamForms.Controls
 			protected set { SetValue(SelectedDatesProperty, value); }
 		}
 
-        public static readonly BindableProperty MinDateProperty =
-            BindableProperty.Create(nameof(MinDate), typeof(DateTime?), typeof(Calendar), null,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
+		public static readonly BindableProperty MinDateProperty =
+			BindableProperty.Create(nameof(MinDate), typeof(DateTime?), typeof(Calendar), null,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
 
-        /// <summary>
-        /// Gets or sets the minimum date.
-        /// </summary>
-        /// <value>The minimum date.</value>
-        public DateTime? MinDate
-        {
-            get { return (DateTime?)GetValue(MinDateProperty); }
-            set { SetValue(MinDateProperty, value); ChangeCalendar(CalandarChanges.MaxMin); }
-        }
+		/// <summary>
+		/// Gets or sets the minimum date.
+		/// </summary>
+		/// <value>The minimum date.</value>
+		public DateTime? MinDate
+		{
+			get { return (DateTime?)GetValue(MinDateProperty); }
+			set { SetValue(MinDateProperty, value); ChangeCalendar(CalandarChanges.MaxMin); }
+		}
 
-        public static readonly BindableProperty MaxDateProperty =
-            BindableProperty.Create(nameof(MaxDate), typeof(DateTime?), typeof(Calendar), null,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
+		public static readonly BindableProperty MaxDateProperty =
+			BindableProperty.Create(nameof(MaxDate), typeof(DateTime?), typeof(Calendar), null,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
 
-        /// <summary>
-        /// Gets or sets the max date.
-        /// </summary>
-        /// <value>The max date.</value>
-        public DateTime? MaxDate
-        {
-            get { return (DateTime?)GetValue(MaxDateProperty); }
-            set { SetValue(MaxDateProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the max date.
+		/// </summary>
+		/// <value>The max date.</value>
+		public DateTime? MaxDate
+		{
+			get { return (DateTime?)GetValue(MaxDateProperty); }
+			set { SetValue(MaxDateProperty, value); }
+		}
 
-        public static readonly BindableProperty StartDateProperty =
-            BindableProperty.Create(nameof(StartDate), typeof(DateTime), typeof(Calendar), DateTime.Now,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.StartDate));
+		public static readonly BindableProperty StartDateProperty =
+			BindableProperty.Create(nameof(StartDate), typeof(DateTime), typeof(Calendar), DateTime.Now,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.StartDate));
 
-        /// <summary>
-        /// Gets or sets a date, to pick the month, the calendar is focused on
-        /// </summary>
-        /// <value>The start date.</value>
-        public DateTime StartDate
-        {
-            get { return (DateTime)GetValue(StartDateProperty); }
-            set { SetValue(StartDateProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets a date, to pick the month, the calendar is focused on
+		/// </summary>
+		/// <value>The start date.</value>
+		public DateTime StartDate
+		{
+			get { return (DateTime)GetValue(StartDateProperty); }
+			set { SetValue(StartDateProperty, value); }
+		}
 
-        public static readonly BindableProperty StartDayProperty =
-            BindableProperty.Create(nameof(StartDate), typeof(DayOfWeek), typeof(Calendar), DayOfWeek.Sunday,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.StartDay));
+		public static readonly BindableProperty StartDayProperty =
+			BindableProperty.Create(nameof(StartDate), typeof(DayOfWeek), typeof(Calendar), DayOfWeek.Sunday,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.StartDay));
 
-        /// <summary>
-        /// Gets or sets the day the calendar starts the week with.
-        /// </summary>
-        /// <value>The start day.</value>
-        public DayOfWeek StartDay
-        {
-            get { return (DayOfWeek)GetValue(StartDayProperty); }
-            set { SetValue(StartDayProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the day the calendar starts the week with.
+		/// </summary>
+		/// <value>The start day.</value>
+		public DayOfWeek StartDay
+		{
+			get { return (DayOfWeek)GetValue(StartDayProperty); }
+			set { SetValue(StartDayProperty, value); }
+		}
 
-        public static readonly BindableProperty BorderWidthProperty =
-            BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderWidth((int)newValue, (int)oldValue));
+		public static readonly BindableProperty BorderWidthProperty =
+			BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderWidth((int)newValue, (int)oldValue));
 
-        protected void ChangeBorderWidth(int newValue, int oldValue)
-        {
-            if (newValue == oldValue) return;
-            buttons.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.BorderWidth = newValue);
-        }
+		protected void ChangeBorderWidth(int newValue, int oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.BorderWidth = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the border width of the calendar.
-        /// </summary>
-        /// <value>The width of the border.</value>
-        public int BorderWidth
-        {
-            get { return (int)GetValue(BorderWidthProperty); }
-            set { SetValue(BorderWidthProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the border width of the calendar.
+		/// </summary>
+		/// <value>The width of the border.</value>
+		public int BorderWidth
+		{
+			get { return (int)GetValue(BorderWidthProperty); }
+			set { SetValue(BorderWidthProperty, value); }
+		}
 
-        public static readonly BindableProperty OuterBorderWidthProperty =
-            BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendar.Padding = (int)newValue);
+		public static readonly BindableProperty OuterBorderWidthProperty =
+			BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendar.Padding = (int)newValue);
 
-        /// <summary>
-        /// Gets or sets the width of the whole calandar border.
-        /// </summary>
-        /// <value>The width of the outer border.</value>
-        public int OuterBorderWidth
-        {
-            get { return (int)GetValue(OuterBorderWidthProperty); }
-            set { SetValue(OuterBorderWidthProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the width of the whole calandar border.
+		/// </summary>
+		/// <value>The width of the outer border.</value>
+		public int OuterBorderWidth
+		{
+			get { return (int)GetValue(OuterBorderWidthProperty); }
+			set { SetValue(OuterBorderWidthProperty, value); }
+		}
 
-        public static readonly BindableProperty BorderColorProperty =
-            BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(Calendar), Color.FromHex("#dddddd"),
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderColor((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty BorderColorProperty =
+			BindableProperty.Create(nameof(BorderColor), typeof(Color), typeof(Calendar), Color.FromHex("#dddddd"),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderColor((Color)newValue, (Color)oldValue));
 
-        protected void ChangeBorderColor(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            MainCalendar.BackgroundColor = newValue;
-            buttons.FindAll(b => b.IsEnabled && !b.IsSelected).ForEach(b => b.BorderColor = newValue);
-        }
+		protected void ChangeBorderColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			MainCalendar.BackgroundColor = newValue;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected).ForEach(b => b.BorderColor = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the border color of the calendar.
-        /// </summary>
-        /// <value>The color of the border.</value>
-        public Color BorderColor
-        {
-            get { return (Color)GetValue(BorderColorProperty); }
-            set { SetValue(BorderColorProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the border color of the calendar.
+		/// </summary>
+		/// <value>The color of the border.</value>
+		public Color BorderColor
+		{
+			get { return (Color)GetValue(BorderColorProperty); }
+			set { SetValue(BorderColorProperty, value); }
+		}
 
-        public static readonly BindableProperty DatesBackgroundColorProperty =
-            BindableProperty.Create(nameof(DatesBackgroundColor), typeof(Color), typeof(Calendar), Color.White,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesBackgroundColor((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesBackgroundColorProperty =
+			BindableProperty.Create(nameof(DatesBackgroundColor), typeof(Color), typeof(Calendar), Color.White,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesBackgroundColor((Color)newValue, (Color)oldValue));
 
-        protected void ChangeDatesBackgroundColor(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedBackgroundColor.HasValue)).ForEach(b => b.BackgroundColor = newValue);
-        }
+		protected void ChangeDatesBackgroundColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedBackgroundColor.HasValue)).ForEach(b => b.BackgroundColor = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the background color of the normal dates.
-        /// </summary>
-        /// <value>The color of the dates background.</value>
-        public Color DatesBackgroundColor
-        {
-            get { return (Color)GetValue(DatesBackgroundColorProperty); }
-            set { SetValue(DatesBackgroundColorProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the background color of the normal dates.
+		/// </summary>
+		/// <value>The color of the dates background.</value>
+		public Color DatesBackgroundColor
+		{
+			get { return (Color)GetValue(DatesBackgroundColorProperty); }
+			set { SetValue(DatesBackgroundColorProperty, value); }
+		}
 
-        public static readonly BindableProperty DatesTextColorProperty =
-            BindableProperty.Create(nameof(DatesTextColor), typeof(Color), typeof(Calendar), Color.Black,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesTextColor((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesTextColorProperty =
+			BindableProperty.Create(nameof(DatesTextColor), typeof(Color), typeof(Calendar), Color.Black,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesTextColor((Color)newValue, (Color)oldValue));
 
-        protected void ChangeDatesTextColor(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedTextColor.HasValue) && !b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
-        }
+		protected void ChangeDatesTextColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedTextColor.HasValue) && !b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the text color of the normal dates.
-        /// </summary>
-        /// <value>The color of the dates text.</value>
-        public Color DatesTextColor
-        {
-            get { return (Color)GetValue(DatesTextColorProperty); }
-            set { SetValue(DatesTextColorProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the text color of the normal dates.
+		/// </summary>
+		/// <value>The color of the dates text.</value>
+		public Color DatesTextColor
+		{
+			get { return (Color)GetValue(DatesTextColorProperty); }
+			set { SetValue(DatesTextColorProperty, value); }
+		}
 
-        public static readonly BindableProperty DatesTextColorOutsideMonthProperty =
-            BindableProperty.Create(nameof(DatesTextColorOutsideMonth), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesTextColorOutsideMonth((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesFontAttributesProperty =
+			BindableProperty.Create(nameof(DatesFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
 
-        protected void ChangeDatesTextColorOutsideMonth(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
-        }
+		protected void ChangeDatesFontAttributes(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedTextColor.HasValue) && !b.IsOutOfMonth).ForEach(b => b.FontAttributes = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the text color of the dates not in the focused month.
-        /// </summary>
-        /// <value>The dates text color outside month.</value>
-        public Color DatesTextColorOutsideMonth
-        {
-            get { return (Color)GetValue(DatesTextColorOutsideMonthProperty); }
-            set { SetValue(DatesTextColorOutsideMonthProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the dates font attributes.
+		/// </summary>
+		/// <value>The dates font attributes.</value>
+		public FontAttributes DatesFontAttributes
+		{
+			get { return (FontAttributes)GetValue(DatesFontAttributesProperty); }
+			set { SetValue(DatesFontAttributesProperty, value); }
+		}
 
-        public static readonly BindableProperty DatesBackgroundColorOutsideMonthProperty =
-            BindableProperty.Create(nameof(DatesBackgroundColorOutsideMonth), typeof(Color), typeof(Calendar), Color.White,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesBackgroundColorOutsideMonth((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesTextColorOutsideMonthProperty =
+			BindableProperty.Create(nameof(DatesTextColorOutsideMonth), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesTextColorOutsideMonth((Color)newValue, (Color)oldValue));
 
-        protected void ChangeDatesBackgroundColorOutsideMonth(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.BackgroundColor = newValue);
-        }
+		protected void ChangeDatesTextColorOutsideMonth(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the background color of the dates not in the focused month.
-        /// </summary>
-        /// <value>The dates background color outside month.</value>
-        public Color DatesBackgroundColorOutsideMonth
-        {
-            get { return (Color)GetValue(DatesBackgroundColorOutsideMonthProperty); }
-            set { SetValue(DatesBackgroundColorOutsideMonthProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the text color of the dates not in the focused month.
+		/// </summary>
+		/// <value>The dates text color outside month.</value>
+		public Color DatesTextColorOutsideMonth
+		{
+			get { return (Color)GetValue(DatesTextColorOutsideMonthProperty); }
+			set { SetValue(DatesTextColorOutsideMonthProperty, value); }
+		}
 
-        public static readonly BindableProperty DatesFontSizeProperty =
-            BindableProperty.Create(nameof(DatesFontSize), typeof(double), typeof(Calendar), 20.0,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontSize((double)newValue, (double)oldValue));
+		public static readonly BindableProperty DatesBackgroundColorOutsideMonthProperty =
+			BindableProperty.Create(nameof(DatesBackgroundColorOutsideMonth), typeof(Color), typeof(Calendar), Color.White,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesBackgroundColorOutsideMonth((Color)newValue, (Color)oldValue));
 
-        protected void ChangeDatesFontSize(double newValue, double oldValue)
-        {
-            if (Math.Abs(newValue - oldValue) < 0.01) return;
-            buttons.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.FontSize = newValue);
-        }
+		protected void ChangeDatesBackgroundColorOutsideMonth(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.BackgroundColor = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the font size of the normal dates.
-        /// </summary>
-        /// <value>The size of the dates font.</value>
-        public double DatesFontSize
-        {
-            get { return (double)GetValue(DatesFontSizeProperty); }
-            set { SetValue(DatesFontSizeProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the background color of the dates not in the focused month.
+		/// </summary>
+		/// <value>The dates background color outside month.</value>
+		public Color DatesBackgroundColorOutsideMonth
+		{
+			get { return (Color)GetValue(DatesBackgroundColorOutsideMonthProperty); }
+			set { SetValue(DatesBackgroundColorOutsideMonthProperty, value); }
+		}
 
-        public static readonly BindableProperty WeekdaysTextColorProperty =
-            BindableProperty.Create(nameof(WeekdaysTextColor), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysTextColor((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesFontAttributesOutsideMonthProperty =
+			BindableProperty.Create(nameof(DatesFontAttributesOutsideMonth), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontAttributesOutsideMonth((FontAttributes)newValue, (FontAttributes)oldValue));
 
-        protected void ChangeWeekdaysTextColor(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            dayLabels.ForEach(l => l.TextColor = newValue);
-        }
+		protected void ChangeDatesFontAttributesOutsideMonth(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.FontAttributes = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the text color of the weekdays labels.
-        /// </summary>
-        /// <value>The color of the weekdays text.</value>
-        public Color WeekdaysTextColor
-        {
-            get { return (Color)GetValue(WeekdaysTextColorProperty); }
-            set { SetValue(WeekdaysTextColorProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the dates font attributes for dates outside of the month.
+		/// </summary>
+		/// <value>The dates font attributes.</value>
+		public FontAttributes DatesFontAttributesOutsideMonth
+		{
+			get { return (FontAttributes)GetValue(DatesFontAttributesOutsideMonthProperty); }
+			set { SetValue(DatesFontAttributesOutsideMonthProperty, value); }
+		}
 
-        public static readonly BindableProperty WeekdaysBackgroundColorProperty =
-            BindableProperty.Create(nameof(WeekdaysBackgroundColor), typeof(Color), typeof(Calendar), Color.Transparent,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysBackgroundColor((Color)newValue, (Color)oldValue));
+		public static readonly BindableProperty DatesFontSizeProperty =
+			BindableProperty.Create(nameof(DatesFontSize), typeof(double), typeof(Calendar), 20.0,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontSize((double)newValue, (double)oldValue));
 
-        protected void ChangeWeekdaysBackgroundColor(Color newValue, Color oldValue)
-        {
-            if (newValue == oldValue) return;
-            dayLabels.ForEach(l => l.BackgroundColor = newValue);
-        }
+		protected void ChangeDatesFontSize(double newValue, double oldValue)
+		{
+			if (Math.Abs(newValue - oldValue) < 0.01) return;
+			buttons.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.FontSize = newValue);
+		}
 
-        /// <summary>
-        /// Gets or sets the background color of the weekdays labels.
-        /// </summary>
-        /// <value>The color of the weekdays background.</value>
-        public Color WeekdaysBackgroundColor
-        {
-            get { return (Color)GetValue(WeekdaysBackgroundColorProperty); }
-            set { SetValue(WeekdaysBackgroundColorProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the font size of the normal dates.
+		/// </summary>
+		/// <value>The size of the dates font.</value>
+		public double DatesFontSize
+		{
+			get { return (double)GetValue(DatesFontSizeProperty); }
+			set { SetValue(DatesFontSizeProperty, value); }
+		}
 
-        public static readonly BindableProperty WeekdaysFontSizeProperty =
-            BindableProperty.Create(nameof(WeekdaysFontSize), typeof(double), typeof(Calendar), 18.0,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontSize((double)newValue, (double)oldValue));
+		public static readonly BindableProperty WeekdaysTextColorProperty =
+			BindableProperty.Create(nameof(WeekdaysTextColor), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysTextColor((Color)newValue, (Color)oldValue));
 
-        protected void ChangeWeekdaysFontSize(double newValue, double oldValue)
-        {
-            if (Math.Abs(newValue - oldValue) < 0.01) return;
+		protected void ChangeWeekdaysTextColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			dayLabels.ForEach(l => l.TextColor = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the text color of the weekdays labels.
+		/// </summary>
+		/// <value>The color of the weekdays text.</value>
+		public Color WeekdaysTextColor
+		{
+			get { return (Color)GetValue(WeekdaysTextColorProperty); }
+			set { SetValue(WeekdaysTextColorProperty, value); }
+		}
+
+		public static readonly BindableProperty WeekdaysBackgroundColorProperty =
+			BindableProperty.Create(nameof(WeekdaysBackgroundColor), typeof(Color), typeof(Calendar), Color.Transparent,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysBackgroundColor((Color)newValue, (Color)oldValue));
+
+		protected void ChangeWeekdaysBackgroundColor(Color newValue, Color oldValue)
+		{
+			if (newValue == oldValue) return;
+			dayLabels.ForEach(l => l.BackgroundColor = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the background color of the weekdays labels.
+		/// </summary>
+		/// <value>The color of the weekdays background.</value>
+		public Color WeekdaysBackgroundColor
+		{
+			get { return (Color)GetValue(WeekdaysBackgroundColorProperty); }
+			set { SetValue(WeekdaysBackgroundColorProperty, value); }
+		}
+
+		public static readonly BindableProperty WeekdaysFontSizeProperty =
+			BindableProperty.Create(nameof(WeekdaysFontSize), typeof(double), typeof(Calendar), 18.0,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontSize((double)newValue, (double)oldValue));
+
+		protected void ChangeWeekdaysFontSize(double newValue, double oldValue)
+		{
+			if (Math.Abs(newValue - oldValue) < 0.01) return;
 			dayLabels.ForEach(l => l.FontSize = newValue);
-        }
+		}
 
-        /// <summary>
-        /// Gets or sets the font size of the weekday labels.
-        /// </summary>
-        /// <value>The size of the weekdays font.</value>
-        public double WeekdaysFontSize
-        {
-            get { return (double)GetValue(WeekdaysFontSizeProperty); }
-            set { SetValue(WeekdaysFontSizeProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the font size of the weekday labels.
+		/// </summary>
+		/// <value>The size of the weekdays font.</value>
+		public double WeekdaysFontSize
+		{
+			get { return (double)GetValue(WeekdaysFontSizeProperty); }
+			set { SetValue(WeekdaysFontSizeProperty, value); }
+		}
 
-        public static readonly BindableProperty WeekdaysFormatProperty =
-            BindableProperty.Create(nameof(WeekdaysFormat), typeof(string), typeof(Calendar), "ddd",
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
+		public static readonly BindableProperty WeekdaysFormatProperty =
+			BindableProperty.Create(nameof(WeekdaysFormat), typeof(string), typeof(Calendar), "ddd",
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
 
 		public static readonly BindableProperty WeekdaysFontAttributesProperty =
 			BindableProperty.Create(nameof(WeekdaysFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
@@ -489,29 +533,170 @@ namespace XamForms.Controls
 			set { SetValue(WeekdaysFontAttributesProperty, value); }
 		}
 
-        /// <summary>
-        /// Gets or sets the date format of the weekday labels.
-        /// </summary>
-        /// <value>The weekdays format.</value>
-        public string WeekdaysFormat
-        {
-            get { return (string)GetValue(WeekdaysFormatProperty); }
-            set { SetValue(WeekdaysFormatProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets the date format of the weekday labels.
+		/// </summary>
+		/// <value>The weekdays format.</value>
+		public string WeekdaysFormat
+		{
+			get { return (string)GetValue(WeekdaysFormatProperty); }
+			set { SetValue(WeekdaysFormatProperty, value); }
+		}
 
-        public static readonly BindableProperty WeekdaysShowProperty =
-            BindableProperty.Create(nameof(WeekdaysShow), typeof(bool), typeof(Calendar), true,
-                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).DayLabels.IsVisible = (bool)newValue);
+		public static readonly BindableProperty WeekdaysShowProperty =
+			BindableProperty.Create(nameof(WeekdaysShow), typeof(bool), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).DayLabels.IsVisible = (bool)newValue);
 
-        /// <summary>
-        /// Gets or sets wether to show the weekday labels.
-        /// </summary>
-        /// <value>The weekdays show.</value>
-        public bool WeekdaysShow
-        {
-            get { return (bool)GetValue(WeekdaysShowProperty); }
-            set { SetValue(WeekdaysShowProperty, value); }
-        }
+		/// <summary>
+		/// Gets or sets wether to show the weekday labels.
+		/// </summary>
+		/// <value>The weekdays show.</value>
+		public bool WeekdaysShow
+		{
+			get { return (bool)GetValue(WeekdaysShowProperty); }
+			set { SetValue(WeekdaysShowProperty, value); }
+		}
+
+		public static readonly BindableProperty EnableTitleMonthYearDetailsProperty =
+		BindableProperty.Create(nameof(EnableTitleMonthYearDetails), typeof(bool), typeof(Calendar), false,
+			propertyChanged: (bindable, oldValue, newValue) =>
+			{
+				(bindable as Calendar).TitleLabel.GestureRecognizers.Clear();
+				if (!(bool)newValue) return;
+				var gr = new TapGestureRecognizer();
+				gr.Tapped += (sender, e) => (bindable as Calendar).NextMonthYearDetails();
+				(bindable as Calendar).TitleLabel.GestureRecognizers.Add(gr);
+			});
+
+		/// <summary>
+		/// Gets or sets wether on Title pressed the month, year or normal view is showen
+		/// </summary>
+		/// <value>The weekdays show.</value>
+		public bool EnableTitleMonthYearDetails
+		{
+			get { return (bool)GetValue(EnableTitleMonthYearDetailsProperty); }
+			set { SetValue(EnableTitleMonthYearDetailsProperty, value); }
+		}
+
+		public DateTypeEnum CalendarViewType { get; protected set; }
+
+		public void PrevMonthYearDetails()
+		{
+			switch (CalendarViewType)
+			{
+				case DateTypeEnum.Normal: ShowYears(); break;
+				case DateTypeEnum.Month: ShowNormal(); break;
+				case DateTypeEnum.Year: ShowMonths(); break;
+				default: ShowNormal(); break;
+			}
+		}
+
+		public void NextMonthYearDetails()
+		{
+			switch (CalendarViewType)
+			{
+				case DateTypeEnum.Normal: ShowMonths(); break;
+				case DateTypeEnum.Month: ShowYears(); break;
+				case DateTypeEnum.Year: ShowNormal(); break;
+				default: ShowNormal(); break;
+			}
+		}
+
+		public void ShowNormal()
+		{
+			if(details != null) MainView.Children.Remove(details);
+			if(!MainView.Children.Contains(calendar)) MainView.Children.Add(calendar);
+			CalendarViewType = DateTypeEnum.Normal;
+			TitleLeftArrow.IsVisible = true;
+			TitleRightArrow.IsVisible = true;
+		}
+
+		public void ShowMonths()
+		{
+			if (MainView.Children.Contains(calendar)) MainView.Children.Remove(calendar);
+			if (details != null && MainView.Children.Contains(details)) MainView.Children.Remove(details);
+			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+			details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			details.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef };
+			details.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef };
+			for (int r = 0; r < 4; r++)
+			{
+				for (int c = 0; c < 3; c++)
+				{
+					var b = new CalendarButton
+					{
+						HorizontalOptions = LayoutOptions.CenterAndExpand,
+						VerticalOptions = LayoutOptions.CenterAndExpand,
+						Text = DateTimeFormatInfo.CurrentInfo.MonthNames[(r * 3) + c],
+						Date = new DateTime(StartDate.Year, (r * 3) + c + 1, 1).Date,
+						BackgroundColor = DatesBackgroundColor,
+						TextColor = DatesTextColor,
+						FontSize = DatesFontSize,
+						FontAttributes = DatesFontAttributes,
+						WidthRequest = calendar.Width / 3 - BorderWidth,
+						HeightRequest = calendar.Height / 4 - BorderWidth
+					};
+					b.Clicked += (sender, e) => {
+						StartDate = (sender as CalendarButton).Date.Value;
+						PrevMonthYearDetails();
+					};
+					details.Children.Add(b, c, r);
+				}
+			}
+			details.WidthRequest = calendar.Width;
+			details.HeightRequest = calendar.Height;
+			MainView.Children.Add(details);
+			CalendarViewType = DateTypeEnum.Month;
+			TitleLeftArrow.IsVisible = false;
+			TitleRightArrow.IsVisible = false;
+		}
+
+		public int YearsRow { get; set; }
+		public int YearsColumn { get; set; }
+
+		public void ShowYears()
+		{
+			if (MainView.Children.Contains(calendar)) MainView.Children.Remove(calendar);
+			if (details != null && MainView.Children.Contains(details)) MainView.Children.Remove(details);
+			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+			details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			details.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef };
+			details.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef };
+			for (int r = 0; r < YearsRow; r++)
+			{
+				for (int c = 0; c < YearsColumn; c++)
+				{
+					var t =  (r * YearsColumn) + c + 1;
+					var b = new CalendarButton
+					{
+						HorizontalOptions = LayoutOptions.CenterAndExpand,
+						VerticalOptions = LayoutOptions.CenterAndExpand,
+						Text = string.Format("{0}", StartDate.Year + (t - (YearsColumn * YearsRow / 2))),
+						Date = new DateTime(StartDate.Year + (t - (YearsColumn*YearsRow/2)), StartDate.Month, 1).Date,
+						BackgroundColor = DatesBackgroundColor,
+						TextColor = DatesTextColor,
+						FontSize = DatesFontSize,
+						FontAttributes = DatesFontAttributes,
+						WidthRequest = (calendar.Width / YearsRow) - BorderWidth,
+						HeightRequest = calendar.Height / YearsColumn - BorderWidth
+					};
+					b.Clicked += (sender, e) =>
+					{
+						StartDate = (sender as CalendarButton).Date.Value;
+						PrevMonthYearDetails();
+					};
+					details.Children.Add(b, c, r);
+				}
+			}
+			details.WidthRequest = calendar.Width;
+			details.HeightRequest = calendar.Height;
+			MainView.Children.Add(details);
+			CalendarViewType = DateTypeEnum.Year;
+			TitleLeftArrow.IsVisible = true;
+			TitleRightArrow.IsVisible = true;
+		}
 
 		public static readonly BindableProperty NumberOfWeekTextColorProperty =
 		  BindableProperty.Create(nameof(NumberOfWeekTextColor), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
@@ -744,6 +929,26 @@ namespace XamForms.Controls
             if (Math.Abs(newValue - oldValue) < 0.01) return;
             buttons.FindAll(b => b.IsSelected).ForEach(b => b.FontSize = newValue);
         }
+
+		public static readonly BindableProperty SelectedFontAttributesProperty =
+			BindableProperty.Create(nameof(SelectedFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeSelectedFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
+
+		protected void ChangeSelectedFontAttributes(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsSelected).ForEach(b => b.FontAttributes = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the dates font attributes for selected dates.
+		/// </summary>
+		/// <value>The dates font attributes.</value>
+		public FontAttributes SelectedFontAttributes
+		{
+			get { return (FontAttributes)GetValue(SelectedFontAttributesProperty); }
+			set { SetValue(SelectedFontAttributesProperty, value); }
+		}
 
         /// <summary>
         /// Gets or sets the font size of the selected date.
@@ -1013,6 +1218,7 @@ namespace XamForms.Controls
                 button.BorderColor = BorderColor;
                 button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
                 button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
+				button.FontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
             });
         }
 
@@ -1022,6 +1228,7 @@ namespace XamForms.Controls
             {
 				var defaultBackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
 				var defaultTextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
+				var defaultFontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
 				button.IsEnabled = true;
                 button.IsSelected = true;
                 button.FontSize = SelectedFontSize;
@@ -1029,6 +1236,7 @@ namespace XamForms.Controls
                 button.BorderColor = SelectedBorderColor;
 				button.BackgroundColor = SelectedBackgroundColor.HasValue ? SelectedBackgroundColor.Value : (special != null && special.BackgroundColor.HasValue ? special.BackgroundColor.Value : defaultBackgroundColor);
 				button.TextColor = SelectedTextColor.HasValue ? SelectedTextColor.Value : (special != null && special.TextColor.HasValue ? special.TextColor.Value : defaultTextColor);
+				button.FontAttributes = SelectedFontAttributes != FontAttributes.None ? SelectedFontAttributes : (special != null && special.FontAttributes.HasValue ? special.FontAttributes.Value : defaultFontAttributes);
             });
         }
 
@@ -1055,6 +1263,7 @@ namespace XamForms.Controls
 			    if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;
 			    if (special.BackgroundColor.HasValue) button.BackgroundColor = special.BackgroundColor.Value;
 			    if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
+				if (special.FontAttributes.HasValue) button.FontAttributes = special.FontAttributes.Value;
 			    button.IsEnabled = special.Selectable;
             });
         }
