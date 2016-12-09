@@ -17,7 +17,7 @@ namespace CalendarDemo
 				MultiSelectDates = true,
 				DisableAllDates = false,
 				ShowNumberOfWeek = true,
-				EnableTitleMonthYearDetails = true,
+				EnableTitleMonthYearView = true,
 				WeekdaysTextColor = Color.Teal,
 				StartDay = DayOfWeek.Monday,
 				SelectedTextColor = Color.Fuchsia,
