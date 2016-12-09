@@ -18,7 +18,7 @@ namespace XamForms.Controls.Droid
             Control.TextChanged += (sender, a) =>
             {
                 var element = Element as CalendarButton;
-                if (Control.Text == element.TextWithoutMeasure) return;
+				if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
                 Control.Text = element.TextWithoutMeasure;
             };
         }
