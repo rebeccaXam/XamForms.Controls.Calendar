@@ -107,7 +107,7 @@ namespace XamForms.Controls
 		protected void ChangeWeekdaysFontAttributes(FontAttributes newValue, FontAttributes oldValue)
 		{
 			if (newValue == oldValue) return;
-			weekNumberLabels.ForEach(l => l.FontAttributes = newValue);
+			dayLabels.ForEach(l => l.FontAttributes = newValue);
 		}
 
 		/// <summary>

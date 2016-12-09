@@ -103,7 +103,14 @@ namespace XamForms.Controls
 
 		protected void RightArrowClickedEvent(object s, EventArgs a)
 		{
-			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
+			if (CalendarViewType == DateTypeEnum.Year)
+			{
+				NextPrevYears(true);
+			}
+			else 
+			{
+				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
+			}
 			RightArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			RightArrowCommand?.Execute(StartDate);
 		}
@@ -123,7 +130,14 @@ namespace XamForms.Controls
 
 		protected void LeftArrowClickedEvent(object s, EventArgs a)
 		{
-			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
+			if (CalendarViewType == DateTypeEnum.Year)
+			{
+				NextPrevYears(false);
+			}
+			else
+			{
+				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
+			}
 			LeftArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			LeftArrowCommand?.Execute(StartDate);
 		}

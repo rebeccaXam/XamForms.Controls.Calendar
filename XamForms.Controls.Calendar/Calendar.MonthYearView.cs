@@ -127,5 +127,16 @@ namespace XamForms.Controls
 			TitleLeftArrow.IsVisible = true;
 			TitleRightArrow.IsVisible = true;
 		}
+
+		protected void NextPrevYears(bool next)
+		{
+			var n = (YearsRow * YearsColumn) * (next ? 1 : -1);
+			foreach (var c in details.Children)
+			{
+				var b = c as CalendarButton;
+				b.TextWithoutMeasure = string.Format("{0}",int.Parse(b.TextWithoutMeasure) + n);
+				b.Date = new DateTime(b.Date.Value.Year + n,b.Date.Value.Month, b.Date.Value.Day).Date;
+			}
+		}
 	}
 }
