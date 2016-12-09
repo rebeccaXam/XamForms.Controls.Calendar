@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.6</version>
+       <version>1.0.7</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -21,6 +21,8 @@
          <dependency id="Xamarin.Forms" version="2.0.1.6521" />
        </dependencies>
        <releaseNotes>
+	   	   [1.0.7]
+		   - Fix for Android StackOverflow problem when ShowNumberOfWeek is enabled
 	   	   [1.0.6]
 		   - Add 'DisableAllDates', make it possible to disable all dates by default (you can enable again with SpecialDates)
 		   - Add Month and Year view for Calendar 
