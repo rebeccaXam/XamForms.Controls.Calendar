@@ -11,7 +11,7 @@ namespace XamForms.Controls
 	{
 		List<CalendarButton> buttons;
 		public Grid MainCalendar;
-		StackLayout calendar;
+		Layout calendar;
 
 		public Calendar()
 		{
@@ -31,23 +31,14 @@ namespace XamForms.Controls
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
 			DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
 			DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-			MainCalendar = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			MainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
 			MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
 			MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 			WeekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 			WeekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 			CalendarViewType = DateTypeEnum.Normal;
-			/*var panGesture = new PanGestureRecognizer();panGesture.PanUpdated += (s, e) =>
-			{
-				var t = e;
-			};
-			MainCalendar.GestureRecognizers.Add(panGesture);*/
 			SelectedDates = new List<DateTime>();
-			DayLabels.PropertyChanged += (sender, e) =>
-			{
-				if (DayLabels.Height > 0) WeekNumbers.Padding = new Thickness(0, DayLabels.Height, 0, 0);
-			};
 			YearsRow = 4;
 			YearsColumn = 4;
 		}
@@ -332,8 +323,7 @@ namespace XamForms.Controls
 				// windows can not
 				await FillCalendar();
 			}
-			calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
-			ShowHideWeekNumbers();
+			ShowHideElements();
 			base.OnParentSet();
 		}
 
@@ -357,6 +347,7 @@ namespace XamForms.Controls
 						{
 							HorizontalOptions = LayoutOptions.Center,
 							VerticalOptions = LayoutOptions.Center,
+							BackgroundColor = WeekdaysBackgroundColor,
 							TextColor = WeekdaysTextColor,
 							FontSize = WeekdaysFontSize,
 							FontAttributes = WeekdaysFontAttributes
@@ -370,6 +361,8 @@ namespace XamForms.Controls
 						BorderColor = BorderColor,
 						FontSize = DatesFontSize,
 						BackgroundColor = DatesBackgroundColor,
+						TextColor = DatesTextColor,
+						FontAttributes = DatesFontAttributes,
 						HorizontalOptions = LayoutOptions.FillAndExpand,
 						VerticalOptions = LayoutOptions.FillAndExpand
 					});

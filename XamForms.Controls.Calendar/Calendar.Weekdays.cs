@@ -125,7 +125,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty WeekdaysShowProperty =
 			BindableProperty.Create(nameof(WeekdaysShow), typeof(bool), typeof(Calendar), true,
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).DayLabels.IsVisible = (bool)newValue);
+				propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ShowHideElements());
 
 		/// <summary>
 		/// Gets or sets wether to show the weekday labels.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace XamForms.Controls
@@ -69,11 +70,18 @@ namespace XamForms.Controls
 						WidthRequest = calendar.Width / 3 - BorderWidth,
 						HeightRequest = calendar.Height / 4 - BorderWidth
 					};
-					b.Clicked += (sender, e) =>
-					{
-						StartDate = (sender as CalendarButton).Date.Value;
-						PrevMonthYearView();
-					};
+
+						b.Clicked += (sender, e) =>
+						{
+							MonthYearButtonCommand?.Execute((sender as CalendarButton).Date.Value);
+							MonthYearButtonClicked?.Invoke(sender, new DateTimeEventArgs { DateTime = (sender as CalendarButton).Date.Value });
+							if (EnableTitleMonthYearView)
+							{
+								StartDate = (sender as CalendarButton).Date.Value;
+								PrevMonthYearView();
+							}
+						};
+
 					details.Children.Add(b, c, r);
 				}
 			}
@@ -114,8 +122,13 @@ namespace XamForms.Controls
 					};
 					b.Clicked += (sender, e) =>
 					{
-						StartDate = (sender as CalendarButton).Date.Value;
-						PrevMonthYearView();
+						MonthYearButtonCommand?.Execute((sender as CalendarButton).Date.Value);
+						MonthYearButtonClicked?.Invoke(sender, new DateTimeEventArgs { DateTime = (sender as CalendarButton).Date.Value});
+						if (EnableTitleMonthYearView)
+						{
+							StartDate = (sender as CalendarButton).Date.Value;
+							PrevMonthYearView();
+						}
 					};
 					details.Children.Add(b, c, r);
 				}
@@ -138,5 +151,24 @@ namespace XamForms.Controls
 				b.Date = new DateTime(b.Date.Value.Year + n,b.Date.Value.Month, b.Date.Value.Day).Date;
 			}
 		}
+
+		public event EventHandler<DateTimeEventArgs> MonthYearButtonClicked;
+
+		#region MonthYearButtonCommand
+
+		public static readonly BindableProperty MonthYearButtonCommandProperty =
+			BindableProperty.Create(nameof(MonthYearButtonCommand), typeof(ICommand), typeof(Calendar), null);
+
+		/// <summary>
+		/// Gets or sets the selected date command.
+		/// </summary>
+		/// <value>The date command.</value>
+		public ICommand MonthYearButtonCommand
+		{
+			get { return (ICommand)GetValue(MonthYearButtonCommandProperty); }
+			set { SetValue(MonthYearButtonCommandProperty, value); }
+		}
+
+		#endregion
 	}
 }

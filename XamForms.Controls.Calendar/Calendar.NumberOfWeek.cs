@@ -106,7 +106,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty ShowNumberOfWeekProperty =
 			BindableProperty.Create(nameof(ShowNumberOfWeek), typeof(bool), typeof(Calendar), false,
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ShowHideWeekNumbers());
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ShowHideElements());
 
 		/// <summary>
 		/// Gets or sets wether to show the number of the week labels.
@@ -133,17 +133,39 @@ namespace XamForms.Controls
 			}
 		}
 
-		protected void ShowHideWeekNumbers()
+		protected void ShowHideElements()
 		{
-			if (calendar == null) return;
-			MainView.Children.Remove(calendar);
+			if (calendar != null) MainView.Children.Remove(calendar);
+			var main = MainCalendar as Layout;
+
 			if (ShowNumberOfWeek)
 			{
-				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Horizontal, Children = { WeekNumbers, calendar } };
+				main = new StackLayout
+				{
+					Padding = 0,
+					Spacing = 0,
+					VerticalOptions = LayoutOptions.FillAndExpand,
+					HorizontalOptions = LayoutOptions.FillAndExpand,
+					Orientation = StackOrientation.Horizontal,
+					Children = { WeekNumbers, MainCalendar }
+				};
+				DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
 			}
-			else
+			if (WeekdaysShow)
 			{
-				calendar = new StackLayout { Padding = 0, Spacing = 0, Orientation = StackOrientation.Vertical, Children = { DayLabels, MainCalendar } };
+				calendar = new StackLayout
+				{
+					Padding = 0,
+					Spacing = 0,
+					VerticalOptions = LayoutOptions.FillAndExpand,
+					HorizontalOptions = LayoutOptions.FillAndExpand,
+					Orientation = StackOrientation.Vertical,
+					Children = { DayLabels, main }
+				};
+			}
+			else 
+			{
+				calendar = main as Layout;
 			}
 			MainView.Children.Add(calendar);
 		}
