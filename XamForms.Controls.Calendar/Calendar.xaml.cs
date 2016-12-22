@@ -325,6 +325,7 @@ namespace XamForms.Controls
 			}
 			ShowHideElements();
 			base.OnParentSet();
+			ChangeSelectedDate(SelectedDate, false);
 		}
 
 		protected Task FillCalendar()

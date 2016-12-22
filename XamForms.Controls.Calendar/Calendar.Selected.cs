@@ -219,7 +219,7 @@ namespace XamForms.Controls
 			});
 		}
 
-		protected bool ChangeSelectedDate(DateTime? date)
+		protected bool ChangeSelectedDate(DateTime? date, bool clicked = true)
 		{
 			if (!date.HasValue) return false;
 
@@ -242,8 +242,11 @@ namespace XamForms.Controls
 				var spD = SpecialDates?.FirstOrDefault(s => s.Date.Date == button.Date.Value.Date);
 				SetButtonSelected(button, spD);
 			}
-			DateClicked?.Invoke(this, new DateTimeEventArgs { DateTime = SelectedDate.Value });
-			DateCommand?.Execute(SelectedDate.Value);
+			if (clicked)
+			{
+				DateClicked?.Invoke(this, new DateTimeEventArgs { DateTime = SelectedDate.Value });
+				DateCommand?.Execute(SelectedDate.Value);
+			}
 			return deselect;
 		}
 
