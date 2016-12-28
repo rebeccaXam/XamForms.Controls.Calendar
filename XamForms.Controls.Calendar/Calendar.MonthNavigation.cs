@@ -19,19 +19,18 @@ namespace XamForms.Controls
 		/// </summary>
 		public CalendarButton TitleLeftArrow { get; protected set; }
 		
+		public static readonly BindableProperty TitleLeftArrowColorProperty =
+			BindableProperty.Create(nameof(TitleLeftArrowColor), typeof(Color), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLeftArrow.TextColor = (Color)newValue);
+
 		/// <summary>
 		/// Gets or sets the color of the left arrow.
 		/// </summary>
-		public Color TitleLeftArrowColor
+		/// <value>The month navigation show.</value>
+		public bool TitleLeftArrowColor
 		{
-		    get
-		    {
-			return TitleLeftArrow.TextColor;
-		    }
-		    set
-		    {
-			TitleLeftArrow.TextColor = value;
-		    }
+			get { return (Color)GetValue(TitleLeftArrowColorProperty); }
+			set { SetValue(TitleLeftArrowColorProperty, value); }
 		}
 		
 		#endregion
@@ -43,19 +42,18 @@ namespace XamForms.Controls
 		/// </summary>
 		public CalendarButton TitleRightArrow { get; protected set; }
 		
+		public static readonly BindableProperty TitleRightArrowColorProperty =
+			BindableProperty.Create(nameof(TitleRightArrowColor), typeof(Color), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleRightArrow.TextColor = (Color)newValue);
+
 		/// <summary>
 		/// Gets or sets the color of the right arrow.
 		/// </summary>
-		public Color TitleRightArrowColor
+		/// <value>The month navigation show.</value>
+		public bool TitleRightArrowColor
 		{
-		    get
-		    {
-			return TitleRightArrow.TextColor;
-		    }
-		    set
-		    {
-			TitleRightArrow.TextColor = value;
-		    }
+			get { return (Color)GetValue(TitleRightArrowColorProperty); }
+			set { SetValue(TitleRightArrowColorProperty, value); }
 		}
 		
 		#endregion
