@@ -11,16 +11,54 @@ namespace XamForms.Controls
 		/// Gets the title label in the month navigation.
 		/// </summary>
 		public Label TitleLabel { get; protected set; }
+		
+		#region TitleLeftArrow
 
 		/// <summary>
 		/// Gets the left button of the month navigation.
 		/// </summary>
 		public CalendarButton TitleLeftArrow { get; protected set; }
+		
+		/// <summary>
+		/// Gets or sets the color of the left arrow.
+		/// </summary>
+		public Color TitleLeftArrowColor
+		{
+		    get
+		    {
+			return TitleLeftArrow.TextColor;
+		    }
+		    set
+		    {
+			TitleLeftArrow.TextColor = value;
+		    }
+		}
+		
+		#endregion
+		
+		#region TitleRightArrow
 
 		/// <summary>
 		/// Gets the right button of the month navigation.
 		/// </summary>
 		public CalendarButton TitleRightArrow { get; protected set; }
+		
+		/// <summary>
+		/// Gets or sets the color of the right arrow.
+		/// </summary>
+		public Color TitleRightArrowColor
+		{
+		    get
+		    {
+			return TitleRightArrow.TextColor;
+		    }
+		    set
+		    {
+			TitleRightArrow.TextColor = value;
+		    }
+		}
+		
+		#endregion
 
 		/// <summary>
 		/// Gets the right button of the month navigation.
@@ -109,10 +147,15 @@ namespace XamForms.Controls
 			}
 			else 
 			{
-				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
+				NextMonth();
 			}
 			RightArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			RightArrowCommand?.Execute(StartDate);
+		}
+		
+		public void NextMonth() 
+		{
+			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
 		}
 
 		#endregion
@@ -136,10 +179,15 @@ namespace XamForms.Controls
 			}
 			else
 			{
-				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
+				PreviousMonth();
 			}
 			LeftArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			LeftArrowCommand?.Execute(StartDate);
+		}
+		
+		public void PreviousMonth()
+		{
+		    StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
 		}
 		#endregion
 	}
