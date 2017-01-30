@@ -11,16 +11,52 @@ namespace XamForms.Controls
 		/// Gets the title label in the month navigation.
 		/// </summary>
 		public Label TitleLabel { get; protected set; }
+		
+		#region TitleLeftArrow
 
 		/// <summary>
 		/// Gets the left button of the month navigation.
 		/// </summary>
 		public CalendarButton TitleLeftArrow { get; protected set; }
+		
+		public static readonly BindableProperty TitleLeftArrowColorProperty =
+			BindableProperty.Create(nameof(TitleLeftArrowColor), typeof(Color), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLeftArrow.TextColor = (Color)newValue);
+
+		/// <summary>
+		/// Gets or sets the color of the left arrow.
+		/// </summary>
+		/// <value>The month navigation show.</value>
+		public bool TitleLeftArrowColor
+		{
+			get { return (Color)GetValue(TitleLeftArrowColorProperty); }
+			set { SetValue(TitleLeftArrowColorProperty, value); }
+		}
+		
+		#endregion
+		
+		#region TitleRightArrow
 
 		/// <summary>
 		/// Gets the right button of the month navigation.
 		/// </summary>
 		public CalendarButton TitleRightArrow { get; protected set; }
+		
+		public static readonly BindableProperty TitleRightArrowColorProperty =
+			BindableProperty.Create(nameof(TitleRightArrowColor), typeof(Color), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleRightArrow.TextColor = (Color)newValue);
+
+		/// <summary>
+		/// Gets or sets the color of the right arrow.
+		/// </summary>
+		/// <value>The month navigation show.</value>
+		public bool TitleRightArrowColor
+		{
+			get { return (Color)GetValue(TitleRightArrowColorProperty); }
+			set { SetValue(TitleRightArrowColorProperty, value); }
+		}
+		
+		#endregion
 
 		/// <summary>
 		/// Gets the right button of the month navigation.
@@ -109,10 +145,15 @@ namespace XamForms.Controls
 			}
 			else 
 			{
-				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
+				NextMonth();
 			}
 			RightArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			RightArrowCommand?.Execute(StartDate);
+		}
+		
+		public void NextMonth() 
+		{
+			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
 		}
 
 		#endregion
@@ -136,10 +177,15 @@ namespace XamForms.Controls
 			}
 			else
 			{
-				StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
+				PreviousMonth();
 			}
 			LeftArrowClicked?.Invoke(s, new DateTimeEventArgs { DateTime = StartDate });
 			LeftArrowCommand?.Execute(StartDate);
+		}
+		
+		public void PreviousMonth()
+		{
+		    StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
 		}
 		#endregion
 	}
