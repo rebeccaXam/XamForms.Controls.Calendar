@@ -9,7 +9,7 @@ namespace XamForms.Controls
 		#region SpecialDates
 
 		public static readonly BindableProperty SpecialDatesProperty =
-			BindableProperty.Create(nameof(SpecialDates), typeof(List<SpecialDate>), typeof(Calendar), null,
+			BindableProperty.Create(nameof(SpecialDates), typeof(List<SpecialDate>), typeof(Calendar), new List<SpecialDate>(),
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.MaxMin));
 
 		public List<SpecialDate> SpecialDates

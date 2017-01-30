@@ -44,7 +44,7 @@ namespace XamForms.Controls
 			set { SetValue(MultiSelectDatesProperty, value); }
 		}
 
-		public static readonly BindableProperty SelectedDatesProperty = BindableProperty.Create(nameof(SelectedDates), typeof(List<DateTime>), typeof(Calendar), null);
+		public static readonly BindableProperty SelectedDatesProperty = BindableProperty.Create(nameof(SelectedDates), typeof(List<DateTime>), typeof(Calendar), new List<DateTime>());
 		/// <summary>
 		/// Gets the selected dates when MultiSelectDates is true
 		/// </summary>

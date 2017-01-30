@@ -387,6 +387,11 @@ namespace XamForms.Controls
 			ChangeCalendar(CalandarChanges.All);
 		}
 
+		public void ForceRedraw()
+		{
+			ChangeCalendar(CalandarChanges.All);
+		}
+
         protected void ChangeCalendar(CalandarChanges changes)
         {
 			Device.BeginInvokeOnMainThread(() =>
