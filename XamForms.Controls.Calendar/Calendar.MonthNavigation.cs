@@ -27,7 +27,7 @@ namespace XamForms.Controls
 		/// Gets or sets the color of the left arrow.
 		/// </summary>
 		/// <value>The month navigation show.</value>
-		public bool TitleLeftArrowColor
+		public Color TitleLeftArrowColor
 		{
 			get { return (Color)GetValue(TitleLeftArrowColorProperty); }
 			set { SetValue(TitleLeftArrowColorProperty, value); }
@@ -50,7 +50,7 @@ namespace XamForms.Controls
 		/// Gets or sets the color of the right arrow.
 		/// </summary>
 		/// <value>The month navigation show.</value>
-		public bool TitleRightArrowColor
+		public Color TitleRightArrowColor
 		{
 			get { return (Color)GetValue(TitleRightArrowColorProperty); }
 			set { SetValue(TitleRightArrowColorProperty, value); }
