@@ -33,8 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Calendar.xaml.cs">
-      <DependentUpon>Calendar.xaml</DependentUpon>
+    <Compile Include="Calendar.cs">
     </Compile>
     <Compile Include="CalendarButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,10 +51,6 @@
     <Compile Include="EnumerableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Calendar.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Compile Include="Calendar.Selected.cs" />
   </ItemGroup>
   <ItemGroup>

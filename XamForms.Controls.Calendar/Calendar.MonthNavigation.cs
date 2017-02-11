@@ -339,7 +339,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty MonthNavigationShowProperty =
 			BindableProperty.Create(nameof(MonthNavigationShow), typeof(bool), typeof(Calendar), true,
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MonthNavigation.IsVisible = (bool)newValue);
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MonthNavigationLayout.IsVisible = (bool)newValue);
 
 		/// <summary>
 		/// Gets or sets wether to show the month navigation.
@@ -357,7 +357,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty TitleLabelFormatProperty =
 			BindableProperty.Create(nameof(TitleLabelFormat), typeof(string), typeof(Calendar), "MMM yyyy",
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).CenterLabel.Text = ((bindable as Calendar).StartDate).ToString((string)newValue));
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.Text = ((bindable as Calendar).StartDate).ToString((string)newValue));
 
 		/// <summary>
 		/// Gets or sets the format of the title in the month navigation.

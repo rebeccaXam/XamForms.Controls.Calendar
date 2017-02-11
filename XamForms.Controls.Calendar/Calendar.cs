@@ -10,19 +10,58 @@ namespace XamForms.Controls
 	public partial class Calendar : ContentView
 	{
 		List<CalendarButton> buttons;
-		public List<Grid> MainCalendars;
-		Layout calendar;
+		List<Grid> MainCalendars;
+		StackLayout MainView, ContentView;
 
 		public Calendar()
 		{
-			InitializeComponent();
-			MonthNavigation.HeightRequest = Device.OS == TargetPlatform.Windows ? 50 : 32;
-			TitleLabel = CenterLabel;
-			TitleLeftArrow = LeftArrow;
-			TitleRightArrow = RightArrow;
-			MonthNavigationLayout = MonthNavigation;
-			LeftArrow.Clicked += LeftArrowClickedEvent;
-			RightArrow.Clicked += RightArrowClickedEvent;
+			TitleLeftArrow = new CalendarButton
+			{
+				FontAttributes = FontAttributes.Bold,
+				BackgroundColor = Color.Transparent,
+				FontSize = 24,
+				Text = "❰",
+				TextColor = Color.FromHex("#c82727")
+			};
+			TitleLabel = new Label { 
+				FontSize = 24,
+				VerticalTextAlignment = TextAlignment.Center,
+				HorizontalTextAlignment = TextAlignment.Center,
+				FontAttributes = FontAttributes.Bold,
+				TextColor = Color.Black,
+				HorizontalOptions = LayoutOptions.FillAndExpand,
+				Text = "OCTOBER 2013"
+			};
+			TitleRightArrow = new CalendarButton
+			{
+				FontAttributes = FontAttributes.Bold,
+				BackgroundColor = Color.Transparent,
+				FontSize = 24,
+				Text = "❱",
+				TextColor = Color.FromHex("#c82727")
+			};
+			MonthNavigationLayout = new StackLayout
+			{
+				Padding = 0,
+				VerticalOptions = LayoutOptions.Start,
+				Orientation = StackOrientation.Horizontal,
+				HeightRequest = Device.OS == TargetPlatform.Windows ? 50 : 32,
+				Children = { TitleLeftArrow, TitleLabel, TitleRightArrow}
+			};
+			ContentView = new StackLayout
+			{
+				Padding = 0,
+				Orientation = StackOrientation.Vertical
+			};
+			MainView = new StackLayout {
+				Padding = 0,
+				Orientation = StackOrientation.Vertical,
+				Children = { MonthNavigationLayout, ContentView }
+			};
+
+
+			TitleLeftArrow.Clicked += LeftArrowClickedEvent;
+			TitleRightArrow.Clicked += RightArrowClickedEvent;
 			dayLabels = new List<Label>(7);
 			weekNumberLabels = new List<Label>(6);
 			buttons = new List<CalendarButton>(42);
@@ -466,7 +505,7 @@ namespace XamForms.Controls
 			{
 				if (changes.HasFlag(CalandarChanges.StartDate))
 				{
-					CenterLabel.Text = StartDate.ToString(TitleLabelFormat);
+					TitleLabel.Text = StartDate.ToString(TitleLabelFormat);
 					ChangeWeekNumbers();
 				}
 

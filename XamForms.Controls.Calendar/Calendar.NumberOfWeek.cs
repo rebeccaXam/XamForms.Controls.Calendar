@@ -137,9 +137,7 @@ namespace XamForms.Controls
 		{
 			if (MainCalendars.Count < 1) return;
 			Content = null;
-			var header = MainView.Children[0];
-			MainView.Children.Clear();
-			MainView.Children.Add(header);
+			ContentView.Children.Clear();
 			for (var i = 0; i < ShowNumOfMonths; i++)
 			{
 				var main = MainCalendars[i] as Layout;
@@ -157,9 +155,10 @@ namespace XamForms.Controls
 					};
 					DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
 				}
+
 				if (WeekdaysShow)
 				{
-					calendar = new StackLayout
+					var stack = new StackLayout
 					{
 						Padding = 0,
 						Spacing = 0,
@@ -168,12 +167,16 @@ namespace XamForms.Controls
 						Orientation = StackOrientation.Vertical,
 						Children = { DayLabels, main }
 					};
+					/*if (i > 0)
+					{
+						stack.Children.Insert(0, new Label { Text = "Test", HorizontalOptions = LayoutOptions.CenterAndExpand, VerticalOptions = LayoutOptions.CenterAndExpand });
+					}*/
+					ContentView.Children.Add(stack);
 				}
 				else
 				{
-					calendar = main as Layout;
+					ContentView.Children.Add(main);
 				}
-				MainView.Children.Add(calendar);
 			}
 			Content = MainView;
 		}

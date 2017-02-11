@@ -7,8 +7,6 @@ namespace XamForms.Controls
 {
 	public partial class Calendar : ContentView
 	{
-		protected Grid details;
-
 		public int YearsRow { get; set; }
 		public int YearsColumn { get; set; }
 
@@ -38,19 +36,18 @@ namespace XamForms.Controls
 
 		public void ShowNormal()
 		{
-			if (details != null) MainView.Children.Remove(details);
-			if (!MainView.Children.Contains(calendar)) MainView.Children.Add(calendar);
+			ContentView.Children.Clear();
 			CalendarViewType = DateTypeEnum.Normal;
 			TitleLeftArrow.IsVisible = true;
 			TitleRightArrow.IsVisible = true;
 		}
+
 		public void ShowMonths()
 		{
-			if (MainView.Children.Contains(calendar)) MainView.Children.Remove(calendar);
-			if (details != null && MainView.Children.Contains(details)) MainView.Children.Remove(details);
+			ContentView.Children.Clear();
 			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-			details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			var details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
 			details.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef };
 			details.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef };
 			for (int r = 0; r < 4; r++)
@@ -67,8 +64,8 @@ namespace XamForms.Controls
 						TextColor = DatesTextColor,
 						FontSize = DatesFontSize,
 						FontAttributes = DatesFontAttributes,
-						WidthRequest = calendar.Width / 3 - BorderWidth,
-						HeightRequest = calendar.Height / 4 - BorderWidth
+						WidthRequest = ContentView.Width / 3 - BorderWidth,
+						HeightRequest = ContentView.Height / 4 - BorderWidth
 					};
 
 						b.Clicked += (sender, e) =>
@@ -85,9 +82,9 @@ namespace XamForms.Controls
 					details.Children.Add(b, c, r);
 				}
 			}
-			details.WidthRequest = calendar.Width;
-			details.HeightRequest = calendar.Height;
-			MainView.Children.Add(details);
+			details.WidthRequest = ContentView.Width;
+			details.HeightRequest = ContentView.Height;
+			ContentView.Children.Add(details);
 			CalendarViewType = DateTypeEnum.Month;
 			TitleLeftArrow.IsVisible = false;
 			TitleRightArrow.IsVisible = false;
@@ -95,11 +92,10 @@ namespace XamForms.Controls
 
 		public void ShowYears()
 		{
-			if (MainView.Children.Contains(calendar)) MainView.Children.Remove(calendar);
-			if (details != null && MainView.Children.Contains(details)) MainView.Children.Remove(details);
+			ContentView.Children.Clear();
 			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-			details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+			var details = new Grid { VerticalOptions = LayoutOptions.CenterAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
 			details.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef };
 			details.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef };
 			for (int r = 0; r < YearsRow; r++)
@@ -117,8 +113,8 @@ namespace XamForms.Controls
 						TextColor = DatesTextColor,
 						FontSize = DatesFontSize,
 						FontAttributes = DatesFontAttributes,
-						WidthRequest = (calendar.Width / YearsRow) - BorderWidth,
-						HeightRequest = calendar.Height / YearsColumn - BorderWidth
+						WidthRequest = (ContentView.Width / YearsRow) - BorderWidth,
+						HeightRequest = ContentView.Height / YearsColumn - BorderWidth
 					};
 					b.Clicked += (sender, e) =>
 					{
@@ -133,9 +129,9 @@ namespace XamForms.Controls
 					details.Children.Add(b, c, r);
 				}
 			}
-			details.WidthRequest = calendar.Width;
-			details.HeightRequest = calendar.Height;
-			MainView.Children.Add(details);
+			details.WidthRequest = ContentView.Width;
+			details.HeightRequest = ContentView.Height;
+			ContentView.Children.Add(details);
 			CalendarViewType = DateTypeEnum.Year;
 			TitleLeftArrow.IsVisible = true;
 			TitleRightArrow.IsVisible = true;
@@ -144,7 +140,7 @@ namespace XamForms.Controls
 		protected void NextPrevYears(bool next)
 		{
 			var n = (YearsRow * YearsColumn) * (next ? 1 : -1);
-			foreach (var c in details.Children)
+			foreach (var c in ContentView.Children)
 			{
 				var b = c as CalendarButton;
 				b.TextWithoutMeasure = string.Format("{0}",int.Parse(b.TextWithoutMeasure) + n);
