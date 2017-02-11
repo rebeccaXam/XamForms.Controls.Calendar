@@ -5,7 +5,7 @@ namespace XamForms.Controls
 {
     public class CalendarButton : Button
     {
-        public static readonly BindableProperty DateProperty =
+		public static readonly BindableProperty DateProperty =
             BindableProperty.Create(nameof(Date), typeof(DateTime?), typeof(CalendarButton), null);
 
         public DateTime? Date
@@ -44,6 +44,8 @@ namespace XamForms.Controls
             }
             set { SetValue(TextWithoutMeasureProperty, value); }
         }
+
+		public BackgroundPattern BackgroundPattern { get; set; }
     }
 }
 

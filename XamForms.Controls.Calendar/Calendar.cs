@@ -599,6 +599,7 @@ namespace XamForms.Controls
             {
                 button.IsEnabled = true;
                 button.IsSelected = false;
+				button.BackgroundPattern = null;
                 button.FontSize = DatesFontSize;
                 button.BorderWidth = BorderWidth;
                 button.BorderColor = BorderColor;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace XamForms.Controls
@@ -18,6 +19,45 @@ namespace XamForms.Controls
 		public int? BorderWidth { get; set; }
 		public double? FontSize { get; set; }
 		public bool Selectable { get; set; }
+		public BackgroundPattern BackgroundPattern{ get; set; }
+	}
+
+	public class BackgroundPattern
+	{
+		protected int columns;
+		public BackgroundPattern(int columns)
+		{
+			this.columns = columns;
+		}
+
+		public List<Pattern> Pattern;
+
+		public float GetTop(int t)
+		{
+			float r = 0;
+			for (int i = t-columns; i > -1; i-=columns)
+			{
+				r += Pattern[i].HightPercent;
+			}
+			return r;
+		}
+
+		public float GetLeft(int l)
+		{
+			float r = 0;
+			for (int i = l-1; i > -1 && (i+1) % columns != 0; i--)
+			{
+				r += Pattern[i].WidthPercent;
+			}
+			return r;
+		}
+	}
+
+	public struct Pattern
+	{
+		public float WidthPercent;
+		public float HightPercent;
+		public Color Color;
 	}
 }
 
