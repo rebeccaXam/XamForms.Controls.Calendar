@@ -7,7 +7,7 @@ namespace XamForms.Controls
 {
 	public partial class Calendar : ContentView
 	{
-		public Grid WeekNumbers;
+		List<Grid> WeekNumbers;
 		List<Label> weekNumberLabels;
 
 		#region NumberOfWeekTextColor
@@ -63,7 +63,7 @@ namespace XamForms.Controls
 		protected void ChangeNumberOfWeekFontSize(double newValue, double oldValue)
 		{
 			if (Math.Abs(newValue - oldValue) < 0.01) return;
-			WeekNumbers.WidthRequest = newValue + (newValue / 2) + 6;
+			WeekNumbers?.ForEach((obj) => obj.WidthRequest = newValue + (newValue / 2) + 6);
 			weekNumberLabels.ForEach(l => l.FontSize = newValue);
 		}
 
@@ -125,49 +125,57 @@ namespace XamForms.Controls
 			if (!ShowNumberOfWeek) return;
 			CultureInfo ciCurr = CultureInfo.CurrentCulture;
 			var start = StartDate;
-			for (int i = 0; i < weekNumberLabels.Count; i++)
+			foreach (var weekNumLabel in weekNumberLabels)
 			{
 				var weekNum = ciCurr.Calendar.GetWeekOfYear(start, CalendarWeekRule.FirstFourDayWeek, StartDay);
-				weekNumberLabels[i].Text = string.Format("{0}", weekNum);
+				weekNumLabel.Text = string.Format("{0}", weekNum);
 				start = start.AddDays(7);
 			}
 		}
 
 		protected void ShowHideElements()
 		{
-			if (calendar != null) MainView.Children.Remove(calendar);
-			var main = MainCalendar as Layout;
+			if (MainCalendars.Count < 1) return;
+			Content = null;
+			var header = MainView.Children[0];
+			MainView.Children.Clear();
+			MainView.Children.Add(header);
+			for (var i = 0; i < ShowNumOfMonths; i++)
+			{
+				var main = MainCalendars[i] as Layout;
 
-			if (ShowNumberOfWeek)
-			{
-				main = new StackLayout
+				if (ShowNumberOfWeek)
 				{
-					Padding = 0,
-					Spacing = 0,
-					VerticalOptions = LayoutOptions.FillAndExpand,
-					HorizontalOptions = LayoutOptions.FillAndExpand,
-					Orientation = StackOrientation.Horizontal,
-					Children = { WeekNumbers, MainCalendar }
-				};
-				DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
-			}
-			if (WeekdaysShow)
-			{
-				calendar = new StackLayout
+					main = new StackLayout
+					{
+						Padding = 0,
+						Spacing = 0,
+						VerticalOptions = LayoutOptions.FillAndExpand,
+						HorizontalOptions = LayoutOptions.FillAndExpand,
+						Orientation = StackOrientation.Horizontal,
+						Children = { WeekNumbers[i], MainCalendars[i] }
+					};
+					DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
+				}
+				if (WeekdaysShow)
 				{
-					Padding = 0,
-					Spacing = 0,
-					VerticalOptions = LayoutOptions.FillAndExpand,
-					HorizontalOptions = LayoutOptions.FillAndExpand,
-					Orientation = StackOrientation.Vertical,
-					Children = { DayLabels, main }
-				};
+					calendar = new StackLayout
+					{
+						Padding = 0,
+						Spacing = 0,
+						VerticalOptions = LayoutOptions.FillAndExpand,
+						HorizontalOptions = LayoutOptions.FillAndExpand,
+						Orientation = StackOrientation.Vertical,
+						Children = { DayLabels, main }
+					};
+				}
+				else
+				{
+					calendar = main as Layout;
+				}
+				MainView.Children.Add(calendar);
 			}
-			else 
-			{
-				calendar = main as Layout;
-			}
-			MainView.Children.Add(calendar);
+			Content = MainView;
 		}
 	}
 }

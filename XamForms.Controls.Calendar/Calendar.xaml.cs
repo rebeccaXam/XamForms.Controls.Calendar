@@ -10,7 +10,7 @@ namespace XamForms.Controls
 	public partial class Calendar : ContentView
 	{
 		List<CalendarButton> buttons;
-		public Grid MainCalendar;
+		public List<Grid> MainCalendars;
 		Layout calendar;
 
 		public Calendar()
@@ -23,20 +23,12 @@ namespace XamForms.Controls
 			MonthNavigationLayout = MonthNavigation;
 			LeftArrow.Clicked += LeftArrowClickedEvent;
 			RightArrow.Clicked += RightArrowClickedEvent;
-			dayLabels = new List<Label>();
-			weekNumberLabels = new List<Label>();
-			buttons = new List<CalendarButton>();
+			dayLabels = new List<Label>(7);
+			weekNumberLabels = new List<Label>(6);
+			buttons = new List<CalendarButton>(42);
+			MainCalendars = new List<Grid>(1);
+			WeekNumbers = new List<Grid>(1);
 
-			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
-			DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
-			DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-			MainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
-			MainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-			MainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-			WeekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
-			WeekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
-			WeekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 			CalendarViewType = DateTypeEnum.Normal;
 			SelectedDates = new List<DateTime>();
 			YearsRow = 4;
@@ -143,7 +135,7 @@ namespace XamForms.Controls
 
 		public static readonly BindableProperty OuterBorderWidthProperty =
 			BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendar.Padding = (int)newValue);
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendars.ForEach((obj) => obj.Padding = (int)newValue));
 
 		/// <summary>
 		/// Gets or sets the width of the whole calandar border.
@@ -166,7 +158,7 @@ namespace XamForms.Controls
 		protected void ChangeBorderColor(Color newValue, Color oldValue)
 		{
 			if (newValue == oldValue) return;
-			MainCalendar.BackgroundColor = newValue;
+			MainCalendars.ForEach((obj) => obj.BackgroundColor = newValue);
 			buttons.FindAll(b => b.IsEnabled && !b.IsSelected).ForEach(b => b.BorderColor = newValue);
 		}
 
@@ -278,6 +270,24 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region ShowNumOfMonths
+
+		public static readonly BindableProperty ShowNumOfMonthsProperty =
+			BindableProperty.Create(nameof(ShowNumOfMonths), typeof(int), typeof(Calendar), 1,
+			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.All));
+
+		/// <summary>
+		/// Gets or sets a the number of months to show
+		/// </summary>
+		/// <value>The start date.</value>
+		public int ShowNumOfMonths
+		{
+			get { return (int)GetValue(ShowNumOfMonthsProperty); }
+			set { SetValue(ShowNumOfMonthsProperty, value); }
+		}
+
+		#endregion
+
 		#region DateCommand
 
         public static readonly BindableProperty DateCommandProperty =
@@ -338,53 +348,111 @@ namespace XamForms.Controls
 
 		protected void FillCalendarWindows()
 		{
-			for (int r = 0; r < 6; r++)
-			{
-				for (int c = 0; c < 7; c++)
-				{
-					if (r == 0)
-					{
-						dayLabels.Add(new Label
-						{
-							HorizontalOptions = LayoutOptions.Center,
-							VerticalOptions = LayoutOptions.Center,
-							BackgroundColor = WeekdaysBackgroundColor,
-							TextColor = WeekdaysTextColor,
-							FontSize = WeekdaysFontSize,
-							FontAttributes = WeekdaysFontAttributes
-						});
-						DayLabels.Children.Add(dayLabels.Last(), c, r);
-					}
-					buttons.Add(new CalendarButton
-					{
-						BorderRadius = 0,
-						BorderWidth = BorderWidth,
-						BorderColor = BorderColor,
-						FontSize = DatesFontSize,
-						BackgroundColor = DatesBackgroundColor,
-						TextColor = DatesTextColor,
-						FontAttributes = DatesFontAttributes,
-						HorizontalOptions = LayoutOptions.FillAndExpand,
-						VerticalOptions = LayoutOptions.FillAndExpand
-					});
-					buttons.Last().Clicked += DateClickedEvent;
-					MainCalendar.Children.Add(buttons.Last(), c, r);
-				}
-				weekNumberLabels.Add(new Label
-				{
-					HorizontalOptions = LayoutOptions.FillAndExpand,
-					VerticalOptions = LayoutOptions.FillAndExpand,
-					TextColor = NumberOfWeekTextColor,
-					BackgroundColor = NumberOfWeekBackgroundColor,
-					VerticalTextAlignment = TextAlignment.Center,
-					HorizontalTextAlignment = TextAlignment.Center,
-					FontSize = NumberOfWeekFontSize,
-					FontAttributes = NumberOfWeekFontAttributes
-				});
-				WeekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
-			}
-			WeekNumbers.WidthRequest = NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6;
+			CreateDayLabels();
+			CreateWeeknumbers();
+			CreateButtons();
 			ChangeCalendar(CalandarChanges.All);
+		}
+
+		protected void CreateWeeknumbers()
+		{
+			weekNumberLabels.Clear();
+			WeekNumbers.Clear();
+			if (!ShowNumberOfWeek) return;
+
+			for (var i = 0; i < ShowNumOfMonths; i++)
+			{
+				var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+				var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+				var weekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
+				weekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
+				weekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
+				weekNumbers.WidthRequest = NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6;
+
+
+				for (int r = 0; r < 6; r++)
+				{
+
+					weekNumberLabels.Add(new Label
+					{
+						HorizontalOptions = LayoutOptions.FillAndExpand,
+						VerticalOptions = LayoutOptions.FillAndExpand,
+						TextColor = NumberOfWeekTextColor,
+						BackgroundColor = NumberOfWeekBackgroundColor,
+						VerticalTextAlignment = TextAlignment.Center,
+						HorizontalTextAlignment = TextAlignment.Center,
+						FontSize = NumberOfWeekFontSize,
+						FontAttributes = NumberOfWeekFontAttributes
+					});
+					weekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
+				}
+				WeekNumbers.Add(weekNumbers);
+			}
+		}
+
+		protected void CreateDayLabels()
+		{
+			if (!WeekdaysShow)
+			{
+				DayLabels = null;
+				dayLabels.Clear();
+				return;
+			}
+			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+			DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
+			DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+
+			dayLabels.Clear();
+			DayLabels.Children.Clear();
+			for (int c = 0; c < 7; c++)
+			{
+				dayLabels.Add(new Label
+				{
+					HorizontalOptions = LayoutOptions.Center,
+					VerticalOptions = LayoutOptions.Center,
+					BackgroundColor = WeekdaysBackgroundColor,
+					TextColor = WeekdaysTextColor,
+					FontSize = WeekdaysFontSize,
+					FontAttributes = WeekdaysFontAttributes
+				});
+				DayLabels.Children.Add(dayLabels.Last(), c, 0);
+			}
+		}
+
+		protected void CreateButtons()
+		{
+			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
+			buttons.Clear();
+			MainCalendars.Clear();
+			for (var i = 0; i < ShowNumOfMonths; i++)
+			{
+				var mainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
+				mainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+				mainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
+
+				for (int r = 0; r < 6; r++)
+				{
+					for (int c = 0; c < 7; c++)
+					{
+						buttons.Add(new CalendarButton
+						{
+							BorderRadius = 0,
+							BorderWidth = BorderWidth,
+							BorderColor = BorderColor,
+							FontSize = DatesFontSize,
+							BackgroundColor = DatesBackgroundColor,
+							TextColor = DatesTextColor,
+							FontAttributes = DatesFontAttributes,
+							HorizontalOptions = LayoutOptions.FillAndExpand,
+							VerticalOptions = LayoutOptions.FillAndExpand
+						});
+						buttons.Last().Clicked += DateClickedEvent;
+						mainCalendar.Children.Add(buttons.Last(), c, r);
+					}
+				}
+				MainCalendars.Add(mainCalendar);
+			}
 		}
 
 		public void ForceRedraw()

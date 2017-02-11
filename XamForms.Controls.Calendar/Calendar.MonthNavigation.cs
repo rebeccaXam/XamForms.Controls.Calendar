@@ -196,6 +196,16 @@ namespace XamForms.Controls
 			get { return TitleLeftArrow.IsEnabled; }
 			set { TitleLeftArrow.IsEnabled = value; }
 		}
+
+		public static readonly BindableProperty TitleLeftArrowIsVisibleCoreProperty = BindableProperty.Create(nameof(TitleLeftArrowIsVisible), typeof(Boolean), typeof(Calendar), default(Boolean),
+					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLeftArrow.IsVisible = (Boolean)newValue);
+
+		public Boolean TitleLeftArrowIsVisible
+		{
+			get { return TitleLeftArrow.IsVisible; }
+			set { TitleLeftArrow.IsVisible = value; }
+		}
+
 		/// <summary>
 		/// Gets the left button of the month navigation.
 		/// </summary>
@@ -302,6 +312,15 @@ namespace XamForms.Controls
 		{
 			get { return TitleRightArrow.IsEnabled; }
 			set { TitleRightArrow.IsEnabled = value; }
+		}
+
+		public static readonly BindableProperty TitleRightArrowIsVisibleCoreProperty = BindableProperty.Create(nameof(TitleRightArrowIsVisible), typeof(Boolean), typeof(Calendar), default(Boolean),
+					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleRightArrow.IsVisible = (Boolean)newValue);
+
+		public Boolean TitleRightArrowIsVisible
+		{
+			get { return TitleRightArrow.IsVisible; }
+			set { TitleRightArrow.IsVisible = value; }
 		}
 		                                     
 		/// <summary>
