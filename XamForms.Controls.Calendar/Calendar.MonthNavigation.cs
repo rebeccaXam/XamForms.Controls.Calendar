@@ -425,7 +425,7 @@ namespace XamForms.Controls
 		
 		public void NextMonth() 
 		{
-			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1);
+			StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(ShowNumOfMonths);
 		}
 
 		#endregion
@@ -457,7 +457,7 @@ namespace XamForms.Controls
 		
 		public void PreviousMonth()
 		{
-		    StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-1);
+		    StartDate = new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(-ShowNumOfMonths);
 		}
 		#endregion
 	}

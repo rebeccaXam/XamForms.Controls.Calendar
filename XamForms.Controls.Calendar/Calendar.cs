@@ -11,6 +11,7 @@ namespace XamForms.Controls
 	{
 		List<CalendarButton> buttons;
 		List<Grid> MainCalendars;
+		List<Label> TitleLabels;
 		StackLayout MainView, ContentView;
 
 		public Calendar()
@@ -30,7 +31,7 @@ namespace XamForms.Controls
 				FontAttributes = FontAttributes.Bold,
 				TextColor = Color.Black,
 				HorizontalOptions = LayoutOptions.FillAndExpand,
-				Text = "OCTOBER 2013"
+				Text = ""
 			};
 			TitleRightArrow = new CalendarButton
 			{
@@ -327,6 +328,24 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region ShowInBetweenMonthLabels
+
+		public static readonly BindableProperty ShowInBetweenMonthLabelsProperty =
+			BindableProperty.Create(nameof(ShowInBetweenMonthLabels), typeof(bool), typeof(Calendar), true,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeCalendar(CalandarChanges.All));
+
+		/// <summary>
+		/// Gets or sets a the number of months to show
+		/// </summary>
+		/// <value>The start date.</value>
+		public bool ShowInBetweenMonthLabels
+		{
+			get { return (bool)GetValue(ShowInBetweenMonthLabelsProperty); }
+			set { SetValue(ShowInBetweenMonthLabelsProperty, value); }
+		}
+
+		#endregion
+
 		#region DateCommand
 
         public static readonly BindableProperty DateCommandProperty =
@@ -344,19 +363,16 @@ namespace XamForms.Controls
 
 		#endregion
 
-		public DateTime CalendarStartDate
+		public DateTime CalendarStartDate(DateTime date)
 		{
-			get
+			var start = date;
+			var beginOfMonth = start.Day == 1;
+			while (!beginOfMonth || start.DayOfWeek != StartDay)
 			{
-				var start = StartDate;
-				var beginOfMonth = start.Day == 1;
-				while (!beginOfMonth || start.DayOfWeek != StartDay)
-				{
-					start = start.AddDays(-1);
-					beginOfMonth |= start.Day == 1;
-				}
-				return start;
+				start = start.AddDays(-1);
+				beginOfMonth |= start.Day == 1;
 			}
+			return start;
 		}
 
 		#region Functions
@@ -375,6 +391,7 @@ namespace XamForms.Controls
 			ShowHideElements();
 			base.OnParentSet();
 			ChangeSelectedDate(SelectedDate, false);
+			ChangeCalendar(CalandarChanges.All);
 		}
 
 		protected Task FillCalendar()
@@ -390,7 +407,6 @@ namespace XamForms.Controls
 			CreateDayLabels();
 			CreateWeeknumbers();
 			CreateButtons();
-			ChangeCalendar(CalandarChanges.All);
 		}
 
 		protected void CreateWeeknumbers()
@@ -506,10 +522,18 @@ namespace XamForms.Controls
 				if (changes.HasFlag(CalandarChanges.StartDate))
 				{
 					TitleLabel.Text = StartDate.ToString(TitleLabelFormat);
-					ChangeWeekNumbers();
+					if (TitleLabels != null)
+					{
+						var tls = StartDate.AddMonths(1);
+						foreach (var tl in TitleLabels)
+						{
+							(tl as Label).Text = tls.ToString(TitleLabelFormat);
+							tls = tls.AddMonths(1);
+						}
+					}
 				}
 
-				var start = CalendarStartDate.Date;
+				var start = CalendarStartDate(StartDate).Date;
 				var beginOfMonth = false;
 				var endOfMonth = false;
 				for (int i = 0; i < buttons.Count; i++)
@@ -521,6 +545,8 @@ namespace XamForms.Controls
 					{
 						dayLabels[i].Text = start.ToString(WeekdaysFormat);
 					}
+
+					ChangeWeekNumbers(start, i);
 
 					if (changes.HasFlag(CalandarChanges.All))
 					{
@@ -557,6 +583,12 @@ namespace XamForms.Controls
 						SetButtonNormal(buttons[i]);
 					}
 					start = start.AddDays(1);
+					if (i != 0 && (i+1) % 42 == 0)
+					{
+						beginOfMonth = false;
+						endOfMonth = false;
+						start = CalendarStartDate(start);
+					}
 				}
 			});
         }
@@ -573,6 +605,7 @@ namespace XamForms.Controls
                 button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
                 button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
 				button.FontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
+				button.IsEnabled = ShowNumOfMonths == 1 || !button.IsOutOfMonth;
             });
         }
 

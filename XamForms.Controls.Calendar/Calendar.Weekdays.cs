@@ -142,7 +142,7 @@ namespace XamForms.Controls
 		protected void ChangeWeekdays()
 		{
 			if (!WeekdaysShow) return;
-			var start = CalendarStartDate;
+			var start = CalendarStartDate(StartDate);
 			for (int i = 0; i < dayLabels.Count; i++)
 			{
 				dayLabels[i].Text = start.ToString(WeekdaysFormat);

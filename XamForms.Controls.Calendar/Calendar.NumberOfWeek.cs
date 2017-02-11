@@ -120,17 +120,12 @@ namespace XamForms.Controls
 
 		#endregion
 
-		protected void ChangeWeekNumbers()
+		protected void ChangeWeekNumbers(DateTime start, int i)
 		{
 			if (!ShowNumberOfWeek) return;
 			CultureInfo ciCurr = CultureInfo.CurrentCulture;
-			var start = StartDate;
-			foreach (var weekNumLabel in weekNumberLabels)
-			{
-				var weekNum = ciCurr.Calendar.GetWeekOfYear(start, CalendarWeekRule.FirstFourDayWeek, StartDay);
-				weekNumLabel.Text = string.Format("{0}", weekNum);
-				start = start.AddDays(7);
-			}
+			var weekNum = ciCurr.Calendar.GetWeekOfYear(start, CalendarWeekRule.FirstFourDayWeek, StartDay);
+			weekNumberLabels[(i / 7)].Text = string.Format("{0}", weekNum);
 		}
 
 		protected void ShowHideElements()
@@ -141,6 +136,37 @@ namespace XamForms.Controls
 			for (var i = 0; i < ShowNumOfMonths; i++)
 			{
 				var main = MainCalendars[i] as Layout;
+
+				if (ShowInBetweenMonthLabels && i > 0)
+				{
+					var label = new Label
+					{
+						FontSize = TitleLabel.FontSize,
+						VerticalTextAlignment = TitleLabel.VerticalTextAlignment,
+						HorizontalTextAlignment = TitleLabel.HorizontalTextAlignment,
+						FontAttributes = TitleLabel.FontAttributes,
+						TextColor = TitleLabel.TextColor,
+						HorizontalOptions = LayoutOptions.FillAndExpand,
+						Text = ""
+					};
+					if (TitleLabels == null)
+					{
+						TitleLabels = new List<Label>(ShowNumOfMonths);
+					}
+					TitleLabels.Add(label);
+					/*if (i == ShowNumOfMonths - 1)
+					{
+						MonthNavigationLayout.Children.Remove(TitleRightArrow);
+						ContentView.Children.Add(new StackLayout { 
+							Orientation = StackOrientation.Horizontal, 
+							Padding = new Thickness(TitleLeftArrow.FontSize*1.5,0,0,0), Children = { label, TitleRightArrow }  
+						});
+					}
+					else 
+					{*/
+						ContentView.Children.Add(label);
+					//}
+				}
 
 				if (ShowNumberOfWeek)
 				{
@@ -153,7 +179,7 @@ namespace XamForms.Controls
 						Orientation = StackOrientation.Horizontal,
 						Children = { WeekNumbers[i], MainCalendars[i] }
 					};
-					DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
+					if(WeekdaysShow) DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
 				}
 
 				if (WeekdaysShow)
@@ -167,10 +193,6 @@ namespace XamForms.Controls
 						Orientation = StackOrientation.Vertical,
 						Children = { DayLabels, main }
 					};
-					/*if (i > 0)
-					{
-						stack.Children.Insert(0, new Label { Text = "Test", HorizontalOptions = LayoutOptions.CenterAndExpand, VerticalOptions = LayoutOptions.CenterAndExpand });
-					}*/
 					ContentView.Children.Add(stack);
 				}
 				else

@@ -229,7 +229,7 @@ namespace XamForms.Controls
 				SelectedDates.Clear();
 			}
 
-			var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date);
+			var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date && b.IsEnabled);
 			if (button == null) return false;
 			var deselect = button.IsSelected;
 			if (button.IsSelected)

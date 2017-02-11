@@ -10,7 +10,10 @@
 			DisabledBorderColor="Black"
 			ShowNumberOfWeek="false"
 			StartDay="Monday"
+			TitleLabelTextColor="Purple"
+			TitleLeftArrowTextColor="Blue"
 			SelectedDate="{Binding Date}"
-			DateCommand="{Binding DateChosen}" />
+			DateCommand="{Binding DateChosen}" >
+		</controls:Calendar>
 	</ContentView.Content>
 </ContentView>
