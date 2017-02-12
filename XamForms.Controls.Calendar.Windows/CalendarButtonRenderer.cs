@@ -30,6 +30,11 @@ namespace XamForms.Controls.Windows
             {
                 Control.Content = element.TextWithoutMeasure;
             }
+
+            if (e.PropertyName == nameof(element.BorderWidth) || e.PropertyName == "Renderer")
+            {
+                Control.BorderThickness = new Thickness(Element.BorderWidth);
+            }
         }
     }
 
@@ -57,7 +62,7 @@ namespace XamForms.Controls.Windows
                         <Setter Property=""Template"">
                             <Setter.Value>
                                 <ControlTemplate TargetType=""Button"">
-                                    <Grid x:Name=""RootGrid"" Background=""{TemplateBinding Background}"">
+                                    <Grid x:Name=""RootGrid"" Background=""{TemplateBinding Background}"" Padding=""1"" Margin=""0"">
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroup x:Name=""CommonStates"">
                                                 <VisualState x:Name=""Normal"">
@@ -112,7 +117,7 @@ namespace XamForms.Controls.Windows
                     <Setter Property=""Template"">
                         <Setter.Value>
                             <ControlTemplate TargetType=""Button"">
-                                <Grid>
+                                <Grid Padding=""1"" Margin=""0"">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name=""CommonStates"">
                                             <VisualState x:Name=""Normal""/>

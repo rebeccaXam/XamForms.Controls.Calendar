@@ -9,7 +9,11 @@ namespace XamForms.Controls
 		#region TitleLabel
 
 		public static readonly BindableProperty TitleLabelHorizontalTextAlignmentProperty = BindableProperty.Create(nameof(TitleLabelHorizontalTextAlignment), typeof(TextAlignment), typeof(Calendar), default(TextAlignment),
-									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.HorizontalTextAlignment = (TextAlignment)newValue);
+			propertyChanged: (bindable, oldValue, newValue) =>
+			{
+				(bindable as Calendar).TitleLabel.HorizontalTextAlignment = (TextAlignment)newValue;
+				(bindable as Calendar).TitleLabels?.ForEach(l => l.HorizontalTextAlignment = (TextAlignment)newValue);
+			});
 
 		public TextAlignment TitleLabelHorizontalTextAlignment
 		{
@@ -18,7 +22,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelVerticalTextAlignmentProperty = BindableProperty.Create(nameof(TitleLabelVerticalTextAlignment), typeof(TextAlignment), typeof(Calendar), default(TextAlignment),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.VerticalTextAlignment = (TextAlignment)newValue);
+		    propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.VerticalTextAlignment = (TextAlignment)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.VerticalTextAlignment = (TextAlignment)newValue);
+		});
 
 		public TextAlignment TitleLabelVerticalTextAlignment
 		{
@@ -27,7 +34,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelTextColorProperty = BindableProperty.Create(nameof(TitleLabelTextColor), typeof(Color), typeof(Calendar), default(Color),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.TextColor = (Color)newValue);
+			  propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.TextColor = (Color)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.TextColor = (Color)newValue);
+		});
 
 		public Color TitleLabelTextColor
 		{
@@ -45,7 +55,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelFontFamilyProperty = BindableProperty.Create(nameof(TitleLabelFontFamily), typeof(String), typeof(Calendar), default(String),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.FontFamily = (String)newValue);
+		   propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.FontFamily = (String)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.FontFamily = (String)newValue);
+		});
 
 		public String TitleLabelFontFamily
 		{
@@ -54,7 +67,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelFontSizeProperty = BindableProperty.Create(nameof(TitleLabelFontSize), typeof(Double), typeof(Calendar), default(Double),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.FontSize = (Double)newValue);
+			propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.FontSize = (Double)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.FontSize = (Double)newValue);
+		});
 
 		public Double TitleLabelFontSize
 		{
@@ -63,7 +79,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelFontAttributesProperty = BindableProperty.Create(nameof(TitleLabelFontAttributes), typeof(FontAttributes), typeof(Calendar), default(FontAttributes),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.FontAttributes = (FontAttributes)newValue);
+		   propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.FontAttributes = (FontAttributes)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.FontAttributes = (FontAttributes)newValue);
+		});
 
 		public FontAttributes TitleLabelFontAttributes
 		{
@@ -72,7 +91,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelFormattedTextProperty = BindableProperty.Create(nameof(TitleLabelFormattedText), typeof(FormattedString), typeof(Calendar), default(FormattedString),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.FormattedText = (FormattedString)newValue);
+		  propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.FormattedText = (FormattedString)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.FormattedText = (FormattedString)newValue);
+		});
 
 		public FormattedString TitleLabelFormattedText
 		{
@@ -81,7 +103,10 @@ namespace XamForms.Controls
 		}
 
 		public static readonly BindableProperty TitleLabelLineBreakModeProperty = BindableProperty.Create(nameof(TitleLabelLineBreakMode), typeof(LineBreakMode), typeof(Calendar), default(LineBreakMode),
-					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLabel.LineBreakMode = (LineBreakMode)newValue);
+		  propertyChanged: (bindable, oldValue, newValue) => {
+			(bindable as Calendar).TitleLabel.LineBreakMode = (LineBreakMode)newValue;
+			(bindable as Calendar).TitleLabels?.ForEach(l => l.LineBreakMode = (LineBreakMode)newValue);
+		});
 
 		public LineBreakMode TitleLabelLineBreakMode
 		{

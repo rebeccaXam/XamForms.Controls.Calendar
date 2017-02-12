@@ -21,6 +21,7 @@ namespace XamForms.Controls.Droid
 				if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
                 Control.Text = element.TextWithoutMeasure;
             };
+			Control.SetPadding(1,1,1,1);
         }
 
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -46,7 +47,6 @@ namespace XamForms.Controls.Droid
 					drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
 					drawable.SetColor(Element.BackgroundColor.ToAndroid());
 					Control.SetBackground(drawable);
-					Control.SetPadding(0, 0, 0, 0);
 				}
 			}
 
@@ -88,7 +88,6 @@ namespace XamForms.Controls.Droid
 			}
 			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
 			Control.SetBackground(layer);
-			Control.SetPadding(0, 0, 0, 0);
 		}
     }
 
