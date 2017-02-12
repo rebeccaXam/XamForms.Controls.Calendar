@@ -45,7 +45,14 @@ namespace XamForms.Controls
             set { SetValue(TextWithoutMeasureProperty, value); }
         }
 
-		public BackgroundPattern BackgroundPattern { get; set; }
+		public static readonly BindableProperty BackgroundPatternProperty =
+			BindableProperty.Create(nameof(BackgroundPattern), typeof(BackgroundPattern), typeof(Button), null);
+
+		public BackgroundPattern BackgroundPattern
+		{
+			get { return (BackgroundPattern)GetValue(BackgroundPatternProperty); }
+			set { SetValue(BackgroundPatternProperty, value); }
+		}
     }
 }
 

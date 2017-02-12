@@ -2,6 +2,7 @@
 using XamForms.Controls.iOS;
 using Xamarin.Forms.Platform.iOS;
 using UIKit;
+using CoreGraphics;
 #if __UNIFIED__
 using Foundation;
 #else
@@ -28,7 +29,43 @@ namespace XamForms.Controls.iOS
 				Control.SetTitleColor(element.TextColor.ToUIColor(), UIControlState.Disabled);
 				Control.SetTitleColor(element.TextColor.ToUIColor(), UIControlState.Normal);
 			}
+			if (e.PropertyName == nameof(element.BackgroundPattern))
+			{ 
+				DrawBackgroundPattern();
+			}
         }
+
+		public override void Draw(CGRect rect)
+		{
+			base.Draw(rect);
+			DrawBackgroundPattern();
+		}
+
+		protected void DrawBackgroundPattern()
+		{
+			var element = Element as CalendarButton;
+			if (element == null || element.BackgroundPattern == null || Control.Frame.Width == 0) return;
+
+			UIImage image;
+			UIGraphics.BeginImageContext(Control.Frame.Size);
+			using (CGContext g = UIGraphics.GetCurrentContext())
+			{
+				for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
+				{
+					var p = element.BackgroundPattern.Pattern[i];
+					g.SetFillColor(p.Color.ToCGColor());
+					var l = (int)(Control.Frame.Width * element.BackgroundPattern.GetLeft(i));
+					var t = (int)(Control.Frame.Height * element.BackgroundPattern.GetTop(i));
+					var w = (int)(Control.Frame.Width * element.BackgroundPattern.Pattern[i].WidthPercent);
+					var h = (int)(Control.Frame.Height * element.BackgroundPattern.Pattern[i].HightPercent);
+					g.FillRect(new CGRect { X = l, Y = t, Width = w, Height = h });
+				}
+
+				image = UIGraphics.GetImageFromCurrentImageContext();
+			}
+			UIGraphics.EndImageContext();
+			Control.SetBackgroundImage(image, UIControlState.Normal);
+		}
     }
 
 	public static class Calendar

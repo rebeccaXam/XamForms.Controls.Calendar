@@ -8,7 +8,7 @@ namespace CalendarDemo
     public class App : Application
     {
 		Calendar calendar;
-        public App()
+		public App()
         {
 			calendar = new Calendar
 			{
@@ -23,13 +23,21 @@ namespace CalendarDemo
 				SelectedTextColor = Color.Fuchsia,
 				SpecialDates = new List<SpecialDate>{
 					new SpecialDate(DateTime.Now.AddDays(2)) { BackgroundColor = Color.Green, TextColor = Color.Accent, BorderColor = Color.Lime, BorderWidth=8, Selectable = true },
-					new SpecialDate(DateTime.Now.AddDays(3)) { BackgroundColor = Color.Green, TextColor = Color.Blue, Selectable = true, 
-						BackgroundPattern = new BackgroundPattern(1) {
-							Pattern = new List<Pattern>{
-								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Red}, new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Purple} ,
-								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Green}, new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow}
+					new SpecialDate(DateTime.Now.AddDays(3))
+					{
+						BackgroundColor = Color.Green,
+						TextColor = Color.Blue,
+						Selectable = true,
+						BackgroundPattern = new BackgroundPattern(1)
+						{
+							Pattern = new List<Pattern>
+							{
+								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Red},
+								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Purple},
+								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Green},
+								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow}
 							}
-						}  
+						}
 					}
 				}
 			};

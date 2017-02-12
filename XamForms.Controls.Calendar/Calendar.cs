@@ -422,7 +422,7 @@ namespace XamForms.Controls
 				var weekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 				weekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 				weekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-				weekNumbers.WidthRequest = NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6;
+				weekNumbers.WidthRequest = NumberOfWeekFontSize * (Device.OS == TargetPlatform.iOS ? 1.5 : 2.2);
 
 
 				for (int r = 0; r < 6; r++)
