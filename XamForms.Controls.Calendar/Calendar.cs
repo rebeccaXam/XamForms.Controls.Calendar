@@ -570,7 +570,7 @@ namespace XamForms.Controls
 					{
 						SetButtonDisabled(buttons[i]);
 					}
-					else if (SelectedDates.Contains(start.Date))
+					else if (SelectedDates.Select(d => d.Date).Contains(start.Date))
 					{
 						SetButtonSelected(buttons[i], sd);
 					}
