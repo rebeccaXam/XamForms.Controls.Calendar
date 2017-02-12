@@ -70,7 +70,6 @@ namespace XamForms.Controls
 			WeekNumbers = new List<Grid>(1);
 
 			CalendarViewType = DateTypeEnum.Normal;
-			SelectedDates = new List<DateTime>();
 			YearsRow = 4;
 			YearsColumn = 4;
 		}
@@ -502,8 +501,9 @@ namespace XamForms.Controls
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.FillAndExpand
 						});
-						buttons.Last().Clicked += DateClickedEvent;
-						mainCalendar.Children.Add(buttons.Last(), c, r);
+						var b = buttons.Last();
+						b.Clicked += DateClickedEvent;
+						mainCalendar.Children.Add(b, c, r);
 					}
 				}
 				MainCalendars.Add(mainCalendar);

@@ -44,6 +44,8 @@ namespace XamForms.Controls.iOS
 		protected void DrawBackgroundPattern()
 		{
 			var element = Element as CalendarButton;
+			Control.SetBackgroundImage(null, UIControlState.Normal);
+			Control.SetBackgroundImage(null, UIControlState.Disabled);
 			if (element == null || element.BackgroundPattern == null || Control.Frame.Width == 0) return;
 
 			UIImage image;
@@ -65,6 +67,7 @@ namespace XamForms.Controls.iOS
 			}
 			UIGraphics.EndImageContext();
 			Control.SetBackgroundImage(image, UIControlState.Normal);
+			Control.SetBackgroundImage(image, UIControlState.Disabled);
 		}
     }
 
