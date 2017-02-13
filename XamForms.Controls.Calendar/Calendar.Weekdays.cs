@@ -6,7 +6,6 @@ namespace XamForms.Controls
 {
 	public partial class Calendar : ContentView
 	{
-		public Grid DayLabels;
 		List<Label> dayLabels;
 
 		#region WeekdaysTextColor

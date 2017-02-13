@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace XamForms.Controls
@@ -131,8 +132,8 @@ namespace XamForms.Controls
 		protected void ShowHideElements()
 		{
 			if (MainCalendars.Count < 1) return;
-			Content = null;
 			ContentView.Children.Clear();
+			dayLabels.Clear();
 			for (var i = 0; i < ShowNumOfMonths; i++)
 			{
 				var main = MainCalendars[i] as Layout;
@@ -179,11 +180,29 @@ namespace XamForms.Controls
 						Orientation = StackOrientation.Horizontal,
 						Children = { WeekNumbers[i], MainCalendars[i] }
 					};
-					if(WeekdaysShow) DayLabels.Padding = new Thickness(NumberOfWeekFontSize + (NumberOfWeekFontSize / 2) + 6, 0, 0, 0);
 				}
 
 				if (WeekdaysShow)
 				{
+					var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
+					var dl = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
+					dl.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+					if (ShowNumberOfWeek) dl.Padding = new Thickness(NumberOfWeekFontSize * 1.5, 0, 0, 0);
+
+					for (int c = 0; c < 7; c++)
+					{
+						dayLabels.Add(new Label
+						{
+							HorizontalOptions = LayoutOptions.Center,
+							VerticalOptions = LayoutOptions.Center,
+							BackgroundColor = WeekdaysBackgroundColor,
+							TextColor = WeekdaysTextColor,
+							FontSize = WeekdaysFontSize,
+							FontAttributes = WeekdaysFontAttributes
+						});
+						dl.Children.Add(dayLabels.Last(), c, 0);
+					}
+
 					var stack = new StackLayout
 					{
 						Padding = 0,
@@ -191,7 +210,7 @@ namespace XamForms.Controls
 						VerticalOptions = LayoutOptions.FillAndExpand,
 						HorizontalOptions = LayoutOptions.FillAndExpand,
 						Orientation = StackOrientation.Vertical,
-						Children = { DayLabels, main }
+						Children = { dl, main }
 					};
 					ContentView.Children.Add(stack);
 				}
@@ -200,7 +219,6 @@ namespace XamForms.Controls
 					ContentView.Children.Add(main);
 				}
 			}
-			Content = MainView;
 		}
 	}
 }

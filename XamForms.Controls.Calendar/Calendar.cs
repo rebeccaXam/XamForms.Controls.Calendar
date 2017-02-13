@@ -387,9 +387,7 @@ namespace XamForms.Controls
 				// windows can not
 				await FillCalendar();
 			}
-			ShowHideElements();
 			base.OnParentSet();
-			ChangeSelectedDate(SelectedDate, false);
 			ChangeCalendar(CalandarChanges.All);
 		}
 
@@ -403,9 +401,9 @@ namespace XamForms.Controls
 
 		protected void FillCalendarWindows()
 		{
-			CreateDayLabels();
 			CreateWeeknumbers();
 			CreateButtons();
+			ShowHideElements();
 		}
 
 		protected void CreateWeeknumbers()
@@ -421,7 +419,7 @@ namespace XamForms.Controls
 				var weekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 				weekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 				weekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-				weekNumbers.WidthRequest = NumberOfWeekFontSize * (Device.OS == TargetPlatform.iOS ? 1.5 : 2.2);
+				weekNumbers.WidthRequest = NumberOfWeekFontSize * (Device.OS == TargetPlatform.iOS ? 1.5 : 2.5);
 
 
 				for (int r = 0; r < 6; r++)
@@ -441,35 +439,6 @@ namespace XamForms.Controls
 					weekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
 				}
 				WeekNumbers.Add(weekNumbers);
-			}
-		}
-
-		protected void CreateDayLabels()
-		{
-			if (!WeekdaysShow)
-			{
-				DayLabels = null;
-				dayLabels.Clear();
-				return;
-			}
-			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
-			DayLabels = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
-			DayLabels.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
-
-			dayLabels.Clear();
-			DayLabels.Children.Clear();
-			for (int c = 0; c < 7; c++)
-			{
-				dayLabels.Add(new Label
-				{
-					HorizontalOptions = LayoutOptions.Center,
-					VerticalOptions = LayoutOptions.Center,
-					BackgroundColor = WeekdaysBackgroundColor,
-					TextColor = WeekdaysTextColor,
-					FontSize = WeekdaysFontSize,
-					FontAttributes = WeekdaysFontAttributes
-				});
-				DayLabels.Children.Add(dayLabels.Last(), c, 0);
 			}
 		}
 
@@ -519,6 +488,7 @@ namespace XamForms.Controls
         {
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				Content = null;
 				if (changes.HasFlag(CalandarChanges.StartDate))
 				{
 					TitleLabel.Text = StartDate.ToString(TitleLabelFormat);
@@ -541,7 +511,7 @@ namespace XamForms.Controls
 					endOfMonth |= beginOfMonth && start.Day == 1;
 					beginOfMonth |= start.Day == 1;
 
-					if (i < 7 && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
+					if (i < dayLabels.Count && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
 					{
 						dayLabels[i].Text = start.ToString(WeekdaysFormat);
 					}
@@ -590,6 +560,7 @@ namespace XamForms.Controls
 						start = CalendarStartDate(start);
 					}
 				}
+				Content = MainView;
 			});
         }
 
