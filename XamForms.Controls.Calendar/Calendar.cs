@@ -529,6 +529,7 @@ namespace XamForms.Controls
 					buttons[i].Date = start;
 
 					buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
+					buttons[i].IsEnabled = ShowNumOfMonths == 1 || !buttons[i].IsOutOfMonth;
 
 					SpecialDate sd = null;
 					if (SpecialDates != null)
@@ -540,7 +541,7 @@ namespace XamForms.Controls
 					{
 						SetButtonDisabled(buttons[i]);
 					}
-					else if (SelectedDates.Select(d => d.Date).Contains(start.Date))
+					else if (buttons[i].IsEnabled && SelectedDates.Select(d => d.Date).Contains(start.Date))
 					{
 						SetButtonSelected(buttons[i], sd);
 					}
