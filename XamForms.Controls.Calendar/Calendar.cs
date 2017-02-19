@@ -294,7 +294,7 @@ namespace XamForms.Controls
 		protected void ChangeDatesFontSize(double newValue, double oldValue)
 		{
 			if (Math.Abs(newValue - oldValue) < 0.01) return;
-			buttons.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.FontSize = newValue);
+			buttons?.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.FontSize = newValue);
 		}
 
 		/// <summary>

@@ -49,6 +49,10 @@ namespace XamForms.Controls.Droid
 					drawable.SetColor(Element.BackgroundColor.ToAndroid());
 					Control.SetBackground(drawable);
 				}
+				else 
+				{
+					ChangeBackgroundPattern();
+				}
 			}
 
 			if (e.PropertyName == nameof(element.BackgroundPattern))
