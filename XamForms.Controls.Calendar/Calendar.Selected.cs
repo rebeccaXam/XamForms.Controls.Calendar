@@ -208,6 +208,7 @@ namespace XamForms.Controls
 				var defaultBackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
 				var defaultTextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
 				var defaultFontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
+				button.BackgroundPattern = special != null ? special.BackgroundPattern : null;
 				button.IsEnabled = true;
 				button.IsSelected = true;
 				button.FontSize = SelectedFontSize;
