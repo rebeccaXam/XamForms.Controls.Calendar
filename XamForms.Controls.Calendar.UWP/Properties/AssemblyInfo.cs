@@ -28,4 +28,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: ComVisible(false)]
 
-[assembly: Xamarin.Forms.ExportRenderer(typeof(XamForms.Controls.CalendarButton), typeof(XamForms.Controls.Windows.CalendarButtonRenderer))]
+[assembly: Xamarin.Forms.Platform.UWP.ExportRenderer(typeof(XamForms.Controls.CalendarButton), typeof(XamForms.Controls.Windows.CalendarButtonRenderer))]

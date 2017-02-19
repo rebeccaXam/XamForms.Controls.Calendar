@@ -62,7 +62,7 @@ namespace XamForms.Controls.Windows
                         <Setter Property=""Template"">
                             <Setter.Value>
                                 <ControlTemplate TargetType=""Button"">
-                                    <Grid x:Name=""RootGrid"" Background=""{TemplateBinding Background}"" Padding=""1"" Margin=""0"">
+                                    <Grid x:Name=""RootGrid"" Background=""{TemplateBinding Background}"" Padding=""0.1"" Margin=""0"">
                                         <VisualStateManager.VisualStateGroups>
                                             <VisualStateGroup x:Name=""CommonStates"">
                                                 <VisualState x:Name=""Normal"">
