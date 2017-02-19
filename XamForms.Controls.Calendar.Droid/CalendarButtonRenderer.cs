@@ -11,7 +11,7 @@ namespace XamForms.Controls.Droid
 	[Preserve(AllMembers = true)]
     public class CalendarButtonRenderer : ButtonRenderer
     {
-        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
+		protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
         {
             base.OnElementChanged(e);
             if (Control == null) return;
@@ -22,6 +22,7 @@ namespace XamForms.Controls.Droid
                 Control.Text = element.TextWithoutMeasure;
             };
 			Control.SetPadding(1,1,1,1);
+			Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
         }
 
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -56,16 +57,10 @@ namespace XamForms.Controls.Droid
 			}
         }
 
-		protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
-		{
-			base.OnMeasure(widthMeasureSpec, heightMeasureSpec);
-			ChangeBackgroundPattern();
-		}
-
 		protected void ChangeBackgroundPattern()
 		{
 			var element = Element as CalendarButton;
-			if (element == null || element.BackgroundPattern == null || Width == 0) return;
+			if (element == null || element.BackgroundPattern == null || Control.Width == 0) return;
 
 			var d = new List<Drawable>();
 			for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
