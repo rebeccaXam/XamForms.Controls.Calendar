@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.7</version>
+       <version>1.0.8</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -21,27 +21,36 @@
          <dependency id="Xamarin.Forms" version="2.0.1.6521" />
        </dependencies>
        <releaseNotes>
-	   	   [1.0.7]
-		   - Fix for Android StackOverflow problem when ShowNumberOfWeek is enabled
-	   	   [1.0.6]
-		   - Add 'DisableAllDates', make it possible to disable all dates by default (you can enable again with SpecialDates)
-		   - Add Month and Year view for Calendar 
-		   - Add 'Show' to show number of the week
-		   - Add missing property WeekdaysFontAttributes
-		   - Fix WeekdaysTextColor was not set
-		   - Fix SelectedDate is now TwoWay binding 
-	       [1.0.5]
-		   - Add support to select multiple dates
-		   - Fix background color for Special Dates that where selected/deselected
-	       [1.0.4]
-		   - Fixed Missing references: Cannot locate resource from ‘ms-appx:///XamForms.Controls.Calendar.UWP/Resources.xaml’.
-           [1.0.3]
-           - Windows is working now
-		   - Extra Special Dates where you can change the style of specific dates
-		   - Some fixes
-           [1.0.2]
-           - Initital Calandar Control (No Windows yet)
-		   - Some fixes
+	 [1.0.8]
+	 - Feature request: bindable property to set CalendarWeekRule
+	 - Should be better: Day button borders on UWP sometimes is not visible
+	 - Feature request: Make background of a date multicolored
+	 - Feature request: Show more than one month (scrollable)
+	 - Fixed: Selected date no highlight on start
+	 - Fixed: "Object reference not set to an instance" exception when binding to SelectedDates Property
+	 - Feature request: make the color of the month arrows a bindable property
+	 - Feature request: bindable property to choose whether month label is bold
+	 [1.0.7]
+	  - Fix for Android StackOverflow problem when ShowNumberOfWeek is enabled
+	  [1.0.6]
+ 	   - Add 'DisableAllDates', make it possible to disable all dates by default (you can enable again with SpecialDates)
+	    - Add Month and Year view for Calendar 
+	    - Add 'Show' to show number of the week
+	    - Add missing property WeekdaysFontAttributes
+	    - Fix WeekdaysTextColor was not set
+	    - Fix SelectedDate is now TwoWay binding 
+	    [1.0.5]
+	    - Add support to select multiple dates
+	    - Fix background color for Special Dates that where selected/deselected
+	    [1.0.4]
+	    - Fixed Missing references: Cannot locate resource from ‘ms-appx:///XamForms.Controls.Calendar.UWP/Resources.xaml’.
+            [1.0.3]
+            - Windows is working now
+	    - Extra Special Dates where you can change the style of specific dates
+	    - Some fixes
+            [1.0.2]
+            - Initital Calandar Control (No Windows yet)
+	    - Some fixes
        </releaseNotes>
    </metadata>
    <files>
