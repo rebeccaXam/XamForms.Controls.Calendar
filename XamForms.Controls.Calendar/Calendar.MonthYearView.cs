@@ -59,6 +59,7 @@ namespace XamForms.Controls
 
 		public void ShowNormal()
 		{
+			Content = null;
 			ContentView.Children.Clear();
 			foreach (var child in normalView)
 			{
@@ -67,10 +68,12 @@ namespace XamForms.Controls
 			CalendarViewType = DateTypeEnum.Normal;
 			TitleLeftArrow.IsVisible = true;
 			TitleRightArrow.IsVisible = true;
+			Content = MainView;
 		}
 
 		public void ShowMonths()
 		{
+			Content = null;
 			ContentView.Children.Clear();
 			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
@@ -90,21 +93,23 @@ namespace XamForms.Controls
 						BackgroundColor = DatesBackgroundColor,
 						TextColor = DatesTextColor,
 						FontSize = DatesFontSize,
+						BorderWidth = BorderWidth,
+						BorderColor = BorderColor,
 						FontAttributes = DatesFontAttributes,
 						WidthRequest = ContentView.Width / 3 - BorderWidth,
 						HeightRequest = ContentView.Height / 4 - BorderWidth
 					};
 
-						b.Clicked += (sender, e) =>
+					b.Clicked += (sender, e) =>
+					{
+						MonthYearButtonCommand?.Execute((sender as CalendarButton).Date.Value);
+						MonthYearButtonClicked?.Invoke(sender, new DateTimeEventArgs { DateTime = (sender as CalendarButton).Date.Value });
+						if (EnableTitleMonthYearView)
 						{
-							MonthYearButtonCommand?.Execute((sender as CalendarButton).Date.Value);
-							MonthYearButtonClicked?.Invoke(sender, new DateTimeEventArgs { DateTime = (sender as CalendarButton).Date.Value });
-							if (EnableTitleMonthYearView)
-							{
-								StartDate = (sender as CalendarButton).Date.Value;
-								PrevMonthYearView();
-							}
-						};
+							StartDate = (sender as CalendarButton).Date.Value;
+							PrevMonthYearView();
+						}
+					};
 
 					details.Children.Add(b, c, r);
 				}
@@ -115,10 +120,12 @@ namespace XamForms.Controls
 			CalendarViewType = DateTypeEnum.Month;
 			TitleLeftArrow.IsVisible = false;
 			TitleRightArrow.IsVisible = false;
+			Content = MainView;
 		}
 
 		public void ShowYears()
 		{
+			Content = null;
 			ContentView.Children.Clear();
 			var columDef = new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) };
 			var rowDef = new RowDefinition { Height = new GridLength(1, GridUnitType.Star) };
@@ -140,6 +147,8 @@ namespace XamForms.Controls
 						TextColor = DatesTextColor,
 						FontSize = DatesFontSize,
 						FontAttributes = DatesFontAttributes,
+						BorderWidth = BorderWidth,
+						BorderColor = BorderColor,
 						WidthRequest = (ContentView.Width / YearsRow) - BorderWidth,
 						HeightRequest = ContentView.Height / YearsColumn - BorderWidth
 					};
@@ -162,6 +171,7 @@ namespace XamForms.Controls
 			CalendarViewType = DateTypeEnum.Year;
 			TitleLeftArrow.IsVisible = true;
 			TitleRightArrow.IsVisible = true;
+			Content = MainView;
 		}
 
 		protected void NextPrevYears(bool next)

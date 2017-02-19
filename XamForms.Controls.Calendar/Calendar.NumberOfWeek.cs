@@ -121,6 +121,39 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region CalendarWeekRule
+
+		public static readonly BindableProperty CalendarWeekRuleProperty =
+			BindableProperty.Create(nameof(CalendarWeekRule), typeof(CalendarWeekRule), typeof(Calendar), CalendarWeekRule.FirstFourDayWeek,
+			propertyChanged: (bindable, oldValue, newValue) =>
+			{
+				var calendar = (bindable as Calendar);
+				var start = calendar.CalendarStartDate(calendar.StartDate).Date;
+				for (int i = 0; i < calendar.buttons.Count; i++)
+				{
+					calendar.ChangeWeekNumbers(start, i);
+
+					start = start.AddDays(1);
+					if (i != 0 && (i + 1) % 42 == 0)
+					{
+						start = calendar.CalendarStartDate(start);
+					}
+				}
+			});
+
+		/// <summary>
+		/// Gets or sets what CalendarWeekRule to use for the week numbers
+		/// </summary>
+		/// <value>The weekdays show.</value>
+		public CalendarWeekRule CalendarWeekRule
+		{
+			get { return (CalendarWeekRule)GetValue(CalendarWeekRuleProperty); }
+			set { SetValue(CalendarWeekRuleProperty, value); }
+		}
+
+		#endregion
+
+
 		protected void ChangeWeekNumbers(DateTime start, int i)
 		{
 			if (!ShowNumberOfWeek) return;
