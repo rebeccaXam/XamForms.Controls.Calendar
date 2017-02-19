@@ -12,6 +12,8 @@ A simple Calendar control for your Xamarin.Forms projects
   <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/images/WinPhone.png" height="200"/>
   <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/images/Win8.png" height="200"/>
   <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/images/UWP.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/images/BackgroundPatternDroid.png" height="200"/>
+  <img src="https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/images/BackgroundpatterniOS.png" height="200"/>
 </p>
 
 In your iOS, Android, and Windows projects call:
