@@ -53,7 +53,7 @@ xmlns:controls="clr-namespace:XamForms.Controls;assembly=XamForms.Controls.Calen
 Then add the xaml:
 
 ```xml
-<controls:Calendar Padding="10,0,10,0" StartDay="Monday" SelectedBorderWidth="4" DisabledBorderColor="Black">
+<controls:Calendar Padding="10,0,10,0" StartDay="Monday" SelectedBorderWidth="4" DisabledBorderColor="Black" />
 ```
 #### Documentation: [Wiki](https://github.com/rebeccaXam/XamForms.Controls.Calendar/wiki)
 
