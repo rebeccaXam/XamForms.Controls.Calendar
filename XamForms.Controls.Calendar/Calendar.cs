@@ -472,7 +472,8 @@ namespace XamForms.Controls
 						VerticalTextAlignment = TextAlignment.Center,
 						HorizontalTextAlignment = TextAlignment.Center,
 						FontSize = NumberOfWeekFontSize,
-						FontAttributes = NumberOfWeekFontAttributes
+						FontAttributes = NumberOfWeekFontAttributes,
+						FontFamily = NumberOfWeekFontFamily
 					});
 					weekNumbers.Children.Add(weekNumberLabels.Last(), 0, r);
 				}

@@ -103,6 +103,29 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region NumberOfWeekFontFamily
+
+		public static readonly BindableProperty NumberOfWeekFontFamilyProperty =
+					BindableProperty.Create(nameof(NumberOfWeekFontFamily), typeof(string), typeof(Calendar), default(string),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeNumberOfWeekFontFamily((string)newValue, (string)oldValue));
+
+		protected void ChangeNumberOfWeekFontFamily(string newValue, string oldValue)
+		{
+			if (newValue == oldValue) return;
+			weekNumberLabels.ForEach(l => l.FontFamily = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font family of the number of the week labels.
+		/// </summary>
+		public string NumberOfWeekFontFamily
+		{
+			get { return (string)GetValue(NumberOfWeekFontFamilyProperty); }
+			set { SetValue(NumberOfWeekFontFamilyProperty, value); }
+		}
+
+		#endregion
+
 		#region ShowNumberOfWeek
 
 		public static readonly BindableProperty ShowNumberOfWeekProperty =
