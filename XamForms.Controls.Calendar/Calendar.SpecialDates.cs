@@ -35,6 +35,7 @@ namespace XamForms.Controls
 				if (special.BackgroundColor.HasValue) button.BackgroundColor = special.BackgroundColor.Value;
 				if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
 				if (special.FontAttributes.HasValue) button.FontAttributes = special.FontAttributes.Value;
+				if (!string.IsNullOrEmpty(special.FontFamily)) button.FontFamily = special.FontFamily;
 				button.BackgroundPattern = special.BackgroundPattern;
 				button.IsEnabled = special.Selectable;
 			});

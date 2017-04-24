@@ -16,6 +16,7 @@ namespace XamForms.Controls
 		public Color? BackgroundColor { get; set; }
 		public Color? BorderColor { get; set; }
 		public FontAttributes? FontAttributes { get; set; }
+		public string FontFamily { get; set; }
 		public int? BorderWidth { get; set; }
 		public double? FontSize { get; set; }
 		public bool Selectable { get; set; }

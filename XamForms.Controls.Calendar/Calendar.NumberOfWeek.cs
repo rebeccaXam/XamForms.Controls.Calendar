@@ -231,6 +231,7 @@ namespace XamForms.Controls
 							BackgroundColor = WeekdaysBackgroundColor,
 							TextColor = WeekdaysTextColor,
 							FontSize = WeekdaysFontSize,
+							FontFamily = WeekdaysFontFamily,
 							FontAttributes = WeekdaysFontAttributes
 						});
 						dl.Children.Add(dayLabels.Last(), c, 0);

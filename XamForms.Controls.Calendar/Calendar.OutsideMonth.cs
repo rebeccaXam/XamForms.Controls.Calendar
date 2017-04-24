@@ -76,5 +76,52 @@ namespace XamForms.Controls
 		}
 
 		#endregion
+
+		#region DatesFontOutsideMonth
+
+		public static readonly BindableProperty DatesFontOutsideMonthProperty =
+			BindableProperty.Create(nameof(DatesFontOutsideMonth), typeof(Font), typeof(Calendar), Font.Default,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontOutsideMonth((Font)newValue, (Font)oldValue));
+
+		protected void ChangeDatesFontOutsideMonth(Font newValue, Font oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.Font = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the dates font for dates outside of the month.
+		/// </summary>
+		/// <value>The dates font attributes.</value>
+		public Font DatesFontOutsideMonth
+		{
+			get { return (Font)GetValue(DatesFontOutsideMonthProperty); }
+			set { SetValue(DatesFontOutsideMonthProperty, value); }
+		}
+
+		#endregion
+
+		#region DatesFontFamilyOutsideMonth
+
+		public static readonly BindableProperty DatesFontFamilyOutsideMonthProperty =
+			BindableProperty.Create(nameof(DatesFontFamilyOutsideMonth), typeof(string), typeof(Calendar), default(string),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontFamilyOutsideMonth((string)newValue, (string)oldValue));
+
+		protected void ChangeDatesFontFamilyOutsideMonth(string newValue, string oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => b.IsEnabled && !b.IsSelected && b.IsOutOfMonth).ForEach(b => b.FontFamily = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the dates font family for dates outside of the month.
+		/// </summary>
+		public string DatesFontFamilyOutsideMonth
+		{
+			get { return (string)GetValue(DatesFontOutsideMonthProperty); }
+			set { SetValue(DatesFontOutsideMonthProperty, value); }
+		}
+
+		#endregion
 	}
 }

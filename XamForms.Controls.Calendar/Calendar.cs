@@ -170,7 +170,7 @@ namespace XamForms.Controls
 
 		#endregion
 
-		#region OuterBorder
+		#region OuterBorderWidth
 
 		public static readonly BindableProperty OuterBorderWidthProperty =
 			BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
@@ -222,7 +222,7 @@ namespace XamForms.Controls
 		protected void ChangeDatesBackgroundColor(Color newValue, Color oldValue)
 		{
 			if (newValue == oldValue) return;
-			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedBackgroundColor.HasValue)).ForEach(b => b.BackgroundColor = newValue);
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || SelectedBackgroundColor != Color.Default)).ForEach(b => b.BackgroundColor = newValue);
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace XamForms.Controls
 		protected void ChangeDatesTextColor(Color newValue, Color oldValue)
 		{
 			if (newValue == oldValue) return;
-			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedTextColor.HasValue) && !b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || SelectedTextColor != Color.Default) && !b.IsOutOfMonth).ForEach(b => b.TextColor = newValue);
 		}
 
 		/// <summary>
@@ -270,7 +270,7 @@ namespace XamForms.Controls
 		protected void ChangeDatesFontAttributes(FontAttributes newValue, FontAttributes oldValue)
 		{
 			if (newValue == oldValue) return;
-			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || !SelectedTextColor.HasValue) && !b.IsOutOfMonth).ForEach(b => b.FontAttributes = newValue);
+			buttons.FindAll(b => b.IsEnabled && (!b.IsSelected || SelectedTextColor != Color.Default) && !b.IsOutOfMonth).ForEach(b => b.FontAttributes = newValue);
 		}
 
 		/// <summary>
@@ -305,6 +305,52 @@ namespace XamForms.Controls
 		{
 			get { return (double)GetValue(DatesFontSizeProperty); }
 			set { SetValue(DatesFontSizeProperty, value); }
+		}
+
+		#endregion
+
+		#region DatesFont
+
+		public static readonly BindableProperty DatesFontProperty =
+					BindableProperty.Create(nameof(DatesFont), typeof(Font), typeof(Calendar), Font.Default,
+					                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFont((Font)newValue, (Font)oldValue));
+
+		protected void ChangeDatesFont(Font newValue, Font oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons?.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.Font = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font of dates.
+		/// </summary>
+		public Font DatesFont
+		{
+			get { return (Font)GetValue(DatesFontProperty); }
+			set { SetValue(DatesFontProperty, value); }
+		}
+
+		#endregion
+
+		#region DatesFontFamily
+
+		public static readonly BindableProperty DatesFontFamilyProperty =
+					BindableProperty.Create(nameof(DatesFontFamily), typeof(string), typeof(Calendar), default(string),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFontFamily((string)newValue, (string)oldValue));
+
+		protected void ChangeDatesFontFamily(string newValue, string oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons?.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.FontFamily = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font family of dates.
+		/// </summary>
+		public string DatesFontFamily
+		{
+			get { return (string)GetValue(DatesFontFamilyProperty); }
+			set { SetValue(DatesFontFamilyProperty, value); }
 		}
 
 		#endregion
@@ -376,17 +422,9 @@ namespace XamForms.Controls
 
 		#region Functions
 
-		protected async override void OnParentSet()
+		protected override void OnParentSet()
 		{
-			if (Device.OS == TargetPlatform.Windows || Device.OS == TargetPlatform.WinPhone)
-			{
-				FillCalendarWindows();
-			}
-			else {
-				// iOS and Android can create controls on another thread when they are not attached to the main ui yet, 
-				// windows can not
-				await FillCalendar();
-			}
+            FillCalendarWindows();
 			base.OnParentSet();
 			ChangeCalendar(CalandarChanges.All);
 		}
@@ -419,7 +457,7 @@ namespace XamForms.Controls
 				var weekNumbers = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = new Thickness(0, 0, 0, 0) };
 				weekNumbers.ColumnDefinitions = new ColumnDefinitionCollection { columDef };
 				weekNumbers.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
-				weekNumbers.WidthRequest = NumberOfWeekFontSize * (Device.OS == TargetPlatform.iOS ? 1.5 : 2.5);
+				weekNumbers.WidthRequest = NumberOfWeekFontSize * (Device.RuntimePlatform == Device.iOS ? 1.5 : 2.5);
 
 
 				for (int r = 0; r < 6; r++)
@@ -553,6 +591,13 @@ namespace XamForms.Controls
 					{
 						SetButtonNormal(buttons[i]);
 					}
+
+					if (DisableDatesLimitToMaxMinRange)
+					{
+						TitleLeftArrow.IsEnabled = !(MinDate.HasValue && start < MinDate);
+						TitleRightArrow.IsEnabled = !(MaxDate.HasValue && start > MaxDate);
+					}
+
 					start = start.AddDays(1);
 					if (i != 0 && (i+1) % 42 == 0)
 					{
@@ -575,6 +620,8 @@ namespace XamForms.Controls
                 button.FontSize = DatesFontSize;
                 button.BorderWidth = BorderWidth;
                 button.BorderColor = BorderColor;
+				button.Font = button.IsOutOfMonth ? DatesFontOutsideMonth : DatesFont;
+				button.FontFamily = button.IsOutOfMonth? DatesFontFamilyOutsideMonth : DatesFontFamily;
                 button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
                 button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
 				button.FontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;

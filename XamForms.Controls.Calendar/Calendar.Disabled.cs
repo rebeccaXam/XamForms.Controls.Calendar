@@ -22,6 +22,23 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region DisableDatesLimitToMaxMinRange
+
+		public static readonly BindableProperty DisableDatesLimitToMaxMinRangeProperty = BindableProperty.Create(nameof(DisableDatesLimitToMaxMinRange), typeof(bool), typeof(Calendar), false,
+				propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar)?.RaiseSpecialDatesChanged());
+
+		/// <summary>
+		/// Gets or sets wether disabled dates limits the left/right scrolling (default is false)
+		/// </summary>
+		/// <value></value>
+		public bool DisableDatesLimitToMaxMinRange
+		{
+			get { return (bool)GetValue(DisableDatesLimitToMaxMinRangeProperty); }
+			set { SetValue(DisableDatesLimitToMaxMinRangeProperty, value); }
+		}
+
+		#endregion
+
 		#region DisabledBorderWidth
 
 		public static readonly BindableProperty DisabledBorderWidthProperty =
@@ -142,6 +159,52 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region DisabledFontAttributes
+
+		public static readonly BindableProperty DisabledFontAttributesProperty =
+					BindableProperty.Create(nameof(DisabledFontAttributes), typeof(FontAttributes), typeof(Calendar), FontAttributes.None,
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDisabledFontAttributes((FontAttributes)newValue, (FontAttributes)oldValue));
+
+		protected void ChangeDisabledFontAttributes(FontAttributes newValue, FontAttributes oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => !b.IsEnabled).ForEach(b => b.FontAttributes = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font family of disabled dates.
+		/// </summary>
+		public FontAttributes DisabledFontAttributes
+		{
+			get { return (FontAttributes)GetValue(DisabledFontAttributesProperty); }
+			set { SetValue(DisabledFontAttributesProperty, value); }
+		}
+
+		#endregion
+
+		#region DisabledFontFamily
+
+		public static readonly BindableProperty DisabledFontFamilyProperty =
+					BindableProperty.Create(nameof(DisabledFontFamily), typeof(string), typeof(Calendar), default(string),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDisabledFontFamily((string)newValue, (string)oldValue));
+
+		protected void ChangeDisabledFontFamily(string newValue, string oldValue)
+		{
+			if (newValue == oldValue) return;
+			buttons.FindAll(b => !b.IsEnabled).ForEach(b => b.FontFamily = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font family of disabled dates.
+		/// </summary>
+		public string DisabledFontFamily
+		{
+			get { return (string)GetValue(DisabledFontFamilyProperty); }
+			set { SetValue(DisabledFontFamilyProperty, value); }
+		}
+
+		#endregion
+
 		protected void SetButtonDisabled(CalendarButton button)
 		{
 			Device.BeginInvokeOnMainThread(() =>
@@ -152,6 +215,8 @@ namespace XamForms.Controls
 				button.BorderColor = DisabledBorderColor;
 				button.BackgroundColor = DisabledBackgroundColor;
 				button.TextColor = DisabledTextColor;
+				button.FontAttributes = DisabledFontAttributes;
+				button.FontFamily = DisabledFontFamily;
 				button.IsEnabled = false;
 				button.IsSelected = false;
 			});

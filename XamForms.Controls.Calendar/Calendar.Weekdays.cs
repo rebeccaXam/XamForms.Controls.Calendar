@@ -80,6 +80,29 @@ namespace XamForms.Controls
 
 		#endregion
 
+		#region WeekdaysFontFamily
+
+		public static readonly BindableProperty WeekdaysFontFamilyProperty =
+					BindableProperty.Create(nameof(WeekdaysFontFamily), typeof(string), typeof(Calendar), default(string),
+									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysFontFamily((string)newValue, (string)oldValue));
+
+		protected void ChangeWeekdaysFontFamily(string newValue, string oldValue)
+		{
+			if (newValue == oldValue) return;
+			dayLabels.ForEach(l => l.FontFamily = newValue);
+		}
+
+		/// <summary>
+		/// Gets or sets the font family of the weekday labels.
+		/// </summary>
+		public string WeekdaysFontFamily
+		{
+			get { return (string)GetValue(WeekdaysFontFamilyProperty); }
+			set { SetValue(WeekdaysFontFamilyProperty, value); }
+		}
+
+		#endregion
+
 		#region WeekdaysFormat
 
 		public static readonly BindableProperty WeekdaysFormatProperty =
