@@ -349,7 +349,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string DatesFontFamily
 		{
-			get { return (string)GetValue(DatesFontFamilyProperty); }
+			get { return GetValue(DatesFontFamilyProperty) as string; }
 			set { SetValue(DatesFontFamilyProperty, value); }
 		}
 
@@ -593,12 +593,6 @@ namespace XamForms.Controls
 						SetButtonNormal(buttons[i]);
 					}
 
-					if (DisableDatesLimitToMaxMinRange)
-					{
-						TitleLeftArrow.IsEnabled = !(MinDate.HasValue && start < MinDate);
-						TitleRightArrow.IsEnabled = !(MaxDate.HasValue && start > MaxDate);
-					}
-
 					start = start.AddDays(1);
 					if (i != 0 && (i+1) % 42 == 0)
 					{
@@ -606,6 +600,12 @@ namespace XamForms.Controls
 						endOfMonth = false;
 						start = CalendarStartDate(start);
 					}
+
+				}
+				if (DisableDatesLimitToMaxMinRange)
+				{
+					TitleLeftArrow.IsEnabled = !(MinDate.HasValue && CalendarStartDate(StartDate).Date < MinDate);
+					TitleRightArrow.IsEnabled = !(MaxDate.HasValue && start > MaxDate);
 				}
 				Content = MainView;
 			});

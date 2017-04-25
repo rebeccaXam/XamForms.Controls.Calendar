@@ -141,6 +141,15 @@ namespace XamForms.Controls
 			set { TitleLeftArrow.TextColor = value; }
 		}
 
+		public static readonly BindableProperty TitleLeftArrowBackgroundColorProperty = BindableProperty.Create(nameof(TitleLeftArrowBackgroundColor), typeof(Color), typeof(Calendar), default(Color),
+			propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLeftArrow.BackgroundColor = (Color)newValue);
+
+		public Color TitleLeftArrowBackgroundColor
+		{
+			get { return TitleLeftArrow.BackgroundColor; }
+			set { TitleLeftArrow.BackgroundColor = value; }
+		}
+
 		public static readonly BindableProperty TitleLeftArrowFontProperty = BindableProperty.Create(nameof(TitleLeftArrowFont), typeof(Font), typeof(Calendar), default(Font),
 					propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleLeftArrow.Font = (Font)newValue);
 
@@ -256,6 +265,15 @@ namespace XamForms.Controls
 		{
 			get { return TitleRightArrow.TextColor; }
 			set { TitleRightArrow.TextColor = value; }
+		}
+
+		public static readonly BindableProperty TitleRightArrowBackgroundColorProperty = BindableProperty.Create(nameof(TitleRightArrowBackgroundColor), typeof(Color), typeof(Calendar), default(Color),
+			propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).TitleRightArrow.BackgroundColor = (Color)newValue);
+
+		public Color TitleRightArrowBackgroundColor
+		{
+			get { return TitleRightArrow.BackgroundColor; }
+			set { TitleRightArrow.BackgroundColor = value; }
 		}
 
 		public static readonly BindableProperty TitleRightArrowFontProperty = BindableProperty.Create(nameof(TitleRightArrowFont), typeof(Font), typeof(Calendar), default(Font),
@@ -390,7 +408,7 @@ namespace XamForms.Controls
 		/// <value>The title label format.</value>
 		public string TitleLabelFormat
 		{
-			get { return (string)GetValue(TitleLabelFormatProperty); }
+			get { return GetValue(TitleLabelFormatProperty) as string; }
 			set { SetValue(TitleLabelFormatProperty, value); }
 		}
 

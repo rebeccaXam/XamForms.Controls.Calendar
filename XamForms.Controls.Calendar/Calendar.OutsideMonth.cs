@@ -118,7 +118,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string DatesFontFamilyOutsideMonth
 		{
-			get { return (string)GetValue(DatesFontOutsideMonthProperty); }
+			get { return GetValue(DatesFontOutsideMonthProperty) as string; }
 			set { SetValue(DatesFontOutsideMonthProperty, value); }
 		}
 

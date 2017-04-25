@@ -120,7 +120,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string NumberOfWeekFontFamily
 		{
-			get { return (string)GetValue(NumberOfWeekFontFamilyProperty); }
+			get { return GetValue(NumberOfWeekFontFamilyProperty) as string; }
 			set { SetValue(NumberOfWeekFontFamilyProperty, value); }
 		}
 

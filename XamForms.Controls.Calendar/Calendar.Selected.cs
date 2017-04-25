@@ -218,7 +218,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string SelectedFontFamily
 		{
-			get { return (string)GetValue(SelectedFontFamilyProperty); }
+			get { return GetValue(SelectedFontFamilyProperty) as string; }
 			set { SetValue(SelectedFontFamilyProperty, value); }
 		}
 

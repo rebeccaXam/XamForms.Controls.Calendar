@@ -199,7 +199,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string DisabledFontFamily
 		{
-			get { return (string)GetValue(DisabledFontFamilyProperty); }
+			get { return GetValue(DisabledFontFamilyProperty) as string; }
 			set { SetValue(DisabledFontFamilyProperty, value); }
 		}
 

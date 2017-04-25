@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -28,6 +29,13 @@ namespace CalendarDemo
 				_date = value;
 				NotifyPropertyChanged(nameof(Date));
 			}
+		}
+
+		private ObservableCollection<XamForms.Controls.SpecialDate> attendances;
+		public ObservableCollection<XamForms.Controls.SpecialDate> Attendances
+		{
+			get { return attendances; }
+			set { attendances = value;  NotifyPropertyChanged(nameof(Attendances));}
 		}
 
 		public ICommand DateChosen

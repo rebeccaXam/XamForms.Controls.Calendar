@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Xamarin.Forms;
 using XamForms.Controls;
 
@@ -8,16 +9,18 @@ namespace CalendarDemo
     public class App : Application
     {
 		Calendar calendar;
+		CalendarVM _vm;
 		public App()
         {
 			calendar = new Calendar
 			{
-				//MaxDate=DateTime.Now.AddDays(30), 
+				MaxDate=DateTime.Now.AddDays(30), 
 				MinDate = DateTime.Now.AddDays(-1),
+				DisableDatesLimitToMaxMinRange = true,
 				MultiSelectDates = true,
 				DisableAllDates = false,
 				WeekdaysShow = true,
-				ShowNumberOfWeek = true,
+				ShowNumberOfWeek = false,
 				ShowNumOfMonths = 1,
 				EnableTitleMonthYearView = true,
 				SelectedDate = DateTime.Now,
@@ -48,10 +51,11 @@ namespace CalendarDemo
 			calendar.DateClicked += (sender, e) => {
 				System.Diagnostics.Debug.WriteLine( calendar.SelectedDates);
 			};
-			var vm = new CalendarVM();
-			calendar.SetBinding(Calendar.DateCommandProperty, nameof(vm.DateChosen));
-			calendar.SetBinding(Calendar.SelectedDateProperty, nameof(vm.Date));
-			calendar.BindingContext = vm;
+			_vm = new CalendarVM();
+			var c2 = new CalendarXamlView();
+			//calendar.SetBinding(Calendar.DateCommandProperty, nameof(_vm.DateChosen));
+			//calendar.SetBinding(Calendar.SpecialDatesProperty, nameof(_vm.Attendances));
+			c2.BindingContext = _vm;
 
             // The root page of your application
             MainPage = new ContentPage
@@ -59,9 +63,9 @@ namespace CalendarDemo
 				BackgroundColor= Color.White,
 				Content = new ScrollView {
 					Content = new StackLayout {
-							Padding = new Thickness(5, Device.OS == TargetPlatform.iOS ? 25 : 5, 5, 5),
+						Padding = new Thickness(5, Device.RuntimePlatform == Device.iOS ? 25 : 5, 5, 5),
 							Children = {
-							calendar
+							calendar//,c2
 						}
 					}
                 }
@@ -71,9 +75,19 @@ namespace CalendarDemo
         protected override void OnStart()
         {
 			// Handle when your app starts
-			calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(5)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
-			calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(6)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
-			calendar.RaiseSpecialDatesChanged();
+			//calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(5)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
+			//calendar.SpecialDates.Add(new SpecialDate(DateTime.Now.AddDays(6)) { BackgroundColor = Color.Fuchsia, TextColor = Color.Accent, BorderColor = Color.Maroon, BorderWidth = 8 });
+			//calendar.RaiseSpecialDatesChanged();
+
+			var dates = new List<SpecialDate>();
+
+			var specialDate = new SpecialDate(new DateTime(2017, 04, 26));
+			specialDate.BackgroundColor = Color.Green;
+			specialDate.TextColor = Color.White;
+
+			dates.Add(specialDate);
+
+			_vm.Attendances = new ObservableCollection<SpecialDate>(dates);
         }
 
         protected override void OnSleep()
