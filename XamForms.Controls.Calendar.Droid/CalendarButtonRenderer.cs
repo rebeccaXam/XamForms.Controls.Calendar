@@ -4,6 +4,9 @@ using Xamarin.Forms.Platform.Android;
 using XamForms.Controls;
 using Android.Runtime;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Android.Graphics;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.Droid
@@ -43,11 +46,18 @@ namespace XamForms.Controls.Droid
             {
 				if (element.BackgroundPattern == null)
 				{
-					var drawable = new GradientDrawable();
-					drawable.SetShape(ShapeType.Rectangle);
-					drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
-					drawable.SetColor(Element.BackgroundColor.ToAndroid());
-					Control.SetBackground(drawable);
+					if (element.BackgroundImage == null)
+					{
+						var drawable = new GradientDrawable();
+						drawable.SetShape(ShapeType.Rectangle);
+						drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
+						drawable.SetColor(Element.BackgroundColor.ToAndroid());
+						Control.SetBackground(drawable);
+					}
+					else
+					{
+						ChangeBackgroundImage();
+					}
 				}
 				else 
 				{
@@ -59,7 +69,30 @@ namespace XamForms.Controls.Droid
 			{
 				ChangeBackgroundPattern();
 			}
+
+			if (e.PropertyName == nameof(element.BackgroundImage))
+			{
+				ChangeBackgroundImage();
+			}
         }
+
+		protected async void ChangeBackgroundImage()
+		{
+			var element = Element as CalendarButton;
+			if (element == null || element.BackgroundImage == null) return;
+
+			var d = new List<Drawable>();
+			var image = await GetBitmap(element.BackgroundImage);
+			d.Add(new BitmapDrawable(image));
+			var drawable = new GradientDrawable();
+			drawable.SetShape(ShapeType.Rectangle);
+			drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
+			drawable.SetColor(Android.Graphics.Color.Transparent);
+			d.Add(drawable);
+			var layer = new LayerDrawable(d.ToArray());
+			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
+			Control.SetBackground(layer);
+		}
 
 		protected void ChangeBackgroundPattern()
 		{
@@ -87,6 +120,12 @@ namespace XamForms.Controls.Droid
 			}
 			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
 			Control.SetBackground(layer);
+		}
+
+		Task<Bitmap> GetBitmap(FileImageSource image)
+		{
+			var handler = new FileImageSourceHandler();
+			return handler.LoadImageAsync(image, this.Control.Context);
 		}
     }
 

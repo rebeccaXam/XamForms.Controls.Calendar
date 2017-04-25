@@ -228,10 +228,12 @@ namespace XamForms.Controls
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				button.BackgroundPattern = special != null ? special.BackgroundPattern : null;
+				button.BackgroundImage = special != null ? special.BackgroundImage : null;
 				var defaultBackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
 				var defaultTextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;
 				var defaultFontAttributes = button.IsOutOfMonth ? DatesFontAttributesOutsideMonth : DatesFontAttributes;
-				button.BackgroundPattern = special != null ? special.BackgroundPattern : null;
+				var defaultFontFamily = button.IsOutOfMonth ? DatesFontFamilyOutsideMonth : DatesFontFamily;
 				button.IsEnabled = true;
 				button.IsSelected = true;
 				button.FontSize = SelectedFontSize;
@@ -240,7 +242,7 @@ namespace XamForms.Controls
 				button.BackgroundColor = SelectedBackgroundColor != Color.Default ? SelectedBackgroundColor : (special != null && special.BackgroundColor.HasValue ? special.BackgroundColor.Value : defaultBackgroundColor);
 				button.TextColor = SelectedTextColor != Color.Default ? SelectedTextColor : (special != null && special.TextColor.HasValue ? special.TextColor.Value : defaultTextColor);
 				button.FontAttributes = SelectedFontAttributes != FontAttributes.None ? SelectedFontAttributes : (special != null && special.FontAttributes.HasValue ? special.FontAttributes.Value : defaultFontAttributes);
-				button.FontFamily = !string.IsNullOrEmpty(SelectedFontFamily) ? SelectedFontFamily : (special != null && !string.IsNullOrEmpty(special.FontFamily) ? special.FontFamily : default(string));
+				button.FontFamily = !string.IsNullOrEmpty(SelectedFontFamily) ? SelectedFontFamily : (special != null && !string.IsNullOrEmpty(special.FontFamily) ? special.FontFamily :defaultFontFamily);
 			});
 		}
 

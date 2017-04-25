@@ -29,6 +29,8 @@ namespace XamForms.Controls
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				button.BackgroundPattern = special.BackgroundPattern;
+				button.BackgroundImage = special.BackgroundImage;
 				if (special.FontSize.HasValue) button.FontSize = special.FontSize.Value;
 				if (special.BorderWidth.HasValue) button.BorderWidth = special.BorderWidth.Value;
 				if (special.BorderColor.HasValue) button.BorderColor = special.BorderColor.Value;
@@ -36,7 +38,6 @@ namespace XamForms.Controls
 				if (special.TextColor.HasValue) button.TextColor = special.TextColor.Value;
 				if (special.FontAttributes.HasValue) button.FontAttributes = special.FontAttributes.Value;
 				if (!string.IsNullOrEmpty(special.FontFamily)) button.FontFamily = special.FontFamily;
-				button.BackgroundPattern = special.BackgroundPattern;
 				button.IsEnabled = special.Selectable;
 			});
 		}

@@ -210,6 +210,7 @@ namespace XamForms.Controls
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				button.BackgroundPattern = null;
+				button.BackgroundImage = null;
 				button.FontSize = DisabledFontSize;
 				button.BorderWidth = DisabledBorderWidth;
 				button.BorderColor = DisabledBorderColor;

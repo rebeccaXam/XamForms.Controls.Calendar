@@ -53,6 +53,16 @@ namespace XamForms.Controls
 			get { return (BackgroundPattern)GetValue(BackgroundPatternProperty); }
 			set { SetValue(BackgroundPatternProperty, value); }
 		}
+
+		public static readonly BindableProperty BackgroundImageProperty =
+			BindableProperty.Create(nameof(BackgroundImage), typeof(FileImageSource), typeof(Button), null);
+
+		public FileImageSource BackgroundImage
+		{
+			get { return (FileImageSource)GetValue(BackgroundImageProperty); }
+			set { SetValue(BackgroundImageProperty, value); }	
+		}
+
     }
 }
 

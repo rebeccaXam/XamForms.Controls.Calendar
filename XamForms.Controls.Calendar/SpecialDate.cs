@@ -21,6 +21,11 @@ namespace XamForms.Controls
 		public double? FontSize { get; set; }
 		public bool Selectable { get; set; }
 		/// <summary>
+		/// Gets or sets the background image (only working on iOS and Android).
+		/// </summary>
+		/// <value>The background pattern.</value>
+		public FileImageSource BackgroundImage { get; set; }
+		/// <summary>
 		/// Gets or sets the background pattern (only working on iOS and Android).
 		/// </summary>
 		/// <value>The background pattern.</value>

@@ -3,6 +3,8 @@ using XamForms.Controls.iOS;
 using Xamarin.Forms.Platform.iOS;
 using UIKit;
 using CoreGraphics;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 #if __UNIFIED__
 using Foundation;
 #else
@@ -33,12 +35,28 @@ namespace XamForms.Controls.iOS
 			{ 
 				DrawBackgroundPattern();
 			}
+			if (e.PropertyName == nameof(element.BackgroundImage))
+			{ 
+				DrawBackgroundImage();
+			}
         }
 
 		public override void Draw(CGRect rect)
 		{
 			base.Draw(rect);
+			DrawBackgroundImage();
 			DrawBackgroundPattern();
+		}
+
+		protected async void DrawBackgroundImage()
+		{
+			var element = Element as CalendarButton;
+			Control.SetBackgroundImage(null, UIControlState.Normal);
+			Control.SetBackgroundImage(null, UIControlState.Disabled);
+			if (element == null || element.BackgroundImage == null) return;
+			var image = await GetImage(element.BackgroundImage);
+			Control.SetBackgroundImage(image, UIControlState.Normal);
+			Control.SetBackgroundImage(image, UIControlState.Disabled);
 		}
 
 		protected void DrawBackgroundPattern()
@@ -68,6 +86,12 @@ namespace XamForms.Controls.iOS
 			UIGraphics.EndImageContext();
 			Control.SetBackgroundImage(image, UIControlState.Normal);
 			Control.SetBackgroundImage(image, UIControlState.Disabled);
+		}
+
+		Task<UIImage> GetImage(FileImageSource image)
+		{
+			var handler = new FileImageSourceHandler();
+			return handler.LoadImageAsync(image);
 		}
     }
 

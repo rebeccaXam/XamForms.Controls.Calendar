@@ -14,10 +14,10 @@ namespace CalendarDemo
         {
 			calendar = new Calendar
 			{
-				MaxDate=DateTime.Now.AddDays(30), 
+				MaxDate = DateTime.Now.AddDays(30),
 				MinDate = DateTime.Now.AddDays(-1),
 				DisableDatesLimitToMaxMinRange = true,
-				MultiSelectDates = true,
+				MultiSelectDates = false,
 				DisableAllDates = false,
 				WeekdaysShow = true,
 				ShowNumberOfWeek = false,
@@ -44,6 +44,11 @@ namespace CalendarDemo
 								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow}
 							}
 						}
+					},
+					new SpecialDate(DateTime.Now.AddDays(4))
+					{
+						Selectable = true,
+						BackgroundImage = FileImageSource.FromFile("icon.png") as FileImageSource
 					}
 				}
 			};
@@ -97,7 +102,7 @@ namespace CalendarDemo
 
         protected override void OnResume()
         {
-            // Handle when your app resumes
+            // Ob resumes
         }
     }
 }
