@@ -309,29 +309,6 @@ namespace XamForms.Controls
 
 		#endregion
 
-		#region DatesFont
-
-		public static readonly BindableProperty DatesFontProperty =
-					BindableProperty.Create(nameof(DatesFont), typeof(Font), typeof(Calendar), Font.Default,
-					                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDatesFont((Font)newValue, (Font)oldValue));
-
-		protected void ChangeDatesFont(Font newValue, Font oldValue)
-		{
-			if (newValue == oldValue) return;
-			buttons?.FindAll(b => !b.IsSelected && b.IsEnabled).ForEach(b => b.Font = newValue);
-		}
-
-		/// <summary>
-		/// Gets or sets the font of dates.
-		/// </summary>
-		public Font DatesFont
-		{
-			get { return (Font)GetValue(DatesFontProperty); }
-			set { SetValue(DatesFontProperty, value); }
-		}
-
-		#endregion
-
 		#region DatesFontFamily
 
 		public static readonly BindableProperty DatesFontFamilyProperty =
@@ -506,6 +483,7 @@ namespace XamForms.Controls
 							BackgroundColor = DatesBackgroundColor,
 							TextColor = DatesTextColor,
 							FontAttributes = DatesFontAttributes,
+							FontFamily = DatesFontFamily,
 							HorizontalOptions = LayoutOptions.FillAndExpand,
 							VerticalOptions = LayoutOptions.FillAndExpand
 						});
@@ -621,7 +599,6 @@ namespace XamForms.Controls
                 button.FontSize = DatesFontSize;
                 button.BorderWidth = BorderWidth;
                 button.BorderColor = BorderColor;
-				button.Font = button.IsOutOfMonth ? DatesFontOutsideMonth : DatesFont;
 				button.FontFamily = button.IsOutOfMonth? DatesFontFamilyOutsideMonth : DatesFontFamily;
                 button.BackgroundColor = button.IsOutOfMonth ? DatesBackgroundColorOutsideMonth : DatesBackgroundColor;
                 button.TextColor = button.IsOutOfMonth ? DatesTextColorOutsideMonth : DatesTextColor;

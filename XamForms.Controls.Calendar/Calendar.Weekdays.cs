@@ -97,7 +97,7 @@ namespace XamForms.Controls
 		/// </summary>
 		public string WeekdaysFontFamily
 		{
-			get { return (string)GetValue(WeekdaysFontFamilyProperty); }
+			get { return GetValue(WeekdaysFontFamilyProperty) as string; }
 			set { SetValue(WeekdaysFontFamilyProperty, value); }
 		}
 
@@ -115,7 +115,7 @@ namespace XamForms.Controls
 		/// <value>The weekdays format.</value>
 		public string WeekdaysFormat
 		{
-			get { return (string)GetValue(WeekdaysFormatProperty); }
+			get { return GetValue(WeekdaysFormatProperty) as string; }
 			set { SetValue(WeekdaysFormatProperty, value); }
 		}
 		#endregion
