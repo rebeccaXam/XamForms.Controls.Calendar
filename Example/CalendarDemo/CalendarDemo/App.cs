@@ -20,7 +20,7 @@ namespace CalendarDemo
 				MultiSelectDates = false,
 				DisableAllDates = false,
 				WeekdaysShow = true,
-				ShowNumberOfWeek = false,
+				ShowNumberOfWeek = true,
 				ShowNumOfMonths = 1,
 				EnableTitleMonthYearView = true,
 				SelectedDate = DateTime.Now,

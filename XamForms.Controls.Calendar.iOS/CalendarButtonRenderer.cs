@@ -44,6 +44,8 @@ namespace XamForms.Controls.iOS
 		public override void Draw(CGRect rect)
 		{
 			base.Draw(rect);
+			Control.SetBackgroundImage(null, UIControlState.Normal);
+			Control.SetBackgroundImage(null, UIControlState.Disabled);
 			DrawBackgroundImage();
 			DrawBackgroundPattern();
 		}
@@ -51,8 +53,6 @@ namespace XamForms.Controls.iOS
 		protected async void DrawBackgroundImage()
 		{
 			var element = Element as CalendarButton;
-			Control.SetBackgroundImage(null, UIControlState.Normal);
-			Control.SetBackgroundImage(null, UIControlState.Disabled);
 			if (element == null || element.BackgroundImage == null) return;
 			var image = await GetImage(element.BackgroundImage);
 			Control.SetBackgroundImage(image, UIControlState.Normal);
@@ -62,8 +62,6 @@ namespace XamForms.Controls.iOS
 		protected void DrawBackgroundPattern()
 		{
 			var element = Element as CalendarButton;
-			Control.SetBackgroundImage(null, UIControlState.Normal);
-			Control.SetBackgroundImage(null, UIControlState.Disabled);
 			if (element == null || element.BackgroundPattern == null || Control.Frame.Width == 0) return;
 
 			UIImage image;

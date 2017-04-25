@@ -554,6 +554,8 @@ namespace XamForms.Controls
 						sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
 					}
 
+                    SetButtonNormal(buttons[i]);
+
 					if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate) || (DisableAllDates && sd == null))
 					{
 						SetButtonDisabled(buttons[i]);
@@ -565,10 +567,6 @@ namespace XamForms.Controls
 					else if (sd != null)
 					{
 						SetButtonSpecial(buttons[i], sd);
-					}
-					else
-					{
-						SetButtonNormal(buttons[i]);
 					}
 
 					start = start.AddDays(1);
