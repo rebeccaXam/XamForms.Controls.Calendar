@@ -114,7 +114,7 @@ namespace XamForms.Controls
 		protected void ChangeSelectedBackgroundColor(Color newValue, Color oldValue)
 		{
 			if (newValue == oldValue) return;
-			buttons.FindAll(b => b.IsSelected).ForEach(b => b.BackgroundColor = (newValue != Color.Default ?  newValue: Color.Transparent));
+			buttons.FindAll(b => b.IsSelected).ForEach(b => b.BackgroundColor = (newValue != Color.Default ?  newValue : Color.Transparent));
 		}
 
 		/// <summary>
