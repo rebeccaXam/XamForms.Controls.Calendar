@@ -256,10 +256,7 @@ namespace XamForms.Controls
 				SelectedDates.Clear();
 			}
 
-			if (buttons.Count == 0)
-			{
-				SelectedDates.Add(SelectedDate.Value.Date);
-			}
+			SelectedDates.Add(SelectedDate.Value.Date);
 
 			var button = buttons.Find(b => b.Date.HasValue && b.Date.Value.Date == date.Value.Date && b.IsEnabled);
 			if (button == null) return false;
