@@ -589,13 +589,14 @@ namespace XamForms.Controls
 
         protected void SetButtonNormal(CalendarButton button)
         {
+			button.BackgroundPattern = null;
+			button.BackgroundImage = null;
+                
             Device.BeginInvokeOnMainThread(() =>
             {
                 button.IsEnabled = true;
                 button.IsSelected = false;
-				button.BackgroundPattern = null;
-				button.BackgroundImage = null;
-                button.FontSize = DatesFontSize;
+				button.FontSize = DatesFontSize;
                 button.BorderWidth = BorderWidth;
                 button.BorderColor = BorderColor;
 				button.FontFamily = button.IsOutOfMonth? DatesFontFamilyOutsideMonth : DatesFontFamily;
