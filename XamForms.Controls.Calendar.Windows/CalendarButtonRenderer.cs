@@ -42,7 +42,11 @@ namespace XamForms.Controls.Windows
 	{
         public static void Init()
 		{
-            var t = "";
+#if WINDOWS_APP
+           XamForms.Controls.Calendar.GridSpace = -5;
+#else
+           XamForms.Controls.Calendar.GridSpace = 0.5;
+#endif
         }
     }
 }

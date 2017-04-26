@@ -13,8 +13,9 @@ namespace XamForms.Controls
 		List<Grid> MainCalendars;
 		List<Label> TitleLabels;
 		StackLayout MainView, ContentView;
+        public static double GridSpace = 0;
 
-		public Calendar()
+        public Calendar()
 		{
 			TitleLeftArrow = new CalendarButton
 			{
@@ -466,8 +467,8 @@ namespace XamForms.Controls
 			MainCalendars.Clear();
 			for (var i = 0; i < ShowNumOfMonths; i++)
 			{
-				var mainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = 0, ColumnSpacing = 0, Padding = 1, BackgroundColor = BorderColor };
-				mainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
+				var mainCalendar = new Grid { VerticalOptions = LayoutOptions.FillAndExpand, HorizontalOptions = LayoutOptions.FillAndExpand, RowSpacing = GridSpace, ColumnSpacing = GridSpace, Padding = 1, BackgroundColor = BorderColor };
+                mainCalendar.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
 				mainCalendar.RowDefinitions = new RowDefinitionCollection { rowDef, rowDef, rowDef, rowDef, rowDef, rowDef };
 
 				for (int r = 0; r < 6; r++)
@@ -621,7 +622,7 @@ namespace XamForms.Controls
 			}
 		}
 
-		#endregion
+#endregion
 
         public event EventHandler<DateTimeEventArgs> DateClicked;
     }
