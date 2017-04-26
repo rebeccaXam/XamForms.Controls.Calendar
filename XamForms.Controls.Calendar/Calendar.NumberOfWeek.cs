@@ -64,7 +64,7 @@ namespace XamForms.Controls
 		protected void ChangeNumberOfWeekFontSize(double newValue, double oldValue)
 		{
 			if (Math.Abs(newValue - oldValue) < 0.01) return;
-			WeekNumbers?.ForEach((obj) => obj.WidthRequest = newValue*( Device.OS == TargetPlatform.iOS ? 1.5 : 2.2));
+			WeekNumbers?.ForEach((obj) => obj.WidthRequest = newValue*( Device.RuntimePlatform == Device.iOS ? 1.5 : 2.2));
 			weekNumberLabels.ForEach(l => l.FontSize = newValue);
 		}
 

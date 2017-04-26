@@ -46,7 +46,7 @@ namespace XamForms.Controls
 				Padding = 0,
 				VerticalOptions = LayoutOptions.Start,
 				Orientation = StackOrientation.Horizontal,
-				HeightRequest = Device.OS == TargetPlatform.Windows ? 50 : 32,
+				HeightRequest = Device.RuntimePlatform == Device.Windows ? 50 : 32,
 				Children = { TitleLeftArrow, TitleLabel, TitleRightArrow}
 			};
 			ContentView = new StackLayout
@@ -149,7 +149,7 @@ namespace XamForms.Controls
 		#region BorderWidth
 
 		public static readonly BindableProperty BorderWidthProperty =
-			BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
+			BindableProperty.Create(nameof(BorderWidth), typeof(int), typeof(Calendar), Device.RuntimePlatform == Device.iOS ? 1 : 3,
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeBorderWidth((int)newValue, (int)oldValue));
 
 		protected void ChangeBorderWidth(int newValue, int oldValue)

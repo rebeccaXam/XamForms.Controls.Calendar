@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.0.8</version>
+       <version>1.1.0</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -13,14 +13,24 @@
        <description>
            Custom calendar control for Xamarin.Forms.
            Customizable border thickness, color, background colors and formats.
-           Built against: 2.1.0.6521
+           Version 1.0.8 or lower Built against: 2.1.0.6521
+	   Version 1.1.0 or above Built against: 2.3.4.231
        </description>
        <summary>A Calendar control for Xamarin Forms.</summary>
        <tags>xamarin, pcl, xam.pcl, uwp, uwa, windows phone, winphone, wp8, android, xamarin.forms, ios, calendar, control</tags>
        <dependencies>
-         <dependency id="Xamarin.Forms" version="2.0.1.6521" />
+         <dependency id="Xamarin.Forms" version="2.3.4.231" />
        </dependencies>
        <releaseNotes>
+	 [1.1.0]
+	 - Update Xamarin.Forms from 2.1.0.6521 to 2.3.4.231
+	 - Added new DisableDatesLimitToMaxMinRange (when true) to disallow to show dates outside min-max daterange
+	 - Added FontFamily properties for: DatesFontFamily,DatesFontFamilyOutsideMonth, DisabledFontFamily, WeekdaysFontFamily, SelectedFontFamily and specialdates.FontFamily
+	 - Add SpecialDate.BackgroundImage to set a background image (Android and iOS only)
+	 - Fix Windows exception at init
+	 - Fix from SelectedBackgroundColor and SelectedTextColor xaml crash
+	 - Fix for random null reference crash at async of FillCalendarWindows, removed async logic
+	 - Fix SpecialDates xaml binding with ObservableCollection, SpecialDates is now of type ICollection
 	 [1.0.8]
 	 - Feature request: bindable property to set CalendarWeekRule
 	 - Should be better: Day button borders on UWP sometimes is not visible

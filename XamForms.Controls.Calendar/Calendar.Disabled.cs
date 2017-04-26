@@ -42,7 +42,7 @@ namespace XamForms.Controls
 		#region DisabledBorderWidth
 
 		public static readonly BindableProperty DisabledBorderWidthProperty =
-			BindableProperty.Create(nameof(DisabledBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
+			BindableProperty.Create(nameof(DisabledBorderWidth), typeof(int), typeof(Calendar), Device.RuntimePlatform == Device.iOS ? 1 : 3,
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeDisabledBorderWidth((int)newValue, (int)oldValue));
 
 		protected void ChangeDisabledBorderWidth(int newValue, int oldValue)

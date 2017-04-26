@@ -25,10 +25,11 @@ XamForms.Controls.<PLATFORM>.Calendar.Init();
 
 You must do this AFTER you call Xamarin.Forms.Init();
 
-**Note:** I you are having problems like: [When Changing Months, the days do not update properly](https://github.com/rebeccaXam/XamForms.Controls.Calendar/issues/2) in Windows UWP, try adding this to your UWP project AssemblyInfo.cs:
+**IMPORTANT:** I you are having problems like: [When Changing Months, the days do not update properly](https://github.com/rebeccaXam/XamForms.Controls.Calendar/issues/2) in, try adding this to your projects AssemblyInfo.cs:
 ```
-[assembly:Xamarin.Forms.Platform.UWP.ExportRenderer(typeof(XamForms.Controls.CalendarButton), typeof(XamForms.Controls.Windows.CalendarButtonRenderer))]
+[assembly:Xamarin.Forms.Platform.<Platform>.ExportRenderer(typeof(XamForms.Controls.CalendarButton), typeof(XamForms.Controls.<Platform>.CalendarButtonRenderer))]
 ```
+[Troubleshoot](https://github.com/rebeccaXam/XamForms.Controls.Calendar/wiki#troubleshoot)
 
 #### Usage
 Here is a sample:
