@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>XamForms.Controls.Calendar</id>
-       <version>1.1.0</version>
+       <version>1.1.1</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam</authors>
        <owners>RebeccaXam</owners>
@@ -22,6 +22,9 @@
          <dependency id="Xamarin.Forms" version="2.3.4.231" />
        </dependencies>
        <releaseNotes>
+	 [1.1.1]
+	 - Fix SelectedDate does not select the date in the calendar when set
+	 - Fix Android SpecialDate background image ghost on wrong date when switching months
 	 [1.1.0]
 	 - Update Xamarin.Forms from 2.1.0.6521 to 2.3.4.231
 	 - Added new DisableDatesLimitToMaxMinRange (when true) to disallow to show dates outside min-max daterange
