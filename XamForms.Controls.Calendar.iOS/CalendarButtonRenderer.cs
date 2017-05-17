@@ -3,6 +3,7 @@ using XamForms.Controls.iOS;
 using Xamarin.Forms.Platform.iOS;
 using UIKit;
 using CoreGraphics;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 #if __UNIFIED__
@@ -72,10 +73,10 @@ namespace XamForms.Controls.iOS
 				{
 					var p = element.BackgroundPattern.Pattern[i];
 					g.SetFillColor(p.Color.ToCGColor());
-					var l = (int)(Control.Frame.Width * element.BackgroundPattern.GetLeft(i));
-					var t = (int)(Control.Frame.Height * element.BackgroundPattern.GetTop(i));
-					var w = (int)(Control.Frame.Width * element.BackgroundPattern.Pattern[i].WidthPercent);
-					var h = (int)(Control.Frame.Height * element.BackgroundPattern.Pattern[i].HightPercent);
+					var l = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.GetLeft(i));
+					var t = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.GetTop(i));
+					var w = (int)Math.Ceiling(Control.Frame.Width * element.BackgroundPattern.Pattern[i].WidthPercent);
+					var h = (int)Math.Ceiling(Control.Frame.Height * element.BackgroundPattern.Pattern[i].HightPercent);
 					g.FillRect(new CGRect { X = l, Y = t, Width = w, Height = h });
 				}
 
