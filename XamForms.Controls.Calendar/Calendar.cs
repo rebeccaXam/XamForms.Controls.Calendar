@@ -14,6 +14,7 @@ namespace XamForms.Controls
 		List<Label> TitleLabels;
 		StackLayout MainView, ContentView;
         public static double GridSpace = 0;
+		public event EventHandler<EventArgs> OnStartRenderCalendar, OnEndRenderCalendar;
 
         public Calendar()
 		{
@@ -174,7 +175,7 @@ namespace XamForms.Controls
 		#region OuterBorderWidth
 
 		public static readonly BindableProperty OuterBorderWidthProperty =
-			BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 1 : 3,
+			BindableProperty.Create(nameof(OuterBorderWidth), typeof(int), typeof(Calendar), Device.RuntimePlatform == Device.iOS ? 1 : 3,
 			                        propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).MainCalendars.ForEach((obj) => obj.Padding = (int)newValue));
 
 		/// <summary>
@@ -506,6 +507,7 @@ namespace XamForms.Controls
         {
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				OnStartRenderCalendar?.Invoke(this, EventArgs.Empty);
 				Content = null;
 				if (changes.HasFlag(CalandarChanges.StartDate))
 				{
@@ -585,6 +587,7 @@ namespace XamForms.Controls
 					TitleRightArrow.IsEnabled = !(MaxDate.HasValue && start > MaxDate);
 				}
 				Content = MainView;
+				OnEndRenderCalendar?.Invoke(this, EventArgs.Empty);
 			});
         }
 

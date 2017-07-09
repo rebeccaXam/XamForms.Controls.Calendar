@@ -60,7 +60,7 @@ namespace XamForms.Controls
 		#region SelectedBorderWidth
 
 		public static readonly BindableProperty SelectedBorderWidthProperty =
-			BindableProperty.Create(nameof(SelectedBorderWidth), typeof(int), typeof(Calendar), Device.OS == TargetPlatform.iOS ? 3 : 5,
+			BindableProperty.Create(nameof(SelectedBorderWidth), typeof(int), typeof(Calendar), Device.RuntimePlatform == Device.iOS ? 3 : 5,
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeSelectedBorderWidth((int)newValue, (int)oldValue));
 
 		protected void ChangeSelectedBorderWidth(int newValue, int oldValue)
