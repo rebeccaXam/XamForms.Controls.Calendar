@@ -162,7 +162,7 @@ namespace XamForms.Controls.Droid
 			paint = new Paint();
 			paint.AntiAlias = true;
 			paint.SetStyle(Paint.Style.Fill);
-			paint.TextAlign = Paint.Align.Center;
+			paint.TextAlign = Paint.Align.Left;
 		}
 
 		public override void Draw(Canvas canvas)
@@ -172,8 +172,24 @@ namespace XamForms.Controls.Droid
 			paint.TextSize = Android.Util.TypedValue.ApplyDimension(Android.Util.ComplexUnitType.Sp,Pattern.TextSize > 0 ? Pattern.TextSize : 12,Forms.Context.Resources.DisplayMetrics);
 			var bounds = new Rect();
 			paint.GetTextBounds(Pattern.Text, 0, Pattern.Text.Length, bounds);
-			canvas.DrawText(Pattern.Text.ToCharArray(), 0, Pattern.Text.Length, Bounds.CenterX(), Bounds.CenterY()+(int)Math.Ceiling(bounds.Height()/2.0), paint);
-			Console.Out.WriteLine(Bounds.CenterY());
+			var al = (int)Pattern.TextAlign;
+			var x = Bounds.Left;
+			if ((al & 2) == 2) // center
+			{
+				x = Bounds.CenterX() - Math.Abs(bounds.CenterX());
+			} else if ((al & 4) == 4) // right
+			{
+				x = Bounds.Right - bounds.Width();
+			}
+			var y = Bounds.Top+Math.Abs(bounds.Top);
+			if ((al & 16) == 16) // middle
+			{
+				y = Bounds.CenterY()+Math.Abs(bounds.CenterY());
+			} else if ((al & 32) == 32) // bottom
+			{
+				y = Bounds.Bottom - Math.Abs(bounds.Bottom);
+			}
+			canvas.DrawText(Pattern.Text.ToCharArray(), 0, Pattern.Text.Length, x, y, paint);
 		}
 	}
 }

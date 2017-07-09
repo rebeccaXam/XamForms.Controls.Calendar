@@ -6,24 +6,28 @@ using XamForms.Controls;
 
 namespace CalendarDemo
 {
-    public class App : Application
+	public class App : Application
     {
 		Calendar calendar;
 		CalendarVM _vm;
+
 		public App()
         {
 			calendar = new Calendar
 			{
-				MaxDate = DateTime.Now.AddDays(30),
-				MinDate = DateTime.Now.AddDays(-1),
-				DisableDatesLimitToMaxMinRange = true,
+				//MaxDate = DateTime.Now.AddDays(30),
+				//MinDate = DateTime.Now.AddDays(-1),
+				//DisableDatesLimitToMaxMinRange = true,
 				MultiSelectDates = false,
 				DisableAllDates = false,
 				WeekdaysShow = true,
-				ShowNumberOfWeek = true,
+				ShowNumberOfWeek = false,
+                BorderWidth = 1,
+                BorderColor = Color.Transparent,
+                OuterBorderWidth = 0,
+                SelectedBorderWidth = 1,
 				ShowNumOfMonths = 1,
 				EnableTitleMonthYearView = true,
-				SelectedDate = DateTime.Now,
 				WeekdaysTextColor = Color.Teal,
 				StartDay = DayOfWeek.Monday,
 				SelectedTextColor = Color.Fuchsia,
@@ -41,7 +45,7 @@ namespace CalendarDemo
 								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Red},
 								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Purple},
 								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Green},
-								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow}
+								new Pattern{ WidthPercent = 1f, HightPercent = 0.25f, Color = Color.Yellow,Text = "Test", TextColor=Color.DarkBlue, TextSize=11, TextAlign=TextAlign.Middle}
 							}
 						}
 					},
@@ -52,7 +56,64 @@ namespace CalendarDemo
 					}
 				}
 			};
-							
+
+			/*
+			var white_row = new Pattern { WidthPercent = 1f, HightPercent = 0.04f, Color = Color.Transparent };
+			var white_col = new Pattern { WidthPercent = 0.04f, HightPercent = 1f, Color = Color.Transparent };
+
+
+			calendar.SpecialDates = new List<SpecialDate>{
+					new SpecialDate(DateTime.Now.AddDays(3))
+					{
+						BackgroundColor = Color.White,
+						TextColor = Color.Black,
+						Selectable = true,
+						BackgroundPattern = new BackgroundPattern(7)
+					{
+						Pattern = new List<Pattern>
+							{
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Red, Text = "X", TextColor=Color.White, TextSize=11},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Gold, Text = "Y", TextColor=Color.White, TextSize=11},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Green, Text = "Z", TextColor=Color.White, TextSize=11},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Purple,Text = "Q", TextColor=Color.White, TextSize=11},
+
+								white_row,white_row,white_row,white_row,white_row,white_row,white_row,
+
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Blue},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Chocolate},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Cyan},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Fuchsia},
+
+								white_row,white_row,white_row,white_row,white_row,white_row,white_row,
+
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Crimson},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Aquamarine},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.OrangeRed},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.DarkOrchid},
+
+								white_row,white_row,white_row,white_row,white_row,white_row,white_row,
+
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Black},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.DeepSkyBlue},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.DarkGoldenrod},
+								white_col,
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Firebrick},
+							}
+						}
+					}
+			};
+			*/				
 			calendar.DateClicked += (sender, e) => {
 				System.Diagnostics.Debug.WriteLine( calendar.SelectedDates);
 			};
@@ -93,6 +154,8 @@ namespace CalendarDemo
 			dates.Add(specialDate);
 
 			_vm.Attendances = new ObservableCollection<SpecialDate>(dates);
+			calendar.SelectedDate = (DateTime.Now);
+
         }
 
         protected override void OnSleep()
