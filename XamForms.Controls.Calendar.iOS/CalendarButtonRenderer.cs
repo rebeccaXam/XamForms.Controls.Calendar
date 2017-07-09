@@ -119,7 +119,6 @@ namespace XamForms.Controls.iOS
 			{
 				y = (r.Y + r.Height) - 2;
 			}
-			Console.Out.WriteLine(r);
 			g.SaveState();
 			g.TranslateCTM(0, Bounds.Height);
     		g.ScaleCTM(1,-1);

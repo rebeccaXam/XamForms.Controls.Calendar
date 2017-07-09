@@ -15,17 +15,17 @@ namespace CalendarDemo
         {
 			calendar = new Calendar
 			{
-				//MaxDate = DateTime.Now.AddDays(30),
-				//MinDate = DateTime.Now.AddDays(-1),
+				MaxDate = DateTime.Now.AddDays(30),
+				MinDate = DateTime.Now.AddDays(-1),
 				//DisableDatesLimitToMaxMinRange = true,
 				MultiSelectDates = false,
 				DisableAllDates = false,
 				WeekdaysShow = true,
-				ShowNumberOfWeek = false,
-                BorderWidth = 1,
-                BorderColor = Color.Transparent,
-                OuterBorderWidth = 0,
-                SelectedBorderWidth = 1,
+				ShowNumberOfWeek = true,
+                //BorderWidth = 1,
+                //BorderColor = Color.Transparent,
+                //OuterBorderWidth = 0,
+                //SelectedBorderWidth = 1,
 				ShowNumOfMonths = 1,
 				EnableTitleMonthYearView = true,
 				WeekdaysTextColor = Color.Teal,
@@ -56,7 +56,6 @@ namespace CalendarDemo
 					}
 				}
 			};
-
 			/*
 			var white_row = new Pattern { WidthPercent = 1f, HightPercent = 0.04f, Color = Color.Transparent };
 			var white_col = new Pattern { WidthPercent = 0.04f, HightPercent = 1f, Color = Color.Transparent };
@@ -72,13 +71,13 @@ namespace CalendarDemo
 					{
 						Pattern = new List<Pattern>
 							{
-								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Red, Text = "X", TextColor=Color.White, TextSize=11},
+							new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Red, Text = "X", TextColor=Color.White, TextSize=11, TextAlign=TextAlign.Middle},
 								white_col,
-								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Gold, Text = "Y", TextColor=Color.White, TextSize=11},
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Gold, Text = "Y", TextColor=Color.White, TextSize=11, TextAlign=TextAlign.Middle},
 								white_col,
-								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Green, Text = "Z", TextColor=Color.White, TextSize=11},
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Green, Text = "Z", TextColor=Color.White, TextSize=11, TextAlign=TextAlign.Middle},
 								white_col,
-								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Purple,Text = "Q", TextColor=Color.White, TextSize=11},
+								new Pattern{ WidthPercent = 0.22f, HightPercent = 0.22f, Color = Color.Purple,Text = "Q", TextColor=Color.White, TextSize=11, TextAlign=TextAlign.Middle},
 
 								white_row,white_row,white_row,white_row,white_row,white_row,white_row,
 
@@ -112,8 +111,8 @@ namespace CalendarDemo
 							}
 						}
 					}
-			};
-			*/				
+			};*/
+					
 			calendar.DateClicked += (sender, e) => {
 				System.Diagnostics.Debug.WriteLine( calendar.SelectedDates);
 			};

@@ -109,7 +109,6 @@ namespace XamForms.Controls.Droid
 				var bp = element.BackgroundPattern.Pattern[i];
 				if (!string.IsNullOrEmpty(bp.Text))
 				{
-					Console.Out.WriteLine("Text:"+bp.Text);
 					d.Add(new TextDrawable(bp.Color.ToAndroid()) { Pattern = bp });
 				}
 				else
