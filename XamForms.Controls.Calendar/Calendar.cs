@@ -76,6 +76,8 @@ namespace XamForms.Controls
 			YearsColumn = 4;
 		}
 
+		public bool IsRendering { get { return Content == null; } }
+
 		#region MinDate
 
 		public static readonly BindableProperty MinDateProperty =
