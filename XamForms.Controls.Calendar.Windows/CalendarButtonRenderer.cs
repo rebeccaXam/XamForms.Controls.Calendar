@@ -45,7 +45,7 @@ namespace XamForms.Controls.Windows
 #if WINDOWS_APP
            XamForms.Controls.Calendar.GridSpace = -5;
 #else
-           XamForms.Controls.Calendar.GridSpace = 0.5;
+           XamForms.Controls.Calendar.GridSpace = 0.1;
 #endif
         }
     }

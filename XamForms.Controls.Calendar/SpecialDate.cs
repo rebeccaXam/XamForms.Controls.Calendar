@@ -68,6 +68,10 @@ namespace XamForms.Controls
 		public float WidthPercent;
 		public float HightPercent;
 		public Color Color;
+
+		public string Text;
+		public Color TextColor;
+		public float TextSize;
 	}
 }
 

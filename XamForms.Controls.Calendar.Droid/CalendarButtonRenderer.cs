@@ -7,50 +7,53 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Graphics;
 using Xamarin.Forms;
+using System;
 
 [assembly: Xamarin.Forms.ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.Droid
 {
 	[Preserve(AllMembers = true)]
-    public class CalendarButtonRenderer : ButtonRenderer
-    {
+	public class CalendarButtonRenderer : ButtonRenderer
+	{
 		protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Button> e)
-        {
-            base.OnElementChanged(e);
-            if (Control == null) return;
-            Control.TextChanged += (sender, a) =>
-            {
-                var element = Element as CalendarButton;
+		{
+			base.OnElementChanged(e);
+			if (Control == null) return;
+			Control.TextChanged += (sender, a) =>
+			{
+				var element = Element as CalendarButton;
 				if (Control.Text == element.TextWithoutMeasure || (string.IsNullOrEmpty(Control.Text) && string.IsNullOrEmpty(element.TextWithoutMeasure))) return;
-                Control.Text = element.TextWithoutMeasure;
-            };
-			Control.SetPadding(1,1,1,1);
+				Control.Text = element.TextWithoutMeasure;
+			};
+			Control.SetPadding(1, 1, 1, 1);
 			Control.ViewTreeObserver.GlobalLayout += (sender, args) => ChangeBackgroundPattern();
-        }
+		}
 
-        protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged(sender, e);
-            var element = Element as CalendarButton;
-            if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
-            {
-                Control.Text = element.TextWithoutMeasure;
-            }
+		protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			base.OnElementPropertyChanged(sender, e);
+			var element = Element as CalendarButton;
+
+			if (e.PropertyName == nameof(element.TextWithoutMeasure) || e.PropertyName == "Renderer")
+			{
+				Control.Text = element.TextWithoutMeasure;
+			}
 
 			if (e.PropertyName == nameof(Element.TextColor) || e.PropertyName == "Renderer")
 			{
 				Control.SetTextColor(Element.TextColor.ToAndroid());
 			}
-			 
+
 			if (e.PropertyName == nameof(Element.BorderWidth) || e.PropertyName == nameof(Element.BorderColor) || e.PropertyName == nameof(Element.BackgroundColor) || e.PropertyName == "Renderer")
-            {
+			{
 				if (element.BackgroundPattern == null)
 				{
 					if (element.BackgroundImage == null)
 					{
 						var drawable = new GradientDrawable();
 						drawable.SetShape(ShapeType.Rectangle);
-						drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
+						var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+						drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 						drawable.SetColor(Element.BackgroundColor.ToAndroid());
 						Control.SetBackground(drawable);
 					}
@@ -59,7 +62,7 @@ namespace XamForms.Controls.Droid
 						ChangeBackgroundImage();
 					}
 				}
-				else 
+				else
 				{
 					ChangeBackgroundPattern();
 				}
@@ -74,7 +77,7 @@ namespace XamForms.Controls.Droid
 			{
 				ChangeBackgroundImage();
 			}
-        }
+		}
 
 		protected async void ChangeBackgroundImage()
 		{
@@ -86,7 +89,8 @@ namespace XamForms.Controls.Droid
 			d.Add(new BitmapDrawable(image));
 			var drawable = new GradientDrawable();
 			drawable.SetShape(ShapeType.Rectangle);
-			drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
+			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 			drawable.SetColor(Android.Graphics.Color.Transparent);
 			d.Add(drawable);
 			var layer = new LayerDrawable(d.ToArray());
@@ -102,20 +106,30 @@ namespace XamForms.Controls.Droid
 			var d = new List<Drawable>();
 			for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
 			{
-				d.Add(new ColorDrawable(element.BackgroundPattern.Pattern[i].Color.ToAndroid()));
+				var bp = element.BackgroundPattern.Pattern[i];
+				if (!string.IsNullOrEmpty(bp.Text))
+				{
+					Console.Out.WriteLine("Text:"+bp.Text);
+					d.Add(new TextDrawable(bp.Color.ToAndroid()) { Pattern = bp });
+				}
+				else
+				{
+					d.Add(new ColorDrawable(bp.Color.ToAndroid()));
+				}
 			}
 			var drawable = new GradientDrawable();
 			drawable.SetShape(ShapeType.Rectangle);
-			drawable.SetStroke((int)Element.BorderWidth, Element.BorderColor.ToAndroid());
+			var borderWidth = (int)Math.Ceiling(Element.BorderWidth);
+			drawable.SetStroke(borderWidth > 0 ? borderWidth + 1 : borderWidth, Element.BorderColor.ToAndroid());
 			drawable.SetColor(Android.Graphics.Color.Transparent);
 			d.Add(drawable);
 			var layer = new LayerDrawable(d.ToArray());
 			for (var i = 0; i < element.BackgroundPattern.Pattern.Count; i++)
 			{
-				var l = (int)(Control.Width * element.BackgroundPattern.GetLeft(i));
-				var t = (int)(Control.Height * element.BackgroundPattern.GetTop(i));
-				var r = (int)(Control.Width * (1 - element.BackgroundPattern.Pattern[i].WidthPercent)) - l;
-				var b = (int)(Control.Height * (1 - element.BackgroundPattern.Pattern[i].HightPercent)) - t;
+				var l = (int)Math.Ceiling(Control.Width * element.BackgroundPattern.GetLeft(i));
+				var t = (int)Math.Ceiling(Control.Height * element.BackgroundPattern.GetTop(i));
+				var r = (int)Math.Ceiling(Control.Width * (1 - element.BackgroundPattern.Pattern[i].WidthPercent)) - l;
+				var b = (int)Math.Ceiling(Control.Height * (1 - element.BackgroundPattern.Pattern[i].HightPercent)) - t;
 				layer.SetLayerInset(i, l, t, r, b);
 			}
 			layer.SetLayerInset(d.Count - 1, 0, 0, 0, 0);
@@ -127,7 +141,7 @@ namespace XamForms.Controls.Droid
 			var handler = new FileImageSourceHandler();
 			return handler.LoadImageAsync(image, this.Control.Context);
 		}
-    }
+	}
 
 	public static class Calendar
 	{
@@ -136,5 +150,30 @@ namespace XamForms.Controls.Droid
 			var d = "";
 		}
 	}
-}
 
+	public class TextDrawable : ColorDrawable
+	{
+		Paint paint;
+		public Pattern Pattern { get; set; }
+
+		public TextDrawable (Android.Graphics.Color color) 
+			: base(color)
+		{
+			paint = new Paint();
+			paint.AntiAlias = true;
+			paint.SetStyle(Paint.Style.Fill);
+			paint.TextAlign = Paint.Align.Center;
+		}
+
+		public override void Draw(Canvas canvas)
+		{
+			base.Draw(canvas);
+			paint.Color = Pattern.TextColor.ToAndroid();
+			paint.TextSize = Android.Util.TypedValue.ApplyDimension(Android.Util.ComplexUnitType.Sp,Pattern.TextSize > 0 ? Pattern.TextSize : 12,Forms.Context.Resources.DisplayMetrics);
+			var bounds = new Rect();
+			paint.GetTextBounds(Pattern.Text, 0, Pattern.Text.Length, bounds);
+			canvas.DrawText(Pattern.Text.ToCharArray(), 0, Pattern.Text.Length, Bounds.CenterX(), Bounds.CenterY()+(int)Math.Ceiling(bounds.Height()/2.0), paint);
+			Console.Out.WriteLine(Bounds.CenterY());
+		}
+	}
+}
