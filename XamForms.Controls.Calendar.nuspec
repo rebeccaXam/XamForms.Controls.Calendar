@@ -25,6 +25,9 @@
 	 [1.1.1]
 	 - Fix SelectedDate does not select the date in the calendar when set
 	 - Fix Android SpecialDate background image ghost on wrong date when switching months
+	 - Add Special Date text option for Android/iOS
+	 - Add OnStartRenderCalendar and OnEndRenderCalendar events for rendering of the calendar and isRendering
+	 - Trying to fix borders not visible
 	 [1.1.0]
 	 - Update Xamarin.Forms from 2.1.0.6521 to 2.3.4.231
 	 - Added new DisableDatesLimitToMaxMinRange (when true) to disallow to show dates outside min-max daterange
