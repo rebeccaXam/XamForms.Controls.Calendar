@@ -47,7 +47,7 @@ namespace XamForms.Controls
 			float r = 0;
 			for (int i = t-columns; i > -1; i-=columns)
 			{
-				r += Pattern[i].HightPercent;
+				r += Pattern[i].HeightPercent;
 			}
 			return r;
 		}
@@ -85,7 +85,7 @@ namespace XamForms.Controls
 	public struct Pattern
 	{
 		public float WidthPercent;
-		public float HightPercent;
+		public float HeightPercent;
 		public Color Color;
 
 		public string Text;
