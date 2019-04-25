@@ -107,9 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\XamForms.Controls.Calendar.Windows\CalendarButtonRenderer.cs">
-      <Link>CalendarButtonRenderer.cs</Link>
-    </Compile>
+    <Compile Include="CalendarButtonRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\XamForms.Controls.Calendar.UWP.rd.xml" />
   </ItemGroup>

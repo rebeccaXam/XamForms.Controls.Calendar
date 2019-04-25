@@ -244,7 +244,7 @@ namespace XamForms.Controls
 					var dl = new Grid { VerticalOptions = LayoutOptions.Start, RowSpacing = 0, ColumnSpacing = 0, Padding = 0 };
 					dl.ColumnDefinitions = new ColumnDefinitionCollection { columDef, columDef, columDef, columDef, columDef, columDef, columDef };
 					var marginFront = NumberOfWeekFontSize * 1.5; 
-					if (Device.RuntimePlatform == Device.Windows) marginFront = NumberOfWeekFontSize * 2.5; 
+					if (Device.RuntimePlatform == Device.UWP) marginFront = NumberOfWeekFontSize * 2.5; 
 					if (ShowNumberOfWeek) dl.Padding = new Thickness(marginFront, 0, 0, 0);
 
 					for (int c = 0; c < 7; c++)

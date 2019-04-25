@@ -8,9 +8,9 @@ namespace XamForms.Controls
 	{
 		List<Label> dayLabels;
 
-		#region WeekdaysTextColor
+        #region WeekdaysTextColor
 
-		public static readonly BindableProperty WeekdaysTextColorProperty =
+        public static readonly BindableProperty WeekdaysTextColorProperty =
 			BindableProperty.Create(nameof(WeekdaysTextColor), typeof(Color), typeof(Calendar), Color.FromHex("#aaaaaa"),
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdaysTextColor((Color)newValue, (Color)oldValue));
 
@@ -101,11 +101,33 @@ namespace XamForms.Controls
 			set { SetValue(WeekdaysFontFamilyProperty, value); }
 		}
 
-		#endregion
+        #endregion
 
-		#region WeekdaysFormat
+        #region WeekdaysFirstCharacterOnly
 
-		public static readonly BindableProperty WeekdaysFormatProperty =
+        public static readonly BindableProperty WeekdaysFirstCharacterOnlyProperty =
+            BindableProperty.Create(nameof(WeekdaysFormat), typeof(bool), typeof(Calendar), false,
+                                    propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
+
+        /// <summary>
+        /// Gets or sets if the date format of the weekday labels should be only contain the first character of the name
+        /// </summary>
+        /// <value>Should the name only contain one character</value>
+        /// <remarks>
+        /// This isn't possible by changing the format of the week using the WeekdaysFormat
+        /// property as the .NET DateTime format handling doesn't have a format for
+        /// just the first character of the day name.
+        /// </remarks>
+        public bool WeekdaysFirstCharacterOnly
+        {
+            get { return (bool)GetValue(WeekdaysFirstCharacterOnlyProperty); }
+            set { SetValue(WeekdaysFirstCharacterOnlyProperty, value); }
+        }
+        #endregion
+
+        #region WeekdaysFormat
+
+        public static readonly BindableProperty WeekdaysFormatProperty =
 			BindableProperty.Create(nameof(WeekdaysFormat), typeof(string), typeof(Calendar), "ddd",
 									propertyChanged: (bindable, oldValue, newValue) => (bindable as Calendar).ChangeWeekdays());
 
@@ -167,9 +189,20 @@ namespace XamForms.Controls
 			var start = CalendarStartDate(StartDate);
 			for (int i = 0; i < dayLabels.Count; i++)
 			{
-				dayLabels[i].Text = start.ToString(WeekdaysFormat);
-				start = start.AddDays(1);
+                //dayLabels[i].Text = start.ToString(WeekdaysFormat);
+                SetWeekdayLabel(start, i);
+                start = start.AddDays(1);
 			}
 		}
-	}
+
+        protected void SetWeekdayLabel(DateTime start, int i)
+        {
+            string weekDayName = start.ToString(WeekdaysFormat);
+
+            if (string.IsNullOrEmpty(weekDayName) == false && WeekdaysFirstCharacterOnly)
+                weekDayName = weekDayName.Substring(0, 1);
+
+            dayLabels[i].Text = weekDayName;
+        }
+    }
 }

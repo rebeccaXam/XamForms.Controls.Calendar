@@ -2,14 +2,10 @@
 using XamForms.Controls.Windows;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
-#if WINDOWS_UWP
 using Xamarin.Forms.Platform.UWP;
-#else
-using Xamarin.Forms.Platform.WinRT;
-#endif
 
 [assembly: ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
-namespace XamForms.Controls.Windows
+namespace XamForms.Controls.UWP
 {
     public class CalendarButtonRenderer : ButtonRenderer
     {

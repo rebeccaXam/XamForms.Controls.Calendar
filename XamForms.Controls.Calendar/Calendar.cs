@@ -48,7 +48,7 @@ namespace XamForms.Controls
 				Padding = 0,
 				VerticalOptions = LayoutOptions.Start,
 				Orientation = StackOrientation.Horizontal,
-				HeightRequest = Device.RuntimePlatform == Device.Windows ? 50 : 32,
+				HeightRequest = Device.RuntimePlatform == Device.UWP ? 50 : 32,
 				Children = { TitleLeftArrow, TitleLabel, TitleRightArrow}
 			};
 			ContentView = new StackLayout
@@ -507,7 +507,7 @@ namespace XamForms.Controls
 
         protected void ChangeCalendar(CalandarChanges changes)
         {
-			Device.BeginInvokeOnMainThread(() =>
+            Device.BeginInvokeOnMainThread(() =>
 			{
 				OnStartRenderCalendar?.Invoke(this, EventArgs.Empty);
 				Content = null;
@@ -534,34 +534,34 @@ namespace XamForms.Controls
 					beginOfMonth |= start.Day == 1;
 
 					if (i < dayLabels.Count && WeekdaysShow && changes.HasFlag(CalandarChanges.StartDay))
-					{
-						dayLabels[i].Text = start.ToString(WeekdaysFormat);
-					}
+                    {
+                        SetWeekdayLabel(start, i);
+                    }
 
-					ChangeWeekNumbers(start, i);
+                    ChangeWeekNumbers(start, i);
 
-					if (changes.HasFlag(CalandarChanges.All))
-					{
-						buttons[i].Text = string.Format("{0}", start.Day);
-					}
-					else
-					{
-						buttons[i].TextWithoutMeasure = string.Format("{0}", start.Day);
-					}
-					buttons[i].Date = start;
+                    if (changes.HasFlag(CalandarChanges.All))
+                    {
+                        buttons[i].Text = string.Format("{0}", start.Day);
+                    }
+                    else
+                    {
+                        buttons[i].TextWithoutMeasure = string.Format("{0}", start.Day);
+                    }
+                    buttons[i].Date = start;
 
-					buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
-					buttons[i].IsEnabled = ShowNumOfMonths == 1 || !buttons[i].IsOutOfMonth;
+                    buttons[i].IsOutOfMonth = !(beginOfMonth && !endOfMonth);
+                    buttons[i].IsEnabled = ShowNumOfMonths == 1 || !buttons[i].IsOutOfMonth;
 
-					SpecialDate sd = null;
-					if (SpecialDates != null)
-					{
-						sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
-					}
+                    SpecialDate sd = null;
+                    if (SpecialDates != null)
+                    {
+                        sd = SpecialDates.FirstOrDefault(s => s.Date.Date == start.Date);
+                    }
 
                     SetButtonNormal(buttons[i]);
 
-					if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate) || (DisableAllDates && sd == null))
+                    if ((MinDate.HasValue && start < MinDate) || (MaxDate.HasValue && start > MaxDate) || (DisableAllDates && sd == null))
 					{
 						SetButtonDisabled(buttons[i]);
 					}
