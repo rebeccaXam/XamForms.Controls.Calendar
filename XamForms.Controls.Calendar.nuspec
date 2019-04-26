@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
-       <id>XamForms.Controls.Calendar</id>
-       <version>1.1.1</version>
+       <id>XamForms.Controls.PurpleCalendar</id>
+       <version>1.2.0</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
-       <authors>RebeccaXam</authors>
-       <owners>RebeccaXam</owners>
-       <licenseUrl>https://github.com/rebeccaXam/XamForms.Controls.Calendar/blob/master/LICENSE</licenseUrl>
-       <projectUrl>https://github.com/rebeccaXam/XamForms.Controls.Calendar</projectUrl>
-      <iconUrl>https://raw.githubusercontent.com/rebeccaXam/XamForms.Controls.Calendar/master/icon.png</iconUrl>
+       <authors>Purplebricks</authors>
+       <owners>Purplebricks</owners>
+       <licenseUrl>https://github.com/purplebricks/XamForms.Controls.Calendar/blob/master/LICENSE</licenseUrl>
+       <projectUrl>https://github.com/purplebricks/XamForms.Controls.Calendar</projectUrl>
+       <iconUrl>https://raw.githubusercontent.com/purplebricks/XamForms.Controls.Calendar/master/icon.png</iconUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
        <description>
            Custom calendar control for Xamarin.Forms.
            Customizable border thickness, color, background colors and formats.
            Version 1.0.8 or lower Built against: 2.1.0.6521
 	   Version 1.1.0 or above Built against: 2.3.4.231
+	   Version 1.2.0 or above Built against: 3.0.0.561731    
        </description>
        <summary>A Calendar control for Xamarin Forms.</summary>
-       <tags>xamarin, pcl, xam.pcl, uwp, uwa, windows phone, winphone, wp8, android, xamarin.forms, ios, calendar, control</tags>
+       <tags>xamarin, uwp, uwa, android, xamarin.forms, ios, calendar, control, dotnet-standard</tags>
        <dependencies>
-         <dependency id="Xamarin.Forms" version="2.3.4.231" />
+         <dependency id="Xamarin.Forms" version="3.0.0.561731" />
        </dependencies>
        <releaseNotes>
+	 [1.2.0]
+	 - Updated to .NET Standard 2.0 (UWP requires Build 1709 - Fall Creators Update)
+	 - Updated to Xamarin Forms 3.0.0.561731 
+	 - Added Property to display only the first letter of the day of the week
+	 - iOS minimum target increased from 6.0 to 7.0 as needed by Xamarin build
+	 - Removed Windows and WinPhone support as not supported by Xamarin Forms version
 	 [1.1.1]
 	 - Fix SelectedDate does not select the date in the calendar when set
 	 - Fix Android SpecialDate background image ghost on wrong date when switching months
@@ -72,15 +79,7 @@
    <files>
       <!--Core-->
      <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/portable-net45+wp8+win8+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10/XamForms.Controls.Calendar.dll" />
-     
-     <!--Win Phone RT-->
-     <file src="XamForms.Controls.Calendar.WinPhone/bin/Release/XamForms.Controls.Calendar.WinPhone.dll" target="lib/wpa81/XamForms.Controls.Calendar.WinPhone.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/wpa81/XamForms.Controls.Calendar.dll" />
-    
-     <!--Win Store-->
-     <file src="XamForms.Controls.Calendar.Windows/bin/Release/XamForms.Controls.Calendar.Windows.dll" target="lib/win81/XamForms.Controls.Calendar.Windows.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/win81/XamForms.Controls.Calendar.dll" />
-	 
+      
      <!--UWP-->
      <file src="XamForms.Controls.Calendar.UWP/bin/Release/XamForms.Controls.Calendar.UWP.dll" target="lib/UAP10/XamForms.Controls.Calendar.UWP.dll" />
      <file src="XamForms.Controls.Calendar/bin/Release/XamForms.Controls.Calendar.dll" target="lib/UAP10/XamForms.Controls.Calendar.dll" />
