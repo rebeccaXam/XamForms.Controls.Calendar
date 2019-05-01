@@ -1,8 +1,8 @@
 ﻿using XamForms.Controls;
-using XamForms.Controls.Windows;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
 using Xamarin.Forms.Platform.UWP;
+using XamForms.Controls.UWP;
 
 [assembly: ExportRenderer(typeof(CalendarButton), typeof(CalendarButtonRenderer))]
 namespace XamForms.Controls.UWP
