@@ -12,8 +12,8 @@ namespace CalendarDemo.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-			XamForms.Controls.Droid.Calendar.Init();
-			LoadApplication(new App());
+            XamForms.Controls.Droid.Calendar.Init();
+            LoadApplication(new App());
         }
     }
 }
