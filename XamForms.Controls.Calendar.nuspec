@@ -6,7 +6,7 @@
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam, Lukasz Lawicki</authors>
        <owners>RebeccaXam</owners>
-       <license type="MIT"/>
+       <license type="expression">MIT</license>
        <projectUrl>https://github.com/lubiepomaranczki/XamForms.Controls.Calendar</projectUrl>
        <iconUrl>https://raw.githubusercontent.com/lubiepomaranczki/XamForms.Controls.Calendar/master/icon.png</iconUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
