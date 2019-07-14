@@ -26,25 +26,9 @@
       <!--Core-->
      <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/netstandard2.0/XamForms.Enhanced.dll" />
      
-     <!--Win Phone RT-->
-     <file src="XamForms.Controls.Calendar.WinPhone/bin/Release/XamForms.Controls.Calendar.WinPhone.dll" target="lib/wpa81/XamForms.Controls.Calendar.WinPhone.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/wpa81/XamForms.Controls.Calendar.dll" />
-    
-     <!--Win Store-->
-     <file src="XamForms.Controls.Calendar.Windows/bin/Release/XamForms.Controls.Calendar.Windows.dll" target="lib/win81/XamForms.Controls.Calendar.Windows.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/win81/XamForms.Controls.Calendar.dll" />
-	 
-     <!--UWP-->
-     <file src="XamForms.Controls.Calendar.UWP/bin/Release/XamForms.Controls.Calendar.UWP.dll" target="lib/UAP10/XamForms.Controls.Calendar.UWP.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/UAP10/XamForms.Controls.Calendar.dll" />
-	 
      <!--Xamarin.Android-->
-     <file src="XamForms.Controls.Calendar.Droid/bin/Release/XamForms.Controls.Calendar.Droid.dll" target="lib/MonoAndroid10/XamForms.Controls.Calendar.Droid.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/MonoAndroid10/XamForms.Controls.Calendar.dll" />
-     
-     <!--MonoTouch10-->
-     <file src="XamForms.Controls.Calendar.iOS/bin/Release/XamForms.Controls.Calendar.iOS.dll" target="lib/MonoTouch10/XamForms.Controls.Calendar.iOS.dll" />
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/MonoTouch10/XamForms.Controls.Calendar.dll" />
+     <file src="XamForms.Controls.Calendar.Droid/bin/Release/XamForms.Controls.Calendar.Droid.dll" target="lib/MonoAndroid70/XamForms.Controls.Calendar.Droid.dll" />
+     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/MonoAndroid70/XamForms.Controls.Calendar.dll" />
 	 
      <!--Xamarin.iOS-->
      <file src="XamForms.Controls.Calendar.iOS/bin/Release/XamForms.Controls.Calendar.iOS.dll" target="lib/Xamarin.iOS10/XamForms.Controls.Calendar.iOS.dll" />
