@@ -90,7 +90,6 @@ Task("ResolveBuildTools")
 });
 
 Task("RestorePackages")
-    .IsDependentOn("ResolveBuildTools")
     .Does(() =>
 {
     NuGetRestore(sln, new NuGetRestoreSettings { NoCache = true });
@@ -103,7 +102,6 @@ Task("RestorePackages")
 
 Task("BuildAndroid")
     .IsDependentOn("Clean")
-    .IsDependentOn("ResolveBuildTools")
     .IsDependentOn("RestorePackages")
     .IsDependentOn("Build")
     .Does(() =>
@@ -119,7 +117,6 @@ Task("BuildAndroid")
 
 Task("BuildiOS")
     .IsDependentOn("Clean")
-    .IsDependentOn("ResolveBuildTools")
     .IsDependentOn("RestorePackages")
     .IsDependentOn("Build")
     .Does(() =>
@@ -135,7 +132,6 @@ Task("BuildiOS")
 
 Task("Build")
     .IsDependentOn("Clean")
-    .IsDependentOn("ResolveBuildTools")
     .IsDependentOn("RestorePackages")
     .Does(() =>
 {
