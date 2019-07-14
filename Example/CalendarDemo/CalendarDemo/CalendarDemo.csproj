@@ -5,7 +5,7 @@
     <AssetTargetFallback>portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10+Xamarin.iOS10;portable-net45+win8+wp8+wpa81;portable-win+net45+wp80+win81+wpa81</AssetTargetFallback>
   </PropertyGroup> 
   <ItemGroup> 
-    <PackageReference Include="Xamarin.Forms" Version="2.3.4.231" />
+    <PackageReference Include="Xamarin.Forms" Version="3.6.0.344457" />
   </ItemGroup>  
   <ItemGroup>
     <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj" />
