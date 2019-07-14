@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
-       <id>XamForms.Controls.Calendar</id>
+       <id>XamForms.Enhanced.Calendar</id>
        <version>{version}</version>
        <title>Calendar Control Plugin for Xamarin.Forms</title>
        <authors>RebeccaXam, Lukasz Lawicki</authors>
        <owners>RebeccaXam</owners>
-       <licenseUrl>https://github.com/lubiepomaranczki/XamForms.Controls.Calendar/blob/master/LICENSE</licenseUrl>
+       <license type="MIT"/>
        <projectUrl>https://github.com/lubiepomaranczki/XamForms.Controls.Calendar</projectUrl>
        <iconUrl>https://raw.githubusercontent.com/lubiepomaranczki/XamForms.Controls.Calendar/master/icon.png</iconUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -14,9 +14,9 @@
            Fork of XamForms.Controls.Calendar calendar control for Xamarin.Forms.
        </description>
        <summary>A Calendar control for Xamarin Forms.</summary>
-       <tags>xamarin, pcl, xam.pcl, uwp, uwa, windows phone, winphone, wp8, android, xamarin.forms, ios, calendar, control</tags>
+       <tags>xamarin, android, xamarin.forms, ios, calendar, control</tags>
        <dependencies>
-         <dependency id="Xamarin.Forms" version="2.3.4.231" />
+         <dependency id="Xamarin.Forms" version="4.1.0.581479" />
        </dependencies>
        <releaseNotes>
         Release notes coming soon...
