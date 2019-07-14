@@ -17,7 +17,6 @@
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
     <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
     <AndroidStoreUncompressedFileExtensions />
@@ -153,7 +152,7 @@
       <Project>{E20B9FA0-D846-47A9-9ECE-FF6D426104BF}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj">
-      <Project>{DA721ED1-72ED-43EF-B909-FF4F037D6549}</Project>
+      <Project>{58DCEF42-DA85-4216-8DA4-4A320FFC2D30}</Project>
       <Name>XamForms.Controls.Calendar</Name>
     </ProjectReference>
   </ItemGroup>
