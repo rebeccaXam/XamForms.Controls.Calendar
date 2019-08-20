@@ -24,7 +24,7 @@
    </metadata>
    <files>
       <!--Core-->
-     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/netstandard2.0/XamForms.Enhanced.dll" />
+     <file src="XamForms.Controls.Calendar/bin/Release/netstandard2.0/XamForms.Controls.Calendar.dll" target="lib/netstandard2.0/XamForms.Controls.Calendar.dll" />
      
      <!--Xamarin.Android-->
      <file src="XamForms.Controls.Calendar.Droid/bin/Release/XamForms.Controls.Calendar.Droid.dll" target="lib/MonoAndroid70/XamForms.Controls.Calendar.Droid.dll" />
