@@ -1,72 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E20B9FA0-D846-47A9-9ECE-FF6D426104BF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CalendarDemo</RootNamespace>
-    <AssemblyName>CalendarDemo</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssetTargetFallback>portable-net45+netcore45+wpa81+wp8+MonoAndroid10+MonoTouch10+Xamarin.iOS10;portable-net45+win8+wp8+wpa81;portable-win+net45+wp80+win81+wpa81</AssetTargetFallback>
+  </PropertyGroup> 
+  <ItemGroup> 
+    <PackageReference Include="Xamarin.Forms" Version="4.1.0.581479" />
+  </ItemGroup>  
   <ItemGroup>
-    <Compile Include="App.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CalendarVM.cs" />
-    <Compile Include="CalendarXamlView.xaml.cs">
-      <DependentUpon>CalendarXamlView.xaml</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Remove="CalendarDemoView.xaml.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\XamForms.Controls.Calendar\XamForms.Controls.Calendar.csproj">
-      <Project>{da721ed1-72ed-43ef-b909-ff4f037d6549}</Project>
-      <Name>XamForms.Controls.Calendar</Name>
-    </ProjectReference>
+    <None Remove="CalendarDemoView.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CalendarXamlView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Xamarin.Forms.Core">
-      <HintPath>..\..\..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Platform">
-      <HintPath>..\..\..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Xaml">
-      <HintPath>..\..\..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
 </Project>
