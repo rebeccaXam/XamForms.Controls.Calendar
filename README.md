@@ -1,3 +1,9 @@
+## PLEASE NOTE: This repository is deprecated and will no longer be maintainted.
+## New Repository: https://github.com/lubiepomaranczki/XamForms.Controls.Calendar
+## Available on NuGet: https://www.nuget.org/packages/XamForms.Enhanced.Calendar/  [![NuGet](https://img.shields.io/nuget/v/XamForms.Enhanced.Calendar.svg?label=NuGet)](hhttps://www.nuget.org/packages/XamForms.Enhanced.Calendar/)
+
+------
+
 ## Calendar Control Plugin for Xamarin.Forms
 
 A simple Calendar control for your Xamarin.Forms projects
