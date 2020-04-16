@@ -42,9 +42,9 @@ Here is a sample:
 ```
 new Calendar
 {
-  BorderColor = Color.Gay,
+  BorderColor = Color.Gray,
   BorderWidth = 3,
-  BackgroundColor = Color.Gay,
+  BackgroundColor = Color.Gray,
   StartDay = DayOfWeek.Sunday,
   StartDate = DateTime.Now
 }
